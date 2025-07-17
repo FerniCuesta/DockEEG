@@ -1,0 +1,5 @@
+# Thesis directory
+thesis/
+
+# Virtual environment
+.venv/
