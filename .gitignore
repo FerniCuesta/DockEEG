@@ -1,5 +1,19 @@
 # Thesis directory
-thesis/
+# thesis/
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.lof
+*.lot
 
 # Virtual environment
 .venv/
