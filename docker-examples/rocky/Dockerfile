@@ -15,4 +15,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && ln -s /usr/lib64/libOpenCL.so.1 /usr/lib/libOpenCL.so \
     && make -j N_FEATURES=3600
 
-CMD mpirun --bind-to none --allow-run-as-root --map-by node --host localhost ./bin/hpmoon -conf config.xml
+CMD ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost", "./bin/hpmoon", "-conf", "config.xml"]
