@@ -29,6 +29,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && rm -rf /var/lib/apt/lists/* \
     && make -j N_FEATURES=3600
 
-CMD ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost", "./bin/hpmoon", "-conf", "config.xml"]
+ENTRYPOINT ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost", "./bin/hpmoon", "-conf", "config.xml"]
 
 # CMD ["sh", "-c", "python3 script.py && rsync -e ssh *.tar jjescobar@hpmoon.ugr.es:/home/jjescobar"]
