@@ -26,3 +26,6 @@ bin/
 
 # Compiled C++ files
 *.o
+
+# Gnuplot output
+gnuplot/
