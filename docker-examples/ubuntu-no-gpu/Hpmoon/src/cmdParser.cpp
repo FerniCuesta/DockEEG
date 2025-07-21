@@ -289,11 +289,12 @@ void CmdParser::printHelp()
 template <>
 char *CmdParser::getValue(const char *const arg)
 {
-
 	std::string aux = (this->find(arg)) ? this->arguments.find(arg)->second.getValue() : "";
-	char *value = new char[aux.length()];
+	if (aux.empty())
+		return nullptr;
+	char *value = new char[aux.length() + 1]; // +1 para el '\0'
 	strcpy(value, aux.c_str());
-	return (aux.empty()) ? NULL : value;
+	return value;
 }
 
 template <>
