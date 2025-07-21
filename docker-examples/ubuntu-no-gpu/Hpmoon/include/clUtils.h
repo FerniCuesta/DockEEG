@@ -23,9 +23,9 @@
 #include "individual.h" // Individual
 
 #ifdef __APPLE__
-    #include <OpenCL/opencl.h> // OpenCL
+#include <OpenCL/opencl.h> // OpenCL
 #else
-    #include <CL/cl.h> // OpenCL
+#include <CL/cl.h> // OpenCL
 #endif
 
 #include <vector> // std::vector...
@@ -65,86 +65,73 @@ const char *const CL_ERROR_DEVICE_FOUND = "Error: Not exists the specified devic
 /**
  * @brief Structure containing the OpenCL variables of a device
  */
-typedef struct CLDevice {
-
+typedef struct CLDevice
+{
 
 	/**
 	 * @brief Identifier for the device
 	 */
 	cl_device_id device;
 
-
 	/**
 	 * @brief The device type
 	 */
 	cl_device_type deviceType;
-
 
 	/**
 	 * @brief The context associated to the device
 	 */
 	cl_context context;
 
-
 	/**
 	 * @brief The command queue which contains the tasks (reads/writes on the device...)
 	 */
 	cl_command_queue commandQueue;
-
 
 	/**
 	 * @brief The OpenCL kernel with the implementation of K-means
 	 */
 	cl_kernel kernel;
 
-
 	/**
 	 * @brief OpenCL object which contains the training database
 	 */
 	cl_mem objTrDataBase;
-
 
 	/**
 	 * @brief OpenCL object which contains the indexes of the instances choosen as initial centroids
 	 */
 	cl_mem objSelInstances;
 
-
 	/**
 	 * @brief OpenCL object which contains the current subpopulations
 	 */
 	cl_mem objSubpopulations;
-
 
 	/**
 	 * @brief OpenCL object which contains the transposed training database
 	 */
 	cl_mem objTransposedTrDataBase;
 
-
 	/**
 	 * @brief The number of compute units specified for this device
 	 */
 	int computeUnits;
-
 
 	/**
 	 * @brief The number of global work-items specified for this device
 	 */
 	size_t wiGlobal;
 
-
 	/**
 	 * @brief The number of local work-items specified for this device
 	 */
 	size_t wiLocal;
 
-
 	/**
 	 * @brief The device name
 	 */
 	std::string deviceName;
-
 
 	/********************************* Methods ********************************/
 
@@ -167,13 +154,11 @@ typedef struct CLDevice {
  */
 CLDevice *createDevices(const float *const trDataBase, const int *const selInstances, const float *const transposedTrDataBase, Config *const conf);
 
-
 /**
  * @brief Gets the IDs of all available OpenCL devices
  * @return A vector containing the IDs of all devices
  */
 std::vector<cl_device_id> getAllDevices();
-
 
 /**
  * @brief Prints a list containing the ID of all available OpenCL devices

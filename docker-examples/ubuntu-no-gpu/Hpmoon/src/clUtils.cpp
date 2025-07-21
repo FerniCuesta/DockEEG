@@ -25,21 +25,22 @@
 /**
  * @brief The destructor
  */
-CLDevice::~CLDevice() {
+CLDevice::~CLDevice()
+{
 
-	if (this -> device != NULL && this -> deviceType != CL_DEVICE_TYPE_CPU) {
+	if (this->device != NULL && this->deviceType != CL_DEVICE_TYPE_CPU)
+	{
 
 		// Resources used are released
-		clReleaseContext(this -> context);
-		clReleaseCommandQueue(this -> commandQueue);
-		clReleaseKernel(this -> kernel);
-		clReleaseMemObject(this -> objTrDataBase);
-		clReleaseMemObject(this -> objTransposedTrDataBase);
-		clReleaseMemObject(this -> objSelInstances);
-		clReleaseMemObject(this -> objSubpopulations);
+		clReleaseContext(this->context);
+		clReleaseCommandQueue(this->commandQueue);
+		clReleaseKernel(this->kernel);
+		clReleaseMemObject(this->objTrDataBase);
+		clReleaseMemObject(this->objTransposedTrDataBase);
+		clReleaseMemObject(this->objSelInstances);
+		clReleaseMemObject(this->objSubpopulations);
 	}
 }
-
 
 /**
  * @brief Creates an array of objects containing the OpenCL variables of each device
@@ -49,8 +50,8 @@ CLDevice::~CLDevice() {
  * @param conf The structure with all configuration parameters
  * @return A pointer containing the objects
  */
-CLDevice *createDevices(const float *const trDataBase, const int *const selInstances, const float *const transposedTrDataBase, Config *const conf) {
-
+CLDevice *createDevices(const float *const trDataBase, const int *const selInstances, const float *const transposedTrDataBase, Config *const conf)
+{
 
 	/********** Find the OpenCL devices specified in configuration ***********/
 
@@ -63,31 +64,33 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 
 	// Others variables
 	auto allDevices = getAllDevices();
-	CLDevice *devices = new CLDevice[conf -> nDevices + (conf -> ompThreads > 0)];
+	CLDevice *devices = new CLDevice[conf->nDevices + (conf->ompThreads > 0)];
 
-	for (int dev = 0; dev < conf -> nDevices; ++dev) {
+	for (int dev = 0; dev < conf->nDevices; ++dev)
+	{
 
 		bool found = false;
-		for (int allDev = 0; allDev < allDevices.size() && !found; ++allDev) {
+		for (int allDev = 0; allDev < allDevices.size() && !found; ++allDev)
+		{
 
 			// Get the specified OpenCL device
 			char dbuff[120];
 			check(clGetDeviceInfo(allDevices[allDev], CL_DEVICE_NAME, sizeof(dbuff), dbuff, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_DEVICE_NAME);
 
 			// If the device exists...
-			if (conf -> devices[dev] == dbuff) {
+			if (conf->devices[dev] == dbuff)
+			{
 				devices[dev].device = allDevices[allDev];
 				devices[dev].deviceName = dbuff;
 				check(clGetDeviceInfo(devices[dev].device, CL_DEVICE_TYPE, sizeof(cl_device_type), &(devices[dev].deviceType), NULL) != CL_SUCCESS, "%s\n", CL_ERROR_DEVICE_TYPE);
 
-
 				/********** Device local memory usage ***********/
 
-				long int usedMemory = conf -> nFeatures * sizeof(cl_uchar); // Chromosome of the individual
-				usedMemory += conf -> trNInstances * sizeof(cl_uchar); // Mapping buffer
-				usedMemory += conf -> K * conf -> nFeatures * sizeof(cl_float); // Centroids buffer
-				usedMemory += conf -> trNInstances * sizeof(cl_float); // DistCentroids buffer
-				usedMemory += conf -> K * sizeof(cl_int); // Samples_in_k buffer
+				long int usedMemory = conf->nFeatures * sizeof(cl_uchar);	// Chromosome of the individual
+				usedMemory += conf->trNInstances * sizeof(cl_uchar);		// Mapping buffer
+				usedMemory += conf->K * conf->nFeatures * sizeof(cl_float); // Centroids buffer
+				usedMemory += conf->trNInstances * sizeof(cl_float);		// DistCentroids buffer
+				usedMemory += conf->K * sizeof(cl_int);						// Samples_in_k buffer
 
 				// Get the maximum local memory size
 				long int maxMemory;
@@ -96,28 +99,25 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 				// Avoid exceeding the maximum local memory available. 1024 bytes of margin
 				check(usedMemory > maxMemory - 1024, "%s:\n\tMax memory: %ld bytes\n\tAllow memory: %ld bytes\n\tUsed memory: %ld bytes\n", CL_ERROR_DEVICE_LOCALMEM, maxMemory, maxMemory - 1024, usedMemory);
 
-
 				/********** Create context ***********/
 
 				devices[dev].context = clCreateContext(NULL, 1, &(devices[dev].device), 0, 0, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_DEVICE_CONTEXT);
 
-
 				/********** Create command queue ***********/
 
-                #ifdef CL_VERSION_2_0
-                    const cl_command_queue_properties properties[] = {CL_QUEUE_PROFILING_ENABLE};
-                    devices[dev].commandQueue = clCreateCommandQueueWithProperties(devices[dev].context, devices[dev].device, properties, &status);
-                #else
-                    devices[dev].commandQueue = clCreateCommandQueue(devices[dev].context, devices[dev].device, CL_QUEUE_PROFILING_ENABLE, &status);
-                #endif
+#ifdef CL_VERSION_2_0
+				const cl_command_queue_properties properties[] = {CL_QUEUE_PROFILING_ENABLE};
+				devices[dev].commandQueue = clCreateCommandQueueWithProperties(devices[dev].context, devices[dev].device, properties, &status);
+#else
+				devices[dev].commandQueue = clCreateCommandQueue(devices[dev].context, devices[dev].device, CL_QUEUE_PROFILING_ENABLE, &status);
+#endif
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_DEVICE_QUEUE);
-
 
 				/********** Read the kernel file ***********/
 
 				// Open the file containing the kernels
-				std::fstream kernels(conf -> kernelsFileName.c_str(), std::fstream::in);
+				std::fstream kernels(conf->kernelsFileName.c_str(), std::fstream::in);
 				check(!kernels.is_open(), "%s\n", CL_ERROR_FILE_OPEN);
 
 				// Obtain the size
@@ -130,13 +130,14 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 				kernels.close();
 
 				// Create program
-				program = clCreateProgramWithSource(devices[dev].context, 1, (const char **) &kernelSource, &fSize, &status);
+				program = clCreateProgramWithSource(devices[dev].context, 1, (const char **)&kernelSource, &fSize, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_PROGRAM_BUILD);
 
 				// Build program for the device in the context
 				char buildOptions[196];
-				sprintf(buildOptions, "-I include -D N_INSTANCES=%d -D N_FEATURES=%d -D N_OBJECTIVES=%d -D K=%d -D MAX_ITER_KMEANS=%d", conf -> trNInstances, conf -> nFeatures, conf -> nObjectives, conf -> K, conf -> maxIterKmeans);
-				if (clBuildProgram(program, 1, &(devices[dev].device), buildOptions, 0, 0) != CL_SUCCESS) {
+				sprintf(buildOptions, "-I include -D N_INSTANCES=%d -D N_FEATURES=%d -D N_OBJECTIVES=%d -D K=%d -D MAX_ITER_KMEANS=%d", conf->trNInstances, conf->nFeatures, conf->nObjectives, conf->K, conf->maxIterKmeans);
+				if (clBuildProgram(program, 1, &(devices[dev].device), buildOptions, 0, 0) != CL_SUCCESS)
+				{
 					char buffer[4096];
 					fprintf(stderr, "Error: Could not build the program\n");
 					check(clGetProgramBuildInfo(program, devices[dev].device, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_PROGRAM_ERRORS);
@@ -149,27 +150,25 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 				devices[dev].kernel = clCreateKernel(program, kernelName, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_KERNEL_BUILD);
 
-
 				/******* Work-items *******/
 
-				devices[dev].computeUnits = atoi(conf -> computeUnits[dev].c_str());
-				devices[dev].wiLocal = atoi(conf -> wiLocal[dev].c_str());
+				devices[dev].computeUnits = atoi(conf->computeUnits[dev].c_str());
+				devices[dev].wiLocal = atoi(conf->wiLocal[dev].c_str());
 				devices[dev].wiGlobal = devices[dev].computeUnits * devices[dev].wiLocal;
-
 
 				/******* Create and write the databases and centroids buffers. Create the subpopulations buffer. Set kernel arguments *******/
 
 				// Create buffers
-				devices[dev].objSubpopulations = clCreateBuffer(devices[dev].context, CL_MEM_READ_WRITE, conf -> familySize * sizeof(Individual), 0, &status);
+				devices[dev].objSubpopulations = clCreateBuffer(devices[dev].context, CL_MEM_READ_WRITE, conf->familySize * sizeof(Individual), 0, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_OBJECT_SUBPOPS);
 
-				devices[dev].objTrDataBase = clCreateBuffer(devices[dev].context, CL_MEM_READ_ONLY, conf -> trNInstances * conf -> nFeatures * sizeof(cl_float), 0, &status);
+				devices[dev].objTrDataBase = clCreateBuffer(devices[dev].context, CL_MEM_READ_ONLY, conf->trNInstances * conf->nFeatures * sizeof(cl_float), 0, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_OBJECT_TRDB);
 
-				devices[dev].objTransposedTrDataBase = clCreateBuffer(devices[dev].context, CL_MEM_READ_ONLY, conf -> trNInstances * conf -> nFeatures * sizeof(cl_float), 0, &status);
+				devices[dev].objTransposedTrDataBase = clCreateBuffer(devices[dev].context, CL_MEM_READ_ONLY, conf->trNInstances * conf->nFeatures * sizeof(cl_float), 0, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_OBJECT_TTRDB);
 
-				devices[dev].objSelInstances = clCreateBuffer(devices[dev].context, CL_MEM_READ_ONLY, conf -> K * sizeof(cl_int), 0, &status);
+				devices[dev].objSelInstances = clCreateBuffer(devices[dev].context, CL_MEM_READ_ONLY, conf->K * sizeof(cl_int), 0, &status);
 				check(status != CL_SUCCESS, "%s\n", CL_ERROR_OBJECT_CENTROIDS);
 
 				// Sets kernel arguments
@@ -182,9 +181,9 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 				check(clSetKernelArg(devices[dev].kernel, 5, sizeof(cl_mem), (void *)&(devices[dev].objTransposedTrDataBase)) != CL_SUCCESS, "%s\n", CL_ERROR_KERNEL_ARGUMENT6);
 
 				// Write buffers
-				check(clEnqueueWriteBuffer(devices[dev].commandQueue, devices[dev].objTrDataBase, CL_FALSE, 0, conf -> trNInstances * conf -> nFeatures * sizeof(cl_float), trDataBase, 0, NULL, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_ENQUEUE_TRDB);
-				check(clEnqueueWriteBuffer(devices[dev].commandQueue, devices[dev].objSelInstances, CL_FALSE, 0, conf -> K * sizeof(cl_int), selInstances, 0, NULL, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_ENQUEUE_CENTROIDS);
-				check(clEnqueueWriteBuffer(devices[dev].commandQueue, devices[dev].objTransposedTrDataBase, CL_FALSE, 0, conf -> trNInstances * conf -> nFeatures * sizeof(cl_float), transposedTrDataBase, 0, NULL, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_ENQUEUE_TTRDB);
+				check(clEnqueueWriteBuffer(devices[dev].commandQueue, devices[dev].objTrDataBase, CL_FALSE, 0, conf->trNInstances * conf->nFeatures * sizeof(cl_float), trDataBase, 0, NULL, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_ENQUEUE_TRDB);
+				check(clEnqueueWriteBuffer(devices[dev].commandQueue, devices[dev].objSelInstances, CL_FALSE, 0, conf->K * sizeof(cl_int), selInstances, 0, NULL, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_ENQUEUE_CENTROIDS);
+				check(clEnqueueWriteBuffer(devices[dev].commandQueue, devices[dev].objTransposedTrDataBase, CL_FALSE, 0, conf->trNInstances * conf->nFeatures * sizeof(cl_float), transposedTrDataBase, 0, NULL, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_ENQUEUE_TTRDB);
 
 				// Resources used are released
 				delete[] kernelSource;
@@ -198,24 +197,24 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 		check(!found, "%s\n", CL_ERROR_DEVICE_FOUND);
 	}
 
-
 	/********** Add the CPU if has been enabled in configuration ***********/
 
-	if (conf -> ompThreads > 0) {
-		devices[conf -> nDevices].deviceType = CL_DEVICE_TYPE_CPU;
-		devices[conf -> nDevices].computeUnits = conf -> ompThreads;
-		++(conf -> nDevices);
+	if (conf->ompThreads > 0)
+	{
+		devices[conf->nDevices].deviceType = CL_DEVICE_TYPE_CPU;
+		devices[conf->nDevices].computeUnits = conf->ompThreads;
+		++(conf->nDevices);
 	}
 
 	return devices;
 }
 
-
 /**
  * @brief Gets the IDs of all available OpenCL devices
  * @return A vector containing the IDs of all devices
  */
-std::vector<cl_device_id> getAllDevices() {
+std::vector<cl_device_id> getAllDevices()
+{
 
 	// OpenCL variables
 	cl_platform_id *platforms;
@@ -226,50 +225,54 @@ std::vector<cl_device_id> getAllDevices() {
 	cl_int status;
 
 	// Get the number of platforms
-	//check(clGetPlatformIDs(0, NULL, &numPlatforms) != CL_SUCCESS, "%s\n", CL_ERROR_PLATFORMS_NUMBER);
-    clGetPlatformIDs(0, NULL, &numPlatforms);
-	//check(numPlatforms == 0, "%s\n", CL_ERROR_PLATFORMS_FOUND);
+	// check(clGetPlatformIDs(0, NULL, &numPlatforms) != CL_SUCCESS, "%s\n", CL_ERROR_PLATFORMS_NUMBER);
+	clGetPlatformIDs(0, NULL, &numPlatforms);
+	// check(numPlatforms == 0, "%s\n", CL_ERROR_PLATFORMS_FOUND);
 
-    if (numPlatforms > 0) {
+	if (numPlatforms > 0)
+	{
 
-        // Get the platforms
-        platforms = new cl_platform_id[numPlatforms];
-        check(clGetPlatformIDs(numPlatforms, platforms, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_PLATFORM_ID);
+		// Get the platforms
+		platforms = new cl_platform_id[numPlatforms];
+		check(clGetPlatformIDs(numPlatforms, platforms, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_PLATFORM_ID);
 
-        // Search devices in each platform
-        for (int i = 0; i < numPlatforms; ++i) {
+		// Search devices in each platform
+		for (int i = 0; i < numPlatforms; ++i)
+		{
 
-            // Get the number of devices of this platform
-            status = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0, 0, (cl_uint*) &numPlatformsDevices);
-            check(status != CL_SUCCESS && status != CL_DEVICE_NOT_FOUND, "%s\n", CL_ERROR_DEVICES_NUMBER);
+			// Get the number of devices of this platform
+			status = clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, 0, 0, (cl_uint *)&numPlatformsDevices);
+			check(status != CL_SUCCESS && status != CL_DEVICE_NOT_FOUND, "%s\n", CL_ERROR_DEVICES_NUMBER);
 
-            // Get all devices of this platform
-            if (numPlatformsDevices > 0) {
-                devices = new cl_device_id[numPlatformsDevices];
-                check(clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, numPlatformsDevices, devices, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_DEVICE_ID);
-                allDevices.insert(allDevices.end(), devices, devices + numPlatformsDevices);
-                delete[] devices;
-            }
-        }
+			// Get all devices of this platform
+			if (numPlatformsDevices > 0)
+			{
+				devices = new cl_device_id[numPlatformsDevices];
+				check(clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_GPU, numPlatformsDevices, devices, NULL) != CL_SUCCESS, "%s\n", CL_ERROR_DEVICE_ID);
+				allDevices.insert(allDevices.end(), devices, devices + numPlatformsDevices);
+				delete[] devices;
+			}
+		}
 
-        delete[] platforms;
-    }
+		delete[] platforms;
+	}
 	return allDevices;
 }
-
 
 /**
  * @brief Prints a list containing the ID of all available OpenCL devices
  * @param mpiRank The MPI process number which is calling the function
  */
-void listDevices(const int mpiRank) {
+void listDevices(const int mpiRank)
+{
 
 	// OpenCL variables
 	auto allDevices = getAllDevices();
 	std::string devices = "Process " + std::to_string(mpiRank) + ": ";
 	devices += (allDevices.empty()) ? "No OpenCL devices in this node" : "OpenCL Devices in this node:";
 
-	for(int i = 0; i < allDevices.size(); ++i) {
+	for (int i = 0; i < allDevices.size(); ++i)
+	{
 		char nameBuff[128];
 		size_t maxWorkitems[3];
 		unsigned int maxCU;

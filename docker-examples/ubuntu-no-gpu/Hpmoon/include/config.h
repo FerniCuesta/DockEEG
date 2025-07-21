@@ -47,8 +47,8 @@ const char *const CFG_ERROR_SIZE_MIN = "Error: The minimum number of MPI process
 /**
  * @brief Structure containing the configuration parameters
  */
-typedef struct Config {
-
+typedef struct Config
+{
 
 	/********************************* XML/command-line parameters ********************************/
 
@@ -57,171 +57,142 @@ typedef struct Config {
 	 */
 	int nSubpopulations;
 
-
 	/**
 	 * @brief The parameter indicating the number of individuals in each subpopulation
 	 */
 	int subpopulationSize;
-
 
 	/**
 	 * @brief The parameter indicating the number of migrations between subpopulations of different nodes
 	 */
 	int nGlobalMigrations;
 
-
 	/**
 	 * @brief The parameter indicating the number of generations to generate before each migration
 	 */
 	int nGenerations;
-
 
 	/**
 	 * @brief The parameter indicating the maximum number of features initially set to '1'
 	 */
 	int maxFeatures;
 
-
 	/**
 	 * @brief The parameter indicating the name of the file containing the fitness of the individuals in the first Pareto front
 	 */
 	std::string dataFileName;
-
 
 	/**
 	 * @brief The parameter indicating the name of the file containing the gnuplot code for data display
 	 */
 	std::string plotFileName;
 
-
 	/**
 	 * @brief The parameter indicating the name of the file containing the image with the data (graphic)
 	 */
 	std::string imageFileName;
-
 
 	/**
 	 * @brief The parameter indicating the number of training instances of the database
 	 */
 	int trNInstances;
 
-
 	/**
 	 * @brief The parameter indicating the name of the file containing the training database
 	 */
 	std::string trDataBaseFileName;
-
 
 	/**
 	 * @brief The parameter indicating if the training database must be normalized or not
 	 */
 	bool trNormalize;
 
-
 	/**
 	 * @brief The parameter indicating the number of individuals competing in the tournament
 	 */
 	int tourSize;
-
 
 	/**
 	 * @brief The parameter indicating the number of OpenCL devices to perform the evaluation of the individuals
 	 */
 	int nDevices;
 
-
 	/**
 	 * @brief The parameter indicating the devices name that will perform the evaluation of the individuals
 	 */
 	std::string *devices;
-
 
 	/**
 	 * @brief The parameter indicating the number of compute units of each device to perform the evaluation of the individuals
 	 */
 	std::string *computeUnits;
 
-
 	/**
 	 * @brief The parameter indicating the number of work-items (threads) per compute unit of each device to perform the evaluation of the individuals
 	 */
 	std::string *wiLocal;
-
 
 	/**
 	 * @brief The parameter indicating the name of the file containing the kernels with the OpenCL code
 	 */
 	std::string kernelsFileName;
 
-
 	/**
 	 * @brief The parameter indicating the number of OpenMP threads to perform the evaluation of the individuals
 	 */
 	int ompThreads;
 
-
 	/********************************* Internal parameters ********************************/
-
 
 	/**
 	 * @brief The parameter indicating the number of centroids (clusters) for K-means algorithm
 	 */
 	int K;
 
-
 	/**
 	 * @brief The parameter indicating the number of maximum iterations for the convergence of K-means
 	 */
 	int maxIterKmeans;
-
 
 	/**
 	 * @brief The parameter indicating the size of the pool (the half of the subpopulation size)
 	 */
 	int poolSize;
 
-
 	/**
 	 * @brief The parameter indicating the number of individuals in each subpopulation (including parents and children)
 	 */
 	int familySize;
-
 
 	/**
 	 * @brief The parameter indicating the number of individuals in the world
 	 */
 	int worldSize;
 
-
 	/**
 	 * @brief The parameter indicating the total number of individuals in the world (including parents and children)
 	 */
 	int totalIndividuals;
-
 
 	/**
 	 * @brief The parameter indicating the number of features of the training database
 	 */
 	int nFeatures;
 
-
 	/**
 	 * @brief The parameter indicating the number of objectives
 	 */
 	unsigned char nObjectives;
-
 
 	/**
 	 * @brief The parameter indicating the MPI rank process
 	 */
 	int mpiRank;
 
-
 	/**
 	 * @brief The parameter indicating the total number of processes in the global communicator
 	 */
 	int mpiSize;
-
 
 	/********************************* Methods ********************************/
 
@@ -232,7 +203,6 @@ typedef struct Config {
 	 * @return An object containing all configuration parameters
 	 */
 	Config(const int argc, const char **argv);
-
 
 	/**
 	 * @brief The destructor
@@ -250,7 +220,6 @@ typedef struct Config {
  * @return The number of obtained tokens
  */
 int split(const std::string str, std::string *&tokens);
-
 
 /**
  * @brief Check the condition. If it is true, a message is showed and the program will abort

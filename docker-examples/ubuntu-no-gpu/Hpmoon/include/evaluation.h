@@ -35,7 +35,6 @@ const char *const EV_ERROR_OBJECTIVES_NUMBER = "Error: Gnuplot is only available
 
 /********************************* Methods ********************************/
 
-
 /**
  * @brief Evaluation of each individual in CPU in Sequential mode or using OpenMP
  * @param subpop The first individual to evaluate of the current subpopulation
@@ -46,7 +45,6 @@ const char *const EV_ERROR_OBJECTIVES_NUMBER = "Error: Gnuplot is only available
  * @param conf The structure with all configuration parameters
  */
 void evaluationCPU(Individual *const subpop, const int nIndividuals, const float *const trDataBase, const int *const selInstances, const int nThreads, const Config *const conf);
-
 
 /**
  * @brief Evaluation of each individual on OpenCL devices
@@ -60,7 +58,6 @@ void evaluationCPU(Individual *const subpop, const int nIndividuals, const float
  */
 void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *const devicesObject, const int nDevices, const float *const trDataBase, const int *const selInstances, const Config *const conf);
 
-
 /**
  * @brief Normalize the fitness for each individual
  * @param subpop The first individual to normalize of the current subpopulation
@@ -68,7 +65,6 @@ void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *cons
  * @param conf The structure with all configuration parameters
  */
 void normalizeFitness(Individual *const subpop, const int nIndividuals, const Config *const conf);
-
 
 /**
  * @brief Gets the hypervolume measure of the subpopulation
@@ -79,14 +75,12 @@ void normalizeFitness(Individual *const subpop, const int nIndividuals, const Co
  */
 float getHypervolume(const Individual *const subpop, const int nIndFront0, const Config *const conf);
 
-
 /**
  * @brief Gets the initial centroids (instances choosen randomly)
  * @param conf The structure with all configuration parameters
  * @return The instances choosen as initial centroids will be stored
  */
-int* getCentroids(const Config *const conf);
-
+int *getCentroids(const Config *const conf);
 
 /**
  * @brief Generates the gnuplot data
@@ -95,7 +89,6 @@ int* getCentroids(const Config *const conf);
  * @param conf The structure with all configuration parameters
  */
 void generateDataPlot(const Individual *const subpop, const int nIndFront0, const Config *const conf);
-
 
 /**
  * @brief Generates gnuplot code for data display
