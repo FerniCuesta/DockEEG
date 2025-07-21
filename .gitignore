@@ -20,3 +20,9 @@
 
 # VS Code settings
 .vscode/
+
+# Binary files
+bin/
+
+# Compiled C++ files
+*.o
