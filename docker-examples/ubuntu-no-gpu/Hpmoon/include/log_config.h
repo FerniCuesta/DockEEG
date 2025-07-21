@@ -1,0 +1,1 @@
+#define LOG_ENABLED 0 // Change to 1 to enable logging

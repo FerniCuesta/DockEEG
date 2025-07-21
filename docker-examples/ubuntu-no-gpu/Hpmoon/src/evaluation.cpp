@@ -22,6 +22,7 @@
 #include <omp.h>  // OpenMP
 #include <math.h> // exp, sqrt, INFINITY
 #include <iostream>
+#include <log_config.h> // LOG_ENABLED
 
 /********************************* Methods ********************************/
 
@@ -36,7 +37,6 @@
  */
 void evaluationCPU(Individual *const subpop, const int nIndividuals, const float *const trDataBase, const int *const selInstances, const int nThreads, const Config *const conf)
 {
-	// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Starting CPU evaluation for " << nIndividuals << " individuals using " << nThreads << " threads" << std::endl;
 
 #pragma omp parallel num_threads(nThreads) if (nThreads > 1)
 	{
@@ -47,13 +47,10 @@ void evaluationCPU(Individual *const subpop, const int nIndividuals, const float
 		int samples_in_k[conf->K];
 
 		int threadID = omp_get_thread_num();
-		// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " started" << std::endl;
 
 #pragma omp for
 		for (int ind = 0; ind < nIndividuals; ++ind)
 		{
-			// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " evaluating individual " << ind << " / " << nIndividuals << std::endl;
-
 			// The centroids will have the selected features of the individual
 			for (int k = 0; k < conf->K; ++k)
 			{
@@ -163,14 +160,8 @@ void evaluationCPU(Individual *const subpop, const int nIndividuals, const float
 
 			subpop[ind].fitness[0] = sumWithin;
 			subpop[ind].fitness[1] = sumInter;
-
-			// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " finished individual " << ind << " / " << nIndividuals << " WCSS: " << sumWithin << " ICSS: " << sumInter << std::endl;
 		}
-
-		// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " finished all assigned individuals" << std::endl;
 	}
-
-	// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: CPU evaluation finished" << std::endl;
 }
 
 /**
@@ -185,8 +176,9 @@ void evaluationCPU(Individual *const subpop, const int nIndividuals, const float
  */
 void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *const devicesObject, const int nDevices, const float *const trDataBase, const int *const selInstances, const Config *const conf)
 {
-
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Starting evaluation for " << nIndividuals << " individuals on " << nDevices << " devices" << std::endl;
+#endif
 
 	int index = 0;
 
@@ -198,12 +190,9 @@ void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *cons
 		cl_int status;
 		cl_event kernelEvent, copyEvent;
 
-		// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " started on device type " << devicesObject[threadID].deviceType << std::endl;
-
 		// Start the copy onto the devices
 		if (devicesObject[threadID].deviceType != CL_DEVICE_TYPE_CPU)
 		{
-			// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " copying individuals to device" << std::endl;
 			check(clEnqueueWriteBuffer(devicesObject[threadID].commandQueue, devicesObject[threadID].objSubpopulations, CL_FALSE, 0, nIndividuals * sizeof(Individual), subpop, 0, NULL, &copyEvent) != CL_SUCCESS, "%s\n", EV_ERROR_ENQUEUE_INDIVIDUALS);
 		}
 
@@ -212,13 +201,11 @@ void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *cons
 		{
 			int maxIndividualsOnGpuKernel = 10000;
 			maxProcessing = (devicesObject[threadID].deviceType == CL_DEVICE_TYPE_GPU) ? std::min(nIndividuals, maxIndividualsOnGpuKernel) : nIndividuals;
-			// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " maxProcessing set to " << maxProcessing << std::endl;
 		}
 		// Heterogeneous mode
 		else
 		{
 			maxProcessing = devicesObject[threadID].computeUnits;
-			// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " heterogeneous mode, computeUnits: " << maxProcessing << std::endl;
 		}
 
 		do
@@ -232,23 +219,18 @@ void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *cons
 			if (begin < nIndividuals)
 			{
 				end = (begin + maxProcessing >= nIndividuals) ? nIndividuals : begin + maxProcessing;
-				// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " processing individuals " << begin << " to " << end << std::endl;
 
 				if (devicesObject[threadID].deviceType != CL_DEVICE_TYPE_CPU)
 				{
-					// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " setting kernel arguments and launching kernel" << std::endl;
-
 					check(clSetKernelArg(devicesObject[threadID].kernel, 3, sizeof(int), &begin) != CL_SUCCESS, "%s\n", EV_ERROR_KERNEL_ARGUMENT4);
 					check(clSetKernelArg(devicesObject[threadID].kernel, 4, sizeof(int), &end) != CL_SUCCESS, "%s\n", EV_ERROR_KERNEL_ARGUMENT5);
 
 					check((status = clEnqueueNDRangeKernel(devicesObject[threadID].commandQueue, devicesObject[threadID].kernel, 1, NULL, &(devicesObject[threadID].wiGlobal), &(devicesObject[threadID].wiLocal), 1, &copyEvent, &kernelEvent)) != CL_SUCCESS, "%s\n", EV_ERROR_ENQUEUE_KERNEL);
 
-					// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " reading results from device" << std::endl;
 					check((status = clEnqueueReadBuffer(devicesObject[threadID].commandQueue, devicesObject[threadID].objSubpopulations, CL_TRUE, begin * sizeof(Individual), (end - begin) * sizeof(Individual), subpop + begin, 1, &kernelEvent, NULL)) != CL_SUCCESS, "%s\n", EV_ERROR_ENQUEUE_READING);
 				}
 				else
 				{
-					// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " evaluating on CPU" << std::endl;
 					evaluationCPU(subpop + begin, end - begin, trDataBase, selInstances, devicesObject[threadID].computeUnits, conf);
 				}
 			}
@@ -257,13 +239,12 @@ void evaluation(Individual *const subpop, const int nIndividuals, CLDevice *cons
 				finished = true;
 			}
 		} while (!finished);
-
-		// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Thread " << threadID << " finished" << std::endl;
 	}
 
-	// std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Normalizing fitness" << std::endl;
 	normalizeFitness(subpop, nIndividuals, conf);
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Evaluation finished" << std::endl;
+#endif
 }
 
 /**

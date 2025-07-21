@@ -19,11 +19,12 @@
 
 #include "ag.h"
 #include "evaluation.h"
-#include <algorithm> // std::max_element
-#include <numeric>	 // std::iota
-#include <omp.h>	 // OpenMP
-#include <set>		 // std::set
-#include <string.h>	 // memcpy, memset
+#include <algorithm>	// std::max_element
+#include <numeric>		// std::iota
+#include <omp.h>		// OpenMP
+#include <set>			// std::set
+#include <string.h>		// memcpy, memset
+#include <log_config.h> // LOG_ENABLED
 
 /********************************* Defines ********************************/
 
@@ -299,58 +300,57 @@ void migration(Individual *const subpops, const int nSubpopulations, const int *
  */
 void evolve(Individual *const subpop, int *const nIndsFronts0, CLDevice *const devicesObject, const float *const trDataBase, const int *const selInstances, const Config *const conf, const bool initialize)
 {
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Starting evolution" << std::endl;
-
-	/********** Multi-objective individuals evaluation over all subpopulations ***********/
+#endif
 
 	int nDevices = (omp_get_num_threads() > 1) ? 1 : conf->nDevices;
 	if (initialize)
 	{
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Initial evaluation" << std::endl;
+#endif
 		evaluation(subpop, conf->subpopulationSize, devicesObject, nDevices, trDataBase, selInstances, conf);
 
-		/********** Sort the subpopulation with the 'Non-dominated sorting' method ***********/
-
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Performing nonDominationSort (initial)" << std::endl;
+#endif
 		nIndsFronts0[0] = nonDominationSort(subpop, conf->subpopulationSize, conf);
 	}
 
-	/********** Start the evolution process ***********/
-
 	for (int g = 0; g < conf->nGenerations; ++g)
 	{
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Generation " << g << std::endl;
-
-		/********** Fill the mating pool and perform crossover ***********/
-
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Getting pool and performing crossover" << std::endl;
+#endif
 		const int *const pool = getPool(conf);
 		int nChildren = crossoverUniform(subpop, pool, conf);
 
-		// Local resources used are released
 		delete[] pool;
 
-		/********** Multi-objective individuals evaluation over the subpopulation ***********/
-
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Evaluating children" << std::endl;
+#endif
 		evaluation(subpop + conf->subpopulationSize, nChildren, devicesObject, nDevices, trDataBase, selInstances, conf);
 
-		/********** The crowding distance of the parents is initialized again for the next nonDominationSort ***********/
-
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Resetting crowding distance" << std::endl;
+#endif
 		for (int i = 0; i < conf->subpopulationSize; ++i)
 		{
 			subpop[i].crowding = 0.0f;
 		}
 
-		// Replace subpopulation
-		// Parents and children are sorted by rank and crowding distance.
-		// The first 'conf -> subpopulationSize' individuals will continue for the next generation
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Performing nonDominationSort (replacement)" << std::endl;
+#endif
 		nIndsFronts0[0] = nonDominationSort(subpop, conf->subpopulationSize + nChildren, conf);
 	}
 
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Evolution finished" << std::endl;
+#endif
 }
 
 /**
@@ -363,7 +363,9 @@ void evolve(Individual *const subpop, int *const nIndsFronts0, CLDevice *const d
  */
 void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *const trDataBase, const int *const selInstances, const Config *const conf)
 {
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Entered agIslands" << std::endl;
+#endif
 
 	MPI::Status status;
 	int array_of_blocklengths[3] = {conf->nFeatures, conf->nObjectives + 1, 2};
@@ -372,15 +374,21 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 	MPI::Datatype Individual_MPI_type = MPI::Datatype::Create_struct(3, array_of_blocklengths, array_of_displacement, array_of_types);
 	Individual_MPI_type.Commit();
 
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: MPI datatype for Individual committed" << std::endl;
+#endif
 
 	MPI::COMM_WORLD.Barrier();
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Passed MPI barrier, starting master/worker logic" << std::endl;
+#endif
 
 	// Master
 	if (conf->mpiRank == 0)
 	{
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Acting as master" << std::endl;
+#endif
 		double timeStart = omp_get_wtime();
 		MPI::Request requests[conf->mpiSize - 1];
 		int nIndsFronts0[conf->nSubpopulations];
@@ -389,25 +397,35 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 		// I work alone
 		if (conf->mpiSize == 1)
 		{
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Single process mode detected" << std::endl;
+#endif
 			omp_set_nested(1);
 			int nThreads = std::min(conf->nDevices, conf->nSubpopulations);
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Using " << nThreads << " threads for evolution" << std::endl;
+#endif
 
 			for (int gMig = 0; gMig < conf->nGlobalMigrations; ++gMig)
 			{
+#if LOG_ENABLED
 				std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Global migration " << gMig << " started" << std::endl;
+#endif
 #pragma omp parallel for num_threads(nThreads) schedule(dynamic, 1)
 				for (int sp = 0; sp < conf->nSubpopulations; ++sp)
 				{
 					int popIndex = sp * conf->familySize;
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Evolving subpopulation " << sp << std::endl;
+#endif
 					evolve(subpops + popIndex, &nIndsFronts0[sp], &devicesObject[omp_get_thread_num()], trDataBase, selInstances, conf, gMig == 0);
 				}
 
 				if (gMig != conf->nGlobalMigrations - 1 && conf->nSubpopulations > 1)
 				{
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Migrating between subpopulations" << std::endl;
+#endif
 					migration(subpops, conf->nSubpopulations, nIndsFronts0, conf);
 				}
 			}
@@ -415,19 +433,27 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 		// I need to distribute
 		else
 		{
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Distributing work to workers" << std::endl;
+#endif
 			int workerCapacities[conf->mpiSize - 1];
 			for (int p = 1; p < conf->mpiSize; ++p)
 			{
+#if LOG_ENABLED
 				std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Receiving capacity from worker " << p << std::endl;
+#endif
 				requests[p - 1] = MPI::COMM_WORLD.Irecv(&workerCapacities[p - 1], 1, MPI::INT, p, MPI::ANY_TAG);
 			}
 			MPI::Request::Waitall(conf->mpiSize - 1, requests);
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: All worker capacities received" << std::endl;
+#endif
 
 			for (int gMig = 0; gMig < conf->nGlobalMigrations; ++gMig)
 			{
+#if LOG_ENABLED
 				std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Global migration " << gMig << " started" << std::endl;
+#endif
 				int nextWork = 0;
 				int sent = 0;
 				int mpiTag = (gMig == 0) ? INITIALIZE : IGNORE_VALUE;
@@ -435,18 +461,24 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 				{
 					int finallyWork = std::min(workerCapacities[p - 1], conf->nSubpopulations - nextWork);
 					int popIndex = nextWork * conf->familySize;
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Sending work to worker " << p << std::endl;
+#endif
 					requests[p - 1] = MPI::COMM_WORLD.Isend(subpops + popIndex, finallyWork * conf->familySize, Individual_MPI_type, p, mpiTag);
 					nextWork += finallyWork;
 					++sent;
 				}
 				MPI::Request::Waitall(sent, requests);
+#if LOG_ENABLED
 				std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: All work sent to workers" << std::endl;
+#endif
 
 				int receivedPtr = 0;
 				while (nextWork < conf->nSubpopulations)
 				{
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Waiting for results from any worker" << std::endl;
+#endif
 					MPI::COMM_WORLD.Recv(subpops + (receivedPtr * conf->familySize), conf->familySize, Individual_MPI_type, MPI::ANY_SOURCE, MPI::ANY_TAG, status);
 					int popIndex = nextWork * conf->familySize;
 					MPI::COMM_WORLD.Send(subpops + popIndex, conf->familySize, Individual_MPI_type, status.Get_source(), mpiTag);
@@ -457,7 +489,9 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 
 				while (receivedPtr < conf->nSubpopulations)
 				{
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Receiving remaining results from workers" << std::endl;
+#endif
 					MPI::COMM_WORLD.Recv(subpops + (receivedPtr * conf->familySize), conf->familySize, Individual_MPI_type, MPI::ANY_SOURCE, MPI::ANY_TAG, status);
 					MPI::COMM_WORLD.Send(NULL, 0, MPI::INT, status.Get_source(), FINISH);
 					nIndsFronts0[receivedPtr] = status.Get_tag();
@@ -466,24 +500,32 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 
 				if (gMig != conf->nGlobalMigrations - 1 && conf->nSubpopulations > 1)
 				{
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Migrating between subpopulations" << std::endl;
+#endif
 					migration(subpops, conf->nSubpopulations, nIndsFronts0, conf);
 				}
 			}
 
 			for (int p = 1; p < conf->mpiSize; ++p)
 			{
+#if LOG_ENABLED
 				std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Notifying worker " << p << " of finish" << std::endl;
+#endif
 				requests[p - 1] = MPI::COMM_WORLD.Isend(NULL, 0, MPI::INT, p, FINISH);
 			}
 		}
 
 		if (conf->nSubpopulations > 1)
 		{
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Recombination process started" << std::endl;
+#endif
 			for (int sp = 0; sp < conf->nSubpopulations; ++sp)
 			{
+#if LOG_ENABLED
 				std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Copying subpopulation " << sp << std::endl;
+#endif
 				memcpy(subpops + (sp * conf->subpopulationSize), subpops + (sp * conf->familySize), conf->subpopulationSize * sizeof(Individual));
 			}
 #pragma omp parallel for
@@ -492,7 +534,9 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 				subpops[i].crowding = 0.0f;
 			}
 			finalFront0 = std::min(conf->subpopulationSize, nonDominationSort(subpops, conf->worldSize, conf));
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: nonDominationSort completed" << std::endl;
+#endif
 		}
 		else
 		{
@@ -502,15 +546,21 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 		MPI::Request::Waitall(conf->mpiSize - 1, requests);
 		MPI::COMM_WORLD.Barrier();
 
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Generating data plot and gnuplot files" << std::endl;
+#endif
 		generateDataPlot(subpops, finalFront0, conf);
 		generateGnuplot(conf);
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Master finished agIslands" << std::endl;
+#endif
 	}
 	// Workers
 	else
 	{
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Acting as worker" << std::endl;
+#endif
 		MPI::COMM_WORLD.Isend(&(conf->nDevices), 1, MPI::INT, 0, 0);
 		omp_set_nested(1);
 		subpops = new Individual[conf->nDevices * conf->familySize];
@@ -522,7 +572,9 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 			int nSubpopulations = status.Get_count(Individual_MPI_type) / conf->familySize;
 			int EXIT = false;
 
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Worker received " << nSubpopulations << " subpopulations" << std::endl;
+#endif
 #pragma omp parallel num_threads(nSubpopulations)
 			{
 				int threadID = omp_get_thread_num();
@@ -532,7 +584,9 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 				int popIndex = threadID * conf->familySize;
 				do
 				{
+#if LOG_ENABLED
 					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Worker thread " << threadID << " evolving subpopulation" << std::endl;
+#endif
 					evolve(subpops + popIndex, &nIndsFronts0, &devicesObject[threadID], trDataBase, selInstances, conf, stat.Get_tag() == INITIALIZE);
 
 					request = MPI::COMM_WORLD.Isend(subpops + popIndex, conf->familySize, Individual_MPI_type, 0, nIndsFronts0);
@@ -542,13 +596,19 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 			}
 
 			MPI::COMM_WORLD.Recv(subpops, conf->nDevices * conf->familySize, Individual_MPI_type, 0, MPI::ANY_TAG, status);
+#if LOG_ENABLED
 			std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Worker waiting for next batch" << std::endl;
+#endif
 		}
 
 		MPI::COMM_WORLD.Barrier();
+#if LOG_ENABLED
 		std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Worker finished agIslands" << std::endl;
+#endif
 	}
 
+#if LOG_ENABLED
 	std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Releasing resources and freeing MPI datatype" << std::endl;
+#endif
 	Individual_MPI_type.Free();
 }
