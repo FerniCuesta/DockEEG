@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 LABEL license="This file is subject to the terms and conditions defined in file 'LICENSE', which is part of Hpmoon repository."
 
@@ -24,11 +24,16 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && apt-get -y upgrade \
     && apt-get -y dist-upgrade \
     && apt-get -y autoremove \
-    && apt-get -y install g++ make libopenmpi-dev ocl-icd-opencl-dev python3 python3-pip \
-    && pip install pyserial rx pandas \
+    && apt-get -y install g++ make libopenmpi-dev ocl-icd-opencl-dev python3 python3-pip python3-venv \
+    && python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install pyserial rx pandas \
     && rm -rf /var/lib/apt/lists/* \
+    && make clean \
     && make -j N_FEATURES=3600
 
-ENTRYPOINT ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost", "./bin/hpmoon", "-conf", "config.xml"]
+ENV PATH="/opt/venv/bin:$PATH"
+
+ENTRYPOINT ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost,localhost", "./bin/hpmoon", "-conf", "config.xml"]
 
 # CMD ["sh", "-c", "python3 script.py && rsync -e ssh *.tar jjescobar@hpmoon.ugr.es:/home/jjescobar"]
