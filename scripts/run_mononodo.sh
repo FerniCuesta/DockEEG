@@ -10,8 +10,8 @@ EXEC="bin/hpmoon"
 WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="../../../logs"
 
-# Cabecera del CSV
-echo "hebras,tiempo_real,memoria_maxima" > $RESULTS
+# Cabecera del CSV (añadimos cpu_percent)
+echo "hebras,tiempo_real,memoria_maxima,cpu_percent" > $RESULTS
 
 for THREADS in "${THREADS_LIST[@]}"
 do
@@ -33,7 +33,8 @@ do
     echo "Extrayendo métricas de $LOGFILE"
     tiempo=$(grep "Elapsed (wall clock) time" "$LOGFILE" | awk '{print $8}')
     memoria=$(grep "Maximum resident set size" "$LOGFILE" | awk '{print $6}')
-    echo "$THREADS,$tiempo,$memoria" >> $RESULTS
+    cpu_percent=$(grep "Percent of CPU this job got" "$LOGFILE" | awk '{print $8}' | tr -d '%')
+    echo "$THREADS,$tiempo,$memoria,$cpu_percent" >> $RESULTS
     echo "Prueba con $THREADS hebras finalizada."
 done
 
