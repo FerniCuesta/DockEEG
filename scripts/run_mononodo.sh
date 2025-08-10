@@ -15,6 +15,9 @@ echo "hebras,tiempo_real,memoria_maxima" > $RESULTS
 
 for THREADS in "${THREADS_LIST[@]}"
 do
+    # Limpieza previa a la ejecución
+    ./scripts/clean_system.sh
+
     # Cambia el valor de <CpuThreads> en config.xml (dentro del WORKDIR)
     sed -i "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
 
