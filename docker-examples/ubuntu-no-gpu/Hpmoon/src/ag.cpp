@@ -416,7 +416,11 @@ void agIslands(Individual *subpops, CLDevice *const devicesObject, const float *
 				{
 					int popIndex = sp * conf->familySize;
 #if LOG_ENABLED
-					std::cout << "Process " << conf->mpiRank << " [" << __func__ << "]: Evolving subpopulation " << sp << std::endl;
+					std::cout << "Process " << conf->mpiRank
+							  << " [Thread " << omp_get_thread_num()
+							  << "/" << omp_get_num_threads()
+							  << "][" << __func__ << "]: Evolving subpopulation "
+							  << sp << std::endl;
 #endif
 					evolve(subpops + popIndex, &nIndsFronts0[sp], &devicesObject[omp_get_thread_num()], trDataBase, selInstances, conf, gMig == 0);
 				}

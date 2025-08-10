@@ -59,6 +59,7 @@ int main(const int argc, const char **argv)
 	int *selInstances;
 	srand((uint)time(NULL) + conf.mpiRank);
 
+	// Master prints configuration parameters
 	if (conf.mpiRank == 0)
 	{
 #if LOG_ENABLED
@@ -76,9 +77,11 @@ int main(const int argc, const char **argv)
 		std::cout << "Process " << conf.mpiRank << " [main]:   trNormalize:          " << conf.trNormalize << std::endl;
 		std::cout << "Process " << conf.mpiRank << " [main]:   tourSize:             " << conf.tourSize << std::endl;
 		std::cout << "Process " << conf.mpiRank << " [main]:   nDevices:             " << conf.nDevices << std::endl;
+		std::cout << "Process " << conf.mpiRank << " [main]:   ompThreads:           " << conf.ompThreads << std::endl;
 #endif
 	}
 
+	// Master with workers
 	if (conf.mpiRank == 0 && conf.mpiSize > 1)
 	{
 #if LOG_ENABLED
@@ -110,6 +113,7 @@ int main(const int argc, const char **argv)
 		const float *const trDataBase = getDataBase(&conf);
 		const float *const transposedTrDataBase = transposeDataBase(trDataBase, &conf);
 
+		// Master works alone
 		if (conf.mpiSize == 1)
 		{
 #if LOG_ENABLED
@@ -118,6 +122,7 @@ int main(const int argc, const char **argv)
 			subpops = createSubpopulations(&conf);
 			selInstances = getCentroids(&conf);
 		}
+		// Workers receive subpopulations and centroids from master
 		else
 		{
 #if LOG_ENABLED
@@ -153,15 +158,18 @@ int main(const int argc, const char **argv)
 		delete[] transposedTrDataBase;
 	}
 
+	if (conf.mpiRank == 0)
+	{
 #if LOG_ENABLED
-	std::cout << "Process " << conf.mpiRank << " [main]: Deleting subpopulations..." << std::endl;
+		std::cout << "Process " << conf.mpiRank << " [main]: Deleting subpopulations..." << std::endl;
 #endif
-	delete[] subpops;
+		delete[] subpops;
 
 #if LOG_ENABLED
-	std::cout << "Process " << conf.mpiRank << " [main]: Deleting selected instances..." << std::endl;
+		std::cout << "Process " << conf.mpiRank << " [main]: Deleting selected instances..." << std::endl;
 #endif
-	delete[] selInstances;
+		delete[] selInstances;
+	}
 
 #if LOG_ENABLED
 	std::cout << "Process " << conf.mpiRank << " [main]: Finalizing MPI environment..." << std::endl;

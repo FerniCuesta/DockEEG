@@ -22,7 +22,8 @@
 #include "tinyxml2.h"
 #include <mpi.h>
 #include <omp.h>
-#include <sstream> // stringstream...
+#include <sstream>		// stringstream...
+#include <log_config.h> // LOG_ENABLED
 
 using namespace tinyxml2;
 
@@ -252,6 +253,11 @@ Config::Config(const int argc, const char **argv)
 		////////////////////// CPU threads value
 		if (parser.isSet("-cth"))
 		{
+#if LOG_ENABLED
+			std::cout << "Process " << MPI::COMM_WORLD.Get_rank()
+					  << " [config]: Setting ompThreads from command-line (-cth): "
+					  << parser.getValue<int>("-cth") << std::endl;
+#endif
 			this->ompThreads = parser.getValue<int>("-cth");
 		}
 		else
@@ -259,10 +265,22 @@ Config::Config(const int argc, const char **argv)
 			XMLElement *aux = parent->NextSiblingElement("CpuThreads");
 			if (aux->GetText() == nullptr)
 			{
+#if LOG_ENABLED
+				std::cout << "Process " << MPI::COMM_WORLD.Get_rank()
+						  << " [config]: CpuThreads not set in XML, using omp_get_num_procs(): "
+						  << omp_get_num_procs() << std::endl;
+#endif
 				this->ompThreads = omp_get_num_procs();
 			}
 			else
 			{
+#if LOG_ENABLED
+				int tmpThreads;
+				aux->QueryIntText(&tmpThreads);
+				std::cout << "Process " << MPI::COMM_WORLD.Get_rank()
+						  << " [config]: Setting ompThreads from XML <CpuThreads>: "
+						  << tmpThreads << std::endl;
+#endif
 				aux->QueryIntText(&(this->ompThreads));
 			}
 		}

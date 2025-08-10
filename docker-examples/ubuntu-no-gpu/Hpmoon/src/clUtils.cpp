@@ -19,6 +19,8 @@
 
 #include "clUtils.h"
 #include <string>
+#include <iostream>
+#include <log_config.h> // LOG_ENABLED
 
 /********************************* Methods ********************************/
 
@@ -63,12 +65,25 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 	cl_int status;
 
 	// Others variables
+#if LOG_ENABLED
+	std::cout << "Process " << conf->mpiRank << " [clUtils]: Searching OpenCL devices..." << std::endl;
+#endif
 	auto allDevices = getAllDevices();
+
+#if LOG_ENABLED
+	std::cout << "Process " << conf->mpiRank << " [clUtils]: Found " << allDevices.size() << " OpenCL devices." << std::endl;
+	std::cout << "Process " << conf->mpiRank << " [clUtils]: conf->nDevices = " << conf->nDevices
+			  << ", conf->ompThreads = " << conf->ompThreads << std::endl;
+	std::cout << "Process " << conf->mpiRank << " [clUtils]: Allocating CLDevice array of size "
+			  << conf->nDevices + (conf->ompThreads > 0) << std::endl;
+#endif
 	CLDevice *devices = new CLDevice[conf->nDevices + (conf->ompThreads > 0)];
 
 	for (int dev = 0; dev < conf->nDevices; ++dev)
 	{
-
+#if LOG_ENABLED
+		std::cout << "Process " << conf->mpiRank << " [clUtils]: Configuring OpenCL device index " << dev << std::endl;
+#endif
 		bool found = false;
 		for (int allDev = 0; allDev < allDevices.size() && !found; ++allDev)
 		{
@@ -201,6 +216,10 @@ CLDevice *createDevices(const float *const trDataBase, const int *const selInsta
 
 	if (conf->ompThreads > 0)
 	{
+#if LOG_ENABLED
+		std::cout << "Process " << conf->mpiRank << " [clUtils]: Adding CPU device with "
+				  << conf->ompThreads << " threads as compute units." << std::endl;
+#endif
 		devices[conf->nDevices].deviceType = CL_DEVICE_TYPE_CPU;
 		devices[conf->nDevices].computeUnits = conf->ompThreads;
 		++(conf->nDevices);
