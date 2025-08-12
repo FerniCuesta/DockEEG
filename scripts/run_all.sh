@@ -1,9 +1,9 @@
 #!/bin/bash
-# scripts/ejecutar_todos.sh
+# scripts/run_all.sh
 
-# Lista de scripts a ejecutar
-./scripts/run_mononodo.sh
-./scripts/run_mononodo_docker.sh
+# List of scripts to execute
+./scripts/run_scalability_single-node_native.sh
+./scripts/run_scalability_single-node_docker.sh
+./scripts/run_scalability_multi-node_native.sh
 
-
-echo "Todos los scripts han finalizado."
+echo "All scripts have finished."
