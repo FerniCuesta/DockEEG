@@ -1,21 +1,24 @@
 #!/bin/bash
 
-NODES=1
-THREADS_LIST=(1 2 4 8 16)
+# scripts/run_scalability_multi-node_docker.sh
+
+NODES_LIST=(1 2 4 8 16)
+THREADS=1
 
 CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
-RESULTS="results/scalability_single-node_docker.csv"
+RESULTS="results/scalability_multi-node_docker.csv"
 EXEC="bin/hpmoon"
 WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="logs"
-IMAGE="hpmoon-ubuntu-no-gpu:v0.0.5"
+IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
 
+# CSV header
 echo "nodes,threads,time,max_memory,cpu_percentage" > $RESULTS
 
-for THREADS in "${THREADS_LIST[@]}"
+for NODES in "${NODES_LIST[@]}"
 do
     echo "------------------------------------------------------------"
-    echo "Starting test with $THREADS threads (Docker)..."
+    echo "Starting test with $NODES nodes and $THREADS threads (Docker)..."
 
     # Clean the system before running the test
     ./scripts/clean_system.sh
@@ -24,14 +27,19 @@ do
     echo "Updating <CpuThreads> to $THREADS in $CONFIG"
     sed -i "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
 
+    # Build the hosts string
+    HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
+
     # Change the logfile name to include the number of threads
-    LOGFILE="$LOGDIR/mononode_docker_${THREADS}threads.log"
+    LOGFILE="$LOGDIR/multi-node_docker_${NODES}nodes_${THREADS}threads.log"
 
     # Run the program in Docker and save the log
     echo "Running the program in Docker and saving log to $LOGFILE"
     /usr/bin/time -v docker run --rm \
-    -v "$PWD/$CONFIG":/root/Hpmoon/config.xml \
-    $IMAGE > "$LOGFILE" 2>&1
+        -v "$PWD/$CONFIG":/root/Hpmoon/config.xml \
+        -w /root/Hpmoon \
+        $IMAGE \
+        mpirun --bind-to none --allow-run-as-root --map-by node --host $HOSTS ./bin/hpmoon -conf config.xml > "$LOGFILE" 2>&1
 
     # Extract metrics from the log file
     echo "Extracting metrics from $LOGFILE"
@@ -42,8 +50,8 @@ do
     # Log the results
     echo "$NODES,$THREADS,$time,$max_memory,$cpu_percentage" >> $RESULTS
 
-    echo "Test with $THREADS threads (Docker) finished."
+    echo "Test with $NODES nodes and $THREADS threads (Docker) finished."
 done
 
 echo "------------------------------------------------------------"
-echo "All Docker tests have finished. Results in $RESULTS"
+echo "All Docker multinode tests have finished. Results in $RESULTS"
