@@ -1,3 +1,19 @@
+#!/bin/bash
+
+# Multi-node scalability test with thread sweep in Native
+
+NODES_LIST=(1 2 4 8 16)
+THREADS_LIST=(1 2 4 8 16)
+
+CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
+RESULTS="results/scalability_multi-node_sweep-threads_native.csv"
+EXEC="bin/hpmoon"
+WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
+LOGDIR="logs"
+
+# CSV header
+echo "nodes,threads,time,max_memory,cpu_percentage" > $RESULTS
+
 for NODES in "${NODES_LIST[@]}"
 do
     for THREADS in "${THREADS_LIST[@]}"

@@ -1,5 +1,4 @@
 #!/bin/bash
-# scripts/run_scalability_multi-node_sweep-threads_docker.sh
 
 # Multi-node scalability test with thread sweep in Docker
 
