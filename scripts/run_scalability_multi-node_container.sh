@@ -1,47 +1,45 @@
 #!/bin/bash
 
-# Multi-node scalability test with thread sweep in Docker
-
+CONTAINER_LIST=("docker" "podman")
 NODES_LIST=(1 2 4 8 16)
-THREADS_LIST=(1 2 4 8 16)
+THREADS=1
 
 CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
-RESULTS="results/scalability_multi-node_sweep-threads_docker.csv"
+RESULTS_DIR="results"
 EXEC="bin/hpmoon"
 WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="logs"
 IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
 
-# CSV header
-echo "nodes,threads,time,max_memory,cpu_percentage" > $RESULTS
+mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
-for NODES in "${NODES_LIST[@]}"
+for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    for THREADS in "${THREADS_LIST[@]}"
-    do
-        TOTAL_THREADS=$((NODES * THREADS))
-        if [ "$TOTAL_THREADS" -gt 16 ]; then
-            echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
-            continue
-        fi
+    RESULTS="$RESULTS_DIR/scalability_multi-node_${CONTAINER}.csv"
+    # CSV header
+    echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
 
+    for NODES in "${NODES_LIST[@]}"
+    do
         echo "------------------------------------------------------------"
-        echo "Starting test with $NODES nodes and $THREADS threads (Docker, total threads: $TOTAL_THREADS)..."
+        echo "Starting test with $NODES nodes and $THREADS threads ($CONTAINER)..."
 
         # Clean the system before running the test
         ./scripts/clean_system.sh
 
-        # Update the number of threads in the configuration file
+        # Change the number of threads in the configuration file
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"
         sed -i "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
 
         # Build the hosts string
         HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-        LOGFILE="$LOGDIR/multinode_docker_sweep_${NODES}nodes_${THREADS}threads.log"
 
-        # Run the program in Docker and save the log
-        echo "Running the program in Docker and saving log to $LOGFILE"
-        /usr/bin/time -v docker run --rm \
+        # Change the logfile name to include the number of threads and container
+        LOGFILE="$LOGDIR/multi-node_${CONTAINER}_${NODES}nodes_${THREADS}threads.log"
+
+        # Run the program in Docker or Podman and save the log
+        echo "Running the program in $CONTAINER and saving log to $LOGFILE"
+        /usr/bin/time -v $CONTAINER run --rm \
             -v "$PWD/$CONFIG":/root/Hpmoon/config.xml \
             -w /root/Hpmoon \
             $IMAGE \
@@ -54,11 +52,11 @@ do
         cpu_percentage=$(grep "Percent of CPU this job got" "$LOGFILE" | awk -F: '{gsub(/%/,""); print $2}' | xargs)
 
         # Log the results
-        echo "$NODES,$THREADS,$time,$max_memory,$cpu_percentage" >> $RESULTS
+        echo "$NODES,$THREADS,$time,$max_memory,$cpu_percentage" >> "$RESULTS"
 
-        echo "Test with $NODES nodes and $THREADS threads (Docker) finished."
+        echo "Test with $NODES nodes and $THREADS threads ($CONTAINER) finished."
     done
 done
 
 echo "------------------------------------------------------------"
-echo "All Docker multi-node sweep tests have finished. Results in $RESULTS"
+echo "All multinode tests have finished. Results in $RESULTS_DIR"
