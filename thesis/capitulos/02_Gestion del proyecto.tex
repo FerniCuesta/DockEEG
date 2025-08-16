@@ -1,28 +1,124 @@
 \chapter{Gestión del Proyecto}\label{cap:planif}
 
+\section{Tareas}
+
+Tareas del OB1 (X):
+
+\begin{itemize}
+    \item 1. X
+    \item 2. Y
+\end{itemize}
+
 \section{Planificación temporal}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{Tarea} & \textbf{Horas estimadas} \\
+        \hline
+        Tarea 1        & 20                       \\
+        Tarea 2        & 15                       \\
+        Tarea 3        & 35                       \\
+        Tarea 4        & 20                       \\
+        Tarea 5        & 10                       \\
+        Tarea 6        & 5                        \\
+        \hline
+        \textbf{Total} & \textbf{105}             \\
+        \hline
+    \end{tabular}
+    \caption{Planificación temporal de tareas y horas estimadas}
+    \label{tab:planificacion-temporal}
+\end{table}
 
 \section{Estimación de costes}
 
-Los recursos necesitamos para llevar a cabo el proyecto son:
+Los recursos necesarios para llevar a cabo el proyecto son:
+
+
+\textbf{Hardware}
 
 \begin{itemize}
-    \item \textbf{Hardware}:
+    \item Ordenador portátil LG Gram 14Z90Q-G.AA75B, este equipo se utilizará para el desarrollo general del trabajo: creación del código para las pruebas, gestión de las pruebas en el clustery creación de la memoria. Cuenta con un procesador Intel Core i7-1260P, 16 GB de RAM y 512 GB de almacenamiento SSD.
 
-          \begin{itemize}
-              \item Ordenador de sobremesa HP Z2 SFF G4 Workstation del Laboratorio de Ciberseguridad de la UGR.
+    \item Ordenador portátil Lenovo Legion 5, será el equipo donde se ejecutarán las pruebas {TODO}. Cuenta con un procesador AMD Ryzen 7 4800H, 16 GB de RAM, 512 GB de almacenamiento SSD y una tarjeta gráfica NVIDIA RTX 2060 con 6 GB de VRAM.
 
-              \item ...
-          \end{itemize}
+    \item Ordenador portátil Apple MacBook Air M4, será el equipo de pruebas en entornos Apple. Cuenta con un procesador Apple M4 de {TODO}.
 
-    \item \textbf{Software}:
-
-          \begin{itemize}
-              \item Sistema operativo Ubuntu 18.04 LTS. Será la distribución Linux principal con la que vamos a trabajar, tanto en forma nativa como en máquinas virtuales.
-
-              \item ...
-
-          \end{itemize}
-
-    \item \textbf{Recursos humanos}.
+    \item Cluster de computación con 4 nodos, cada uno con {TODO}.
 \end{itemize}
+
+Para la ejecución de las pruebas en un cluster de computación, no se ha podido contar en el que pone la Universidad de Granada a disposición de los estudiantes, por lo que se ha optado por hacer uso de un cluster de computación en la nube, concretamente el servicio de Digital Ocean \footnote{\url{https://www.digitalocean.com/}}. Este servicio permite crear y gestionar clusters de computación con diferentes configuraciones de hardware, lo que facilita la ejecución de aplicaciones HPC en entornos distribuidos. Además, ofrece $200\$$ de crédito inicial para estudiantes, lo que permite realizar pruebas y experimentos sin coste adicional.
+
+\textbf{Software}
+
+\begin{itemize}
+    \item Sistema operativo Ubuntu 24.04 LTS. Será la distribución Linux principal con la que vamos a trabajar, tanto en forma nativa, así como en los contenedores y en el cluster de computación.
+
+    \item Sistema operativo Microsoft Windows 11. Será la distribución con la que se ejecutarán las pruebas de compatibilidad y rendimiento en entornos Windows.
+
+    \item Sistema operativo macOS {TODO}. Será la distribución con la que se ejecutarán las pruebas de compatibilidad y rendimiento en entornos Apple.
+\end{itemize}
+
+\textbf{Recursos humanos}.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|r|}
+        \hline
+        \textbf{Dispositivo}             & \textbf{Descripción}             & \textbf{Coste (€)} \\
+        \hline
+        LG Gram 14Z90Q-G.AA75B           & Portátil principal de desarrollo & 1\,200             \\
+        Lenovo Legion 5                  & Portátil de pruebas              & 1\,000             \\
+        Apple MacBook Air M4             & Portátil de pruebas Apple        & 1\,059             \\
+        Cluster de computación (4 nodos) & Nube Digital Ocean               & 400                \\
+        \hline
+        \textbf{Total}                   &                                  & \textbf{2\,600}    \\
+        \hline
+    \end{tabular}
+    \caption{Costes estimados de hardware para el proyecto}
+    \label{tab:costes-hardware}
+\end{table}
+
+En cuanto al software, los sistemas operativos Microsoft Windows 11 y macOS {TODO} vienen incluidos en los dispositivos correspondientes, por lo que no se ha considerado un coste adicional. El sistema operativo Ubuntu 24.04 LTS es de código abierto y gratuito, por lo que tampoco se ha considerado un coste adicional.
+
+\textbf{Recursos humanos}
+
+En la tabla \ref{tab:recursos-humanos} se detalla el coste por hora, las horas estimadas y el coste total de los recursos humanos necesarios para llevar a cabo el proyecto.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|r|r|r|}
+        \hline
+        \textbf{Recurso}        & \textbf{Puesto}  & \textbf{/h} & \textbf{Horas} & \textbf{Total (€)} \\
+        \hline
+        Fernando Cuesta Bueno   & Desarrollador    & 30          & 100            & 3\,000             \\
+        Juan José Escobar Pérez & Tutor/Supervisor & 40          & 50             & 2\,000             \\
+        \hline
+        \textbf{Total}          &                  &             &                & \textbf{5\,000}    \\
+        \hline
+    \end{tabular}
+    \caption{Costes estimados de recursos humanos para el proyecto}
+    \label{tab:recursos-humanos}
+\end{table}
+
+\textbf{Coste total del proyecto}
+
+El coste total del proyecto se calcula sumando los costes de hardware, software y recursos humanos. En la tabla \ref{tab:coste-total} se detalla el coste total estimado.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|r|}
+        \hline
+        \textbf{Concepto} & \textbf{Coste (€)} \\
+        \hline
+        Hardware          & 2\,600             \\
+        Software          & 0                  \\
+        Recursos humanos  & 5\,000             \\
+        \hline
+        \textbf{Total}    & \textbf{7\,600}    \\
+        \hline
+    \end{tabular}
+    \caption{Coste total estimado del proyecto}
+    \label{tab:coste-total}
+\end{table}
