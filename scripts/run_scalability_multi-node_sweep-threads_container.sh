@@ -19,6 +19,7 @@ mkdir -p "$RESULTS_DIR" "$LOGDIR"
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
     RESULTS="$RESULTS_DIR/scalability_multi-node_sweep-threads_${CONTAINER}.csv"
+    
     # CSV header
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
 

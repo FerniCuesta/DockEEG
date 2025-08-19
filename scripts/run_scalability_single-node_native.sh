@@ -5,11 +5,12 @@
 NODES=1
 THREADS_LIST=(1 2 4 8 16)
 
-CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
+BASE_DIR="docker-examples/ubuntu-gpu"
+CONFIG="$BASE_DIR/Hpmoon/config.xml"
 RESULTS_DIR="results"
 RESULTS="$RESULTS_DIR/scalability_single-node_native.csv"
 EXEC="bin/hpmoon"
-WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
+WORKDIR="$BASE_DIR/Hpmoon"
 LOGDIR="logs"
 
 # Create directories if they do not exist
