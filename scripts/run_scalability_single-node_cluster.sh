@@ -4,12 +4,14 @@ set -euo pipefail
 # Ajusta si hace falta
 IMAGE="ferniicueesta/hpmoon-ubuntu-no-gpu:v0.0.6"
 CONFIG_REL="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
+RESULTS_DIR="results"
+RESULTS="$RESULTS_DIR/scalability_single-node_cluster.csv"
 THREADS_LIST=(1 2 4 8 16)
 NAMESPACE="${NAMESPACE:-default}"
 LOGDIR="logs"
-RESULTS="results/scalability_single-node_cluster.csv"
 
-mkdir -p "$LOGDIR" results
+# Create directories if they do not exist
+mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 # Verifica kubectl/context
 if ! command -v kubectl >/dev/null 2>&1; then

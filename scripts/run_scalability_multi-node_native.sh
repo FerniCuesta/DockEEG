@@ -6,10 +6,14 @@ NODES_LIST=(1 2 4 8 16)
 THREADS=1
 
 CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
-RESULTS="results/scalability_multi-node_native.csv"
+RESULTS_DIR="results"
+RESULTS="$RESULTS_DIR/scalability_multi-node_native.csv"
 EXEC="bin/hpmoon"
 WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="logs"
+
+# Create directories if they do not exist
+mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 # CSV header
 echo "nodes,threads,time,max_memory,cpu_percentage" > $RESULTS

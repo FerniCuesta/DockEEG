@@ -7,16 +7,18 @@ NODES_LIST=(1 2 4 8 16)
 THREADS_LIST=(1 2 4 8 16)
 
 CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
+RESULTS_DIR="results"
 EXEC="bin/hpmoon"
 WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="logs"
 IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
 
-mkdir -p results "$LOGDIR"
+# Create directories if they do not exist
+mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    RESULTS="results/scalability_multi-node_sweep-threads_${CONTAINER}.csv"
+    RESULTS="$RESULTS_DIR/scalability_multi-node_sweep-threads_${CONTAINER}.csv"
     # CSV header
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
 

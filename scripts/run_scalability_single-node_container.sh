@@ -5,16 +5,18 @@ NODES=1
 THREADS_LIST=(1 2 4 8 16)
 
 CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
+RESULTS_DIR="results"
 EXEC="bin/hpmoon"
 WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="logs"
 IMAGE="hpmoon-ubuntu-no-gpu:v0.0.5"
 
-mkdir -p results "$LOGDIR"
+# Create directories if they do not exist
+mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    RESULTS="results/scalability_single-node_${CONTAINER}.csv"
+    RESULTS="$RESULTS_DIR/scalability_single-node_${CONTAINER}.csv"
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
 
     for THREADS in "${THREADS_LIST[@]}"

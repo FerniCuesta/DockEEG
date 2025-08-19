@@ -11,6 +11,7 @@ WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
 LOGDIR="logs"
 IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
 
+# Create directories if they do not exist
 mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
