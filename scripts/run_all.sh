@@ -18,13 +18,17 @@ SCRIPTS=(
     "./scripts/single-node/run_ubuntu_native.sh"
     # "./scripts/single-node/run_ubuntu_container.sh"
     # "./scripts/single-node/run_cluster_container.sh"
-    # "./scripts/multi-node/run_ubuntu_native.sh"
+    "./scripts/multi-node/run_ubuntu_native.sh"
     # "./scripts/multi-node/run_ubuntu_container.sh"
     # "./scripts/sweep-threads/run_ubuntu_native.sh"
     # "./scripts/sweep-threads/run_ubuntu_container.sh"
     # "./scripts/sweep-threads/run_no-limit_ubuntu_native.sh"
 )
 
+# Compile program
+./scripts/utils/build_hpmoon.sh "$WORKDIR"
+
+# Execute script list
 for script in "${SCRIPTS[@]}"; do
     $script $PARAMS
 done

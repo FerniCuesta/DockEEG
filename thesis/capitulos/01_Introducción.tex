@@ -1,17 +1,30 @@
 \chapter{Introducción}\label{cap:introduccion}
 
-[La introducción tiene que poner en contexto al lector contando, a modo de historia, el origen y contexto del problema, motivando por qué es necesario abordarlo y finalizando con lo que se propone en el proyecto.]
-\section{Motivación}
- [Opcional si se ha motivado la realización del proyecto en los párrafos anteriores.]
+[La introducción tiene que poner en contexto al lector contando, a modo de historia, el origen y contexto del problema, motivando por qué es necesario abordarlo y finalizando con lo que se propone en el proyecto.
+
+   También es importante que sigas cierto orden y estructura a la hora de presentar (introducir) los contenidos, siguiendo un patrón que atienda al qué, para describir el contexto; al por qué, para dar razón o motivar el trabajo, y al por tanto, para definir objetivos consecuentes con la motivación y el contexto del trabajo.
+]
+
+
+
+\section{Motivación}\label{sec:motivacion}
+[Opcional si se ha motivado la realización del proyecto en los párrafos anteriores.]
 
 \section{Objetivos}\label{sec:objetivos}
 
-[Definir el objetivo principal del proyecto así como objetivos secundarios]
+Analizar la viabilidad y las limitaciones del uso de contenedores, concretamente Docker, para encapsular y ejecutar aplicaciones de alto rendimiento (HPC) en arquitecturas heterogéneas modernas —como big.LITTLE— y entornos multiplataforma, con el fin de facilitar su portabilidad, uso y adopción por parte de la comunidad científica.
+
+\subsection{Objetivos específicos}\label{subsec:objetivos_especificos}
 
 \begin{itemize}
-    \item \textbf{OB1}. Bla bla bla ...
-    \item \textbf{OB2}. Bla bla bla ...
-    \item \textbf{OB3}. Bla bla bla ...
+   \item \textbf{OB1}. Investigar el estado actual de la tecnología de contenedores, especialmente Docker, y su aplicación en entornos de computación de alto rendimiento.
+   \item \textbf{OB2}. Estudiar el comportamiento de aplicaciones HPC ejecutadas en contenedores sobre sistemas operativos mayoritarios: Microsoft Windows, Linux y macOS.
+   \item \textbf{OB3}. Analizar el impacto de las arquitecturas heterogéneas big.LITTLE en el rendimiento de aplicaciones HPC containerizadas, investigando específicamente los problemas de detección de núcleos de eficiencia y el balanceamiento de carga de trabajo entre núcleos de alto rendimiento y eficiencia energética.
+   \item \textbf{OB4}. Analizar las capacidades de Docker para aprovechar recursos hardware avanzados, como núcleos eficientes y GPUs (integradas y dedicadas), en diferentes plataformas y arquitecturas.
+   \item \textbf{OB5}. Detectar y documentar los problemas de compatibilidad y portabilidad que dificultan la creación de imágenes Docker universales para entornos heterogéneos.
+   \item \textbf{OB6}. Proponer recomendaciones o estrategias para mejorar la ejecución y portabilidad de aplicaciones HPC en entornos contenedorizados y heterogéneos.
+   \item \textbf{OB7}. Caracterizar el soporte GPU en contenedores, evaluando las limitaciones y capacidades de Docker para el aprovechamiento de recursos GPU tanto integrados como dedicados, analizando la compatibilidad con diferentes fabricantes (NVIDIA y AMD) y las restricciones impuestas por los drivers.
+   \item \textbf{OB8}. Desarrollar un marco de evaluación que establezca métricas y metodologías de benchmarking para la evaluación sistemática del rendimiento de aplicaciones HPC containerizadas en arquitecturas big.LITTLE.
+   \item \textbf{OB9}. Analizar la reproducibilidad científica, determinando en qué medida la containerización con Docker contribuye a la reproducibilidad y portabilidad de experimentos científicos computacionales.
 \end{itemize}
 
-\cite{smith2023eeg}

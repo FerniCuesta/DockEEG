@@ -41,7 +41,7 @@ do
     echo "Running the program and saving log to $LOGFILE"
     (
         cd "$WORKDIR"
-        /usr/bin/time -v mpirun --bind-to none --allow-run-as-root --map-by node --host localhost ./$EXEC -conf config.xml -ns $THREADS > "$LOGFILE_RELATIVE" 2>&1
+        /usr/bin/time -v mpirun --bind-to none --allow-run-as-root --map-by node --host localhost ./$EXEC -conf config.xml > "$LOGFILE_RELATIVE" 2>&1
     )
 
     # Extract metrics from the log file
