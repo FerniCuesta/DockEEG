@@ -1,32 +1,34 @@
 #!/bin/bash
 
 # Configuration
-BASE_DIR="${1:-docker-examples/ubuntu-no-gpu}"
-RESULTS_DIR="${2:-results}"
-EXEC="${3:-bin/hpmoon}"
-WORKDIR="${4:-$BASE_DIR/Hpmoon}"
+BASE_DIR="${1:-docker-examples/ubuntu-gpu}"
+WORKDIR="${2:-$BASE_DIR/Hpmoon}"
+RESULTS_DIR="${3:-results}"
+EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-IMAGE="hpmoon-ubuntu-no-gpu:v0.0.5"
+IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
 
 # Test parameters
 CONTAINER_LIST=("docker" "podman")
-NODES=1
-THREADS_LIST=(1 2 4 8 16)
+NODES_LIST=(1 2 4 8 16)
+THREADS=1
 
 # Create directories if they do not exist
 mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    RESULTS="$RESULTS_DIR/scalability_single-node_${CONTAINER}.csv"
+    RESULTS="$RESULTS_DIR/multi-node_ubuntu_${CONTAINER}.csv"
+    
+    # CSV header
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
 
-    for THREADS in "${THREADS_LIST[@]}"
+    for NODES in "${NODES_LIST[@]}"
     do
         echo "------------------------------------------------------------"
-        echo "Starting test with $THREADS threads ($CONTAINER)..."
+        echo "Starting test with $NODES nodes and $THREADS threads ($CONTAINER)..."
 
         # Clean the system before running the test
         # ./scripts/clean_system.sh
@@ -35,14 +37,19 @@ do
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"
         sed -i "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
 
+        # Build the hosts string
+        HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
+
         # Change the logfile name to include the number of threads and container
-        LOGFILE="$LOGDIR/mononode_${CONTAINER}_${THREADS}threads.log"
+        LOGFILE="$LOGDIR/multi-node_${CONTAINER}_${NODES}nodes_${THREADS}threads.log"
 
         # Run the program in Docker or Podman and save the log
         echo "Running the program in $CONTAINER and saving log to $LOGFILE"
         /usr/bin/time -v $CONTAINER run --rm \
             -v "$PWD/$CONFIG":/root/Hpmoon/config.xml \
-            $IMAGE > "$LOGFILE" 2>&1
+            -w /root/Hpmoon \
+            $IMAGE \
+            mpirun --bind-to none --allow-run-as-root --map-by node --host $HOSTS ./bin/hpmoon -conf config.xml > "$LOGFILE" 2>&1
 
         # Extract metrics from the log file
         echo "Extracting metrics from $LOGFILE"
@@ -53,9 +60,9 @@ do
         # Log the results
         echo "$NODES,$THREADS,$time,$max_memory,$cpu_percentage" >> "$RESULTS"
 
-        echo "Test with $THREADS threads ($CONTAINER) finished."
+        echo "Test with $NODES nodes and $THREADS threads ($CONTAINER) finished."
     done
 done
 
 echo "------------------------------------------------------------"
-echo "All tests have finished. Results in results/"
+echo "All multinode tests have finished. Results in $RESULTS_DIR"

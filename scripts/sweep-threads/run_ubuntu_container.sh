@@ -2,9 +2,9 @@
 
 # Configuration
 BASE_DIR="${1:-docker-examples/ubuntu-no-gpu}"
-RESULTS_DIR="${2:-results}"
-EXEC="${3:-bin/hpmoon}"
-WORKDIR="${4:-$BASE_DIR/Hpmoon}"
+WORKDIR="${2:-$BASE_DIR/Hpmoon}"
+RESULTS_DIR="${3:-results}"
+EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
@@ -20,7 +20,7 @@ mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    RESULTS="$RESULTS_DIR/scalability_multi-node_sweep-threads_${CONTAINER}.csv"
+    RESULTS="$RESULTS_DIR/sweep-threads_ubuntu_${CONTAINER}.csv"
     
     # CSV header
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"

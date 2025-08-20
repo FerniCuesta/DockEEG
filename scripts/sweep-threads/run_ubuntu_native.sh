@@ -2,13 +2,13 @@
 
 # Configuration
 BASE_DIR="${1:-docker-examples/ubuntu-gpu}"
-RESULTS_DIR="${2:-results}"
-EXEC="${3:-bin/hpmoon}"
-WORKDIR="${4:-$BASE_DIR/Hpmoon}"
+WORKDIR="${2:-$BASE_DIR/Hpmoon}"
+RESULTS_DIR="${3:-results}"
+EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/scalability_multi-node_sweep-threads_no-limit_native.csv"
+RESULTS="$RESULTS_DIR/sweep-threads_ubuntu_native.csv"
 
 # Test parameters
 NODES_LIST=(1 2 4 8 16)
@@ -25,12 +25,16 @@ do
     for THREADS in "${THREADS_LIST[@]}"
     do
         TOTAL_THREADS=$((NODES * THREADS))
-        
+        if [ "$TOTAL_THREADS" -gt 16 ]; then
+            echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
+            continue
+        fi
+
         echo "------------------------------------------------------------"
         echo "Starting test with $NODES nodes and $THREADS threads (total threads: $TOTAL_THREADS)..."
 
         # Clean the system before running the test
-        # ./scripts/clean_system.sh
+        ./scripts/clean_system.sh
 
         # Update the number of threads in the configuration file
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"
