@@ -229,8 +229,10 @@ pdfproducer = {pdflatex}
 %
 %
 %%\nocite{*}
-%\bibliography{bibliografia/bibliografia}\addcontentsline{toc}{chapter}{Bibliografía}
-%\bibliographystyle{miunsrturl}
+% Uncomment the following lines and add at least one \cite{} in your chapters to avoid the error,
+% or keep them commented if you do not use citations.
+% \bibliography{bibliografia/bibliografia}\addcontentsline{toc}{chapter}{Bibliografía}
+% \bibliographystyle{miunsrturl}
 %
 \appendix
 \input{capitulos/A_gestion}
@@ -239,8 +241,8 @@ pdfproducer = {pdflatex}
 % \addcontentsline{toc}{chapter}{Glosario}
 % \printglossary
 
-\bibliographystyle{IEEEtran}
-\bibliography{referencias}\addcontentsline{toc}{chapter}{Bibliografía}
+% \bibliographystyle{IEEEtran}
+% \bibliography{referencias}\addcontentsline{toc}{chapter}{Bibliografía}
 \chapter*{}
 \thispagestyle{empty}
 
