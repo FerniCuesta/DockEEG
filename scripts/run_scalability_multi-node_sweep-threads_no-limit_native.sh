@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# Multi-node scalability test with thread sweep in Native
+# Configuration
+BASE_DIR="${1:-docker-examples/ubuntu-gpu}"
+RESULTS_DIR="${2:-results}"
+EXEC="${3:-bin/hpmoon}"
+WORKDIR="${4:-$BASE_DIR/Hpmoon}"
+LOGDIR="${5:-logs}"
 
+CONFIG="$WORKDIR/config.xml"
+RESULTS="$RESULTS_DIR/scalability_multi-node_sweep-threads_no-limit_native.csv"
+
+# Test parameters
 NODES_LIST=(1 2 4 8 16)
 THREADS_LIST=(1 2 4 8 16)
-
-BASE_DIR="docker-examples/ubuntu-gpu"
-CONFIG="$BASE_DIR/Hpmoon/config.xml"
-RESULTS_DIR="results"
-RESULTS="$RESULTS_DIR/scalability_multi-node_sweep-threads_no-limit_native.csv"
-EXEC="bin/hpmoon"
-WORKDIR="$BASE_DIR/Hpmoon"
-LOGDIR="logs"
 
 # Create directories if they do not exist
 mkdir -p "$RESULTS_DIR" "$LOGDIR"
@@ -29,7 +30,7 @@ do
         echo "Starting test with $NODES nodes and $THREADS threads (total threads: $TOTAL_THREADS)..."
 
         # Clean the system before running the test
-        ./scripts/clean_system.sh
+        # ./scripts/clean_system.sh
 
         # Update the number of threads in the configuration file
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"

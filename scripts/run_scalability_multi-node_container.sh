@@ -1,15 +1,20 @@
 #!/bin/bash
 
+# Configuration
+BASE_DIR="${1:-docker-examples/ubuntu-gpu}"
+RESULTS_DIR="${2:-results}"
+EXEC="${3:-bin/hpmoon}"
+WORKDIR="${4:-$BASE_DIR/Hpmoon}"
+LOGDIR="${5:-logs}"
+
+CONFIG="$WORKDIR/config.xml"
+RESULTS="$RESULTS_DIR/scalability_multi-node_native.csv"
+IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
+
+# Test parameters
 CONTAINER_LIST=("docker" "podman")
 NODES_LIST=(1 2 4 8 16)
 THREADS=1
-
-CONFIG="docker-examples/ubuntu-no-gpu/Hpmoon/config.xml"
-RESULTS_DIR="results"
-EXEC="bin/hpmoon"
-WORKDIR="docker-examples/ubuntu-no-gpu/Hpmoon"
-LOGDIR="logs"
-IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
 
 # Create directories if they do not exist
 mkdir -p "$RESULTS_DIR" "$LOGDIR"
@@ -27,7 +32,7 @@ do
         echo "Starting test with $NODES nodes and $THREADS threads ($CONTAINER)..."
 
         # Clean the system before running the test
-        ./scripts/clean_system.sh
+        # ./scripts/clean_system.sh
 
         # Change the number of threads in the configuration file
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"
