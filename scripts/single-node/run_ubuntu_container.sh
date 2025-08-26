@@ -20,7 +20,7 @@ mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    RESULTS="$RESULTS_DIR/single-node_ubuntu_${CONTAINER}.csv"
+    RESULTS="$RESULTS_DIR/single-node/ubuntu_${CONTAINER}.csv"
 
     # CSV header
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
@@ -38,7 +38,7 @@ do
         sed -i "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
 
         # Change the logfile name to include the number of threads and container
-        LOGFILE="$LOGDIR/mononode_${CONTAINER}_${THREADS}threads.log"
+        LOGFILE="$LOGDIR/single-node/ubuntu_${CONTAINER}_${THREADS}threads.log"
 
         # Run the program in Docker or Podman and save the log
         echo "Running the program in $CONTAINER and saving log to $LOGFILE"

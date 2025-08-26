@@ -8,7 +8,7 @@ EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/single-node_ubuntu_native.csv"
+RESULTS="$RESULTS_DIR/single-node/ubuntu_native.csv"
 
 # Test parameters
 NODES=1
@@ -34,7 +34,7 @@ do
     sed -i "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
 
     # Change the logfile name to include the number of threads
-    LOGFILE="$LOGDIR/single-node_${THREADS}threads.log"
+    LOGFILE="$LOGDIR/single-node/ubuntu_native_${THREADS}threads.log"
     LOGFILE_RELATIVE="$(realpath --relative-to="$WORKDIR" "$LOGFILE")"
 
     # Run the program

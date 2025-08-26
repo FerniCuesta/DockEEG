@@ -20,7 +20,7 @@ mkdir -p "$RESULTS_DIR" "$LOGDIR"
 
 for CONTAINER in "${CONTAINER_LIST[@]}"
 do
-    RESULTS="$RESULTS_DIR/sweep-threads_ubuntu_${CONTAINER}.csv"
+    RESULTS="$RESULTS_DIR/sweep-threads/ubuntu_${CONTAINER}.csv"
     
     # CSV header
     echo "nodes,threads,time,max_memory,cpu_percentage" > "$RESULTS"
@@ -47,7 +47,7 @@ do
 
             # Build the hosts string
             HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-            LOGFILE="$LOGDIR/multinode_${CONTAINER}_sweep_${NODES}nodes_${THREADS}threads.log"
+            LOGFILE="$LOGDIR/sweep-threads/ubuntu_${CONTAINER}_sweep_${NODES}nodes_${THREADS}threads.log"
 
             # Run the program in Docker or Podman and save the log
             echo "Running the program in $CONTAINER and saving log to $LOGFILE"

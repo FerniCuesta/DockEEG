@@ -8,7 +8,7 @@ EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/multi-node_ubuntu_native.csv"
+RESULTS="$RESULTS_DIR/multi-node/ubuntu_native.csv"
 
 # Test parameters
 NODES_LIST=(1 2 4 8 16)
@@ -37,7 +37,7 @@ do
     HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
 
     # Change the logfile name to include the number of threads
-    LOGFILE="$LOGDIR/multi-node_${NODES}nodes_${THREADS}threads.log"
+    LOGFILE="$LOGDIR/multi-node/ubuntu_native_${NODES}nodes_${THREADS}threads.log"
     LOGFILE_RELATIVE="$(realpath --relative-to="$WORKDIR" "$LOGFILE")"
 
     # Run the program in Docker and save the log

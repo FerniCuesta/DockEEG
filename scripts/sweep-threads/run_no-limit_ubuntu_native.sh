@@ -8,7 +8,7 @@ EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/sweep-threads_no-limit_ubuntu_native.csv"
+RESULTS="$RESULTS_DIR/sweep-threads/no-limit_ubuntu_native.csv"
 
 # Test parameters
 NODES_LIST=(1 2 4 8 16)
@@ -38,7 +38,7 @@ do
 
         # Build the hosts string
         HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-        LOGFILE="$LOGDIR/multinode_sweep_${NODES}nodes_${THREADS}threads.log"
+        LOGFILE="$LOGDIR/sweep-threads/no-limit_ubuntu_native_${NODES}nodes_${THREADS}threads.log"
         LOGFILE_RELATIVE="$(realpath --relative-to="$WORKDIR" "$LOGFILE")"
 
         # Run the program and save the log
