@@ -62,4 +62,4 @@ do
 done
 
 echo "------------------------------------------------------------"
-echo "All multinode tests have finished. Results in $RESULTS_DIR"
+echo "All Mac Multi-Node Container tests have finished. Results in $RESULTS"

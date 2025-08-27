@@ -57,4 +57,4 @@ do
 done
 
 echo "------------------------------------------------------------"
-echo "All tests have finished. Results in $RESULTS"
+echo "All Ubuntu Single-Node Native tests have finished. Results in $RESULTS"
