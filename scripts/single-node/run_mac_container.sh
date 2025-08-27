@@ -32,14 +32,14 @@ do
 
         # Change the number of threads in the configuration file (macOS sed is different)
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"
-        sed -i '' "s/<CpuThreads>[0-9]\+<\/CpuThreads>/<CpuThreads>${THREADS}<\/CpuThreads>/" "$CONFIG"
+        sed -i '' -E "s|<CpuThreads>[[:space:]]*[0-9]+[[:space:]]*</CpuThreads>|<CpuThreads>${THREADS}</CpuThreads>|" "$CONFIG"
 
         # Change the logfile name to include the number of threads and container
         LOGFILE="$LOGDIR/single-node/mac_${CONTAINER}_${THREADS}threads.log"
 
         # Run the program in Docker or Podman and save the log
         echo "Running the program in $CONTAINER and saving log to $LOGFILE"
-        /usr/bin/time -v $CONTAINER run --rm \
+        gtime -v $CONTAINER run --rm \
             -v "$PWD/$CONFIG":/root/Hpmoon/config.xml \
             $IMAGE > "$LOGFILE" 2>&1
 
