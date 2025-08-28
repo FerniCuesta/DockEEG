@@ -8,7 +8,7 @@ EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/sweep-threads/no-limit_ubuntu_native.csv"
+RESULTS="$RESULTS_DIR/experiments/limit_ubuntu_native.csv"
 
 # Test parameters
 NODES_LIST=(1 2 4 8 16)
@@ -25,6 +25,10 @@ do
     for THREADS in "${THREADS_LIST[@]}"
     do
         TOTAL_THREADS=$((NODES * THREADS))
+        if [ "$TOTAL_THREADS" -gt 16 ]; then
+            echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
+            continue
+        fi
         
         echo "------------------------------------------------------------"
         echo "Starting test with $NODES nodes and $THREADS threads (total threads: $TOTAL_THREADS)..."
@@ -38,7 +42,7 @@ do
 
         # Build the hosts string
         HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-        LOGFILE="$LOGDIR/sweep-threads/no-limit_ubuntu_native_${NODES}nodes_${THREADS}threads.log"
+        LOGFILE="$LOGDIR/experiments/limit_ubuntu_native_${NODES}nodes_${THREADS}threads.log"
         LOGFILE_RELATIVE="$(realpath --relative-to="$WORKDIR" "$LOGFILE")"
 
         # Run the program and save the log
