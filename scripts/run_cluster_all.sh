@@ -14,7 +14,7 @@ PARAMS="$BASE_DIR $WORKDIR $RESULTS_DIR $EXEC $LOGDIR"
 SCRIPTS=(
     "./scripts/single-node/run_cluster_container.sh"
     # "./scripts/multi-node/run_cluster_container.sh"
-    # "./scripts/sweep-threads/run_cluster_container.sh"
+    # "./scripts/thread-sweep/run_cluster_container.sh"
 )
 
 # Compile program

@@ -16,8 +16,8 @@ SCRIPTS=(
     # "./scripts/single-node/run_ubuntu_container.sh"
     # "./scripts/multi-node/run_ubuntu_native.sh"
     # "./scripts/multi-node/run_ubuntu_container.sh"
-    "./scripts/sweep-threads/run_ubuntu_native.sh"
-    "./scripts/sweep-threads/run_ubuntu_container.sh"
+    "./scripts/thread-sweep/run_ubuntu_native.sh"
+    "./scripts/thread-sweep/run_ubuntu_container.sh"
 )
 
 # Compile program

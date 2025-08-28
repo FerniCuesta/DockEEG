@@ -14,7 +14,7 @@ $Params = "$BaseDir $WorkDir $ResultsDir $Exec $LogDir"
 $Scripts = @(
     ".\scripts\single-node\run_windows_container.ps1"
     # ".\scripts\multi-node\run_windows_container.ps1"
-    # ".\scripts\sweep-threads\run_windows_container.ps1"
+    # ".\scripts\thread-sweep\run_windows_container.ps1"
 )
 
 # Execute script list

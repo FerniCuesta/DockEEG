@@ -8,7 +8,7 @@ EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/sweep-threads/ubuntu_native.csv"
+RESULTS="$RESULTS_DIR/thread-sweep/ubuntu_native.csv"
 
 # Test parameters
 NODES_LIST=(1 2 4 8 16)
@@ -43,7 +43,7 @@ do
 
         # Build the hosts string
         HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-        LOGFILE="$LOGDIR/sweep-threads/ubuntu_${NODES}nodes_${THREADS}threads.log"
+        LOGFILE="$LOGDIR/thread-sweep/ubuntu_${NODES}nodes_${THREADS}threads.log"
         LOGFILE_RELATIVE="$(realpath --relative-to="$WORKDIR" "$LOGFILE")"
 
         # Run the program and save the log
@@ -67,4 +67,4 @@ do
 done
 
 echo "------------------------------------------------------------"
-echo "All Ubuntu sweep-threads native tests have finished. Results in $RESULTS_DIR/"
+echo "All Ubuntu thread-sweep native tests have finished. Results in $RESULTS_DIR/"
