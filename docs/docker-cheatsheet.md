@@ -24,10 +24,10 @@ docker image ls -a
 
 ### Construir imagen
 
-Construye una imagen usando el Dockerfile especificado (`-f Dockerfile.dev`) y le asigna un nombre y etiqueta (`-t nombre:tag`). El punto (`.`) indica el contexto de construcción (directorio actual).
+Construye una imagen usando el Dockerfile especificado (`-f Dockerfile`) y le asigna un nombre y etiqueta (`-t nombre:tag`). El punto (`.`) indica el contexto de construcción (directorio actual).
 
 ```bash
-docker build -t nombre:tag -f Dockerfile.dev .
+docker build -t nombre:tag -f Dockerfile .
 ```
 
 ---

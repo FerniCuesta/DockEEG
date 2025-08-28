@@ -8,7 +8,7 @@ EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-IMAGE="hpmoon-ubuntu-no-gpu:v0.0.6"
+IMAGE="hpmoon-ubuntu-no-gpu:v0.0.7"
 
 # Test parameters
 CONTAINER_LIST=("docker" "podman")
@@ -30,10 +30,11 @@ do
         for THREADS in "${THREADS_LIST[@]}"
         do
             TOTAL_THREADS=$((NODES * THREADS))
-            if [ "$TOTAL_THREADS" -gt 16 ]; then
-                echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
-                continue
-            fi
+            # If commented it allows to exceed the limit of 16 threads
+            # if [ "$TOTAL_THREADS" -gt 16 ]; then
+            #     echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
+            #     continue
+            # fi
 
             echo "------------------------------------------------------------"
             echo "Starting test with $NODES nodes and $THREADS threads ($CONTAINER, total threads: $TOTAL_THREADS)..."
@@ -47,7 +48,7 @@ do
 
             # Build the hosts string
             HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-            LOGFILE="$LOGDIR/sweep-threads/ubuntu_${CONTAINER}_sweep_${NODES}nodes_${THREADS}threads.log"
+            LOGFILE="$LOGDIR/sweep-threads/ubuntu_${CONTAINER}_${NODES}nodes_${THREADS}threads.log"
 
             # Run the program in Docker or Podman and save the log
             echo "Running the program in $CONTAINER and saving log to $LOGFILE"

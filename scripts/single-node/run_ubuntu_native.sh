@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-BASE_DIR="${1:-docker-examples/ubuntu-gpu}"
+BASE_DIR="${1:-docker-examples/ubuntu-no-gpu}"
 WORKDIR="${2:-$BASE_DIR/Hpmoon}"
 RESULTS_DIR="${3:-results}"
 EXEC="${4:-bin/hpmoon}"

@@ -12,12 +12,8 @@ PARAMS="$BASE_DIR $WORKDIR $RESULTS_DIR $EXEC $LOGDIR"
 
 # Script list
 SCRIPTS=(
-    # "./scripts/single-node/run_ubuntu_native.sh"
-    # "./scripts/single-node/run_ubuntu_container.sh"
-    # "./scripts/multi-node/run_ubuntu_native.sh"
-    # "./scripts/multi-node/run_ubuntu_container.sh"
-    "./scripts/sweep-threads/run_ubuntu_native.sh"
-    "./scripts/sweep-threads/run_ubuntu_container.sh"
+    "./scripts/experiments/run_limit_ubuntu_native.sh"
+    "./scripts/experiments/run_no-limit_ubuntu_native.sh"
 )
 
 # Compile program
