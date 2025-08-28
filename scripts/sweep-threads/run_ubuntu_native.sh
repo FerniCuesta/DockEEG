@@ -25,16 +25,17 @@ do
     for THREADS in "${THREADS_LIST[@]}"
     do
         TOTAL_THREADS=$((NODES * THREADS))
-        if [ "$TOTAL_THREADS" -gt 16 ]; then
-            echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
-            continue
-        fi
+        # If commented it allows to exceed the limit of 16 threads
+        # if [ "$TOTAL_THREADS" -gt 16 ]; then
+        #     echo "Skipping: $NODES nodes x $THREADS threads = $TOTAL_THREADS (exceeds the limit of 16)"
+        #     continue
+        # fi
 
         echo "------------------------------------------------------------"
         echo "Starting test with $NODES nodes and $THREADS threads (total threads: $TOTAL_THREADS)..."
 
         # Clean the system before running the test
-        ./scripts/clean_system.sh
+        # ./scripts/clean_system.sh
 
         # Update the number of threads in the configuration file
         echo "Updating <CpuThreads> to $THREADS in $CONFIG"

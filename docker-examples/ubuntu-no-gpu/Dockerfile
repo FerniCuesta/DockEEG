@@ -24,10 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && apt-get -y upgrade \
     && apt-get -y dist-upgrade \
     && apt-get -y autoremove \
-    && apt-get -y install g++ make libopenmpi-dev ocl-icd-opencl-dev python3 python3-pip python3-venv \
-    && python3 -m venv /opt/venv \
-    && /opt/venv/bin/pip install --upgrade pip \
-    && /opt/venv/bin/pip install pyserial rx pandas \
+    && apt-get -y install g++ make libopenmpi-dev ocl-icd-opencl-dev \
     && rm -rf /var/lib/apt/lists/* \
     && make clean \
     && make -j N_FEATURES=3600
