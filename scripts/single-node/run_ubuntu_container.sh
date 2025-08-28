@@ -60,4 +60,4 @@ do
 done
 
 echo "------------------------------------------------------------"
-echo "All tests have finished. Results in results/"
+echo "All Ubuntu Single-Node Container tests have finished. Results in $RESULTS"
