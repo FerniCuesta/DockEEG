@@ -65,3 +65,6 @@ do
         echo "Test with $NODES nodes and $THREADS threads finished."
     done
 done
+
+echo "------------------------------------------------------------"
+echo "All Ubuntu sweep-threads native tests have finished. Results in $RESULTS_DIR/"

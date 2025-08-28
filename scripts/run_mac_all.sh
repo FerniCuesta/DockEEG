@@ -12,9 +12,9 @@ PARAMS="$BASE_DIR $WORKDIR $RESULTS_DIR $EXEC $LOGDIR"
 
 # Script list
 SCRIPTS=(
-    "./scripts/single-node/run_mac_container.sh"
+    # "./scripts/single-node/run_mac_container.sh"
     # "./scripts/multi-node/run_mac_container.sh"
-    # "./scripts/sweep-threads/run_mac_container.sh"
+    "./scripts/sweep-threads/run_mac_container.sh"
 )
 
 # Execute script list
