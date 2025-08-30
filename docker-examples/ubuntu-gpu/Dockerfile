@@ -19,19 +19,24 @@ ENV DEBIAN_FRONTEND=noninteractive
 COPY Hpmoon /root/Hpmoon
 WORKDIR /root/Hpmoon
 
+RUN apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y install software-properties-common
+
+RUN add-apt-repository ppa:graphics-drivers/ppa
+
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && apt-get -y update \
     && apt-get -y upgrade \
     && apt-get -y dist-upgrade \
     && apt-get -y autoremove \
-    && apt-get -y install g++ make libopenmpi-dev ocl-icd-opencl-dev python3 python3-pip python3-venv \
-    && python3 -m venv /opt/venv \
-    && /opt/venv/bin/pip install --upgrade pip \
-    && /opt/venv/bin/pip install pyserial rx pandas \
+    && apt-get -y install g++ make libopenmpi-dev ocl-icd-opencl-dev \
+    && apt-get -y install nvidia-driver-575-open \
+    && apt-get -y install clinfo \
     && rm -rf /var/lib/apt/lists/* \
     && make clean \
     && make -j N_FEATURES=3600
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-ENTRYPOINT ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost", "./bin/hpmoon", "-conf", "config.xml"]
+CMD ["mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node", "--host", "localhost", "./bin/hpmoon", "-conf", "config.xml"]

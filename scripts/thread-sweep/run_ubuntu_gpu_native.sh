@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Configuration
-BASE_DIR="${1:-docker-examples/ubuntu-no-gpu}"
+BASE_DIR="${1:-docker-examples/ubuntu-gpu}"
 WORKDIR="${2:-$BASE_DIR/Hpmoon}"
 RESULTS_DIR="${3:-results}"
 EXEC="${4:-bin/hpmoon}"
 LOGDIR="${5:-logs}"
 
 CONFIG="$WORKDIR/config.xml"
-RESULTS="$RESULTS_DIR/thread-sweep/ubuntu_native.csv"
+RESULTS="$RESULTS_DIR/thread-sweep/ubuntu_native_gpu.csv"
 
 # Test parameters
 NODES_LIST=(1 2 4 8 16)
@@ -43,7 +43,7 @@ do
 
         # Build the hosts string
         HOSTS=$(yes localhost | head -n $NODES | paste -sd, -)
-        LOGFILE="$LOGDIR/thread-sweep/ubuntu_native_${NODES}nodes_${THREADS}threads.log"
+        LOGFILE="$LOGDIR/thread-sweep/ubuntu_native_gpu_${NODES}nodes_${THREADS}threads.log"
         LOGFILE_RELATIVE="$(realpath --relative-to="$WORKDIR" "$LOGFILE")"
 
         # Run the program and save the log
