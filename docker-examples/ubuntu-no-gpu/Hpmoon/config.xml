@@ -33,66 +33,66 @@
 	<Devices>
 	
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<NDevices>0</NDevices>
-		<CpuThreads>1</CpuThreads>
+		<CpuThreads>16</CpuThreads>
 
 		<!-- Worker 0 (MPI Process 1) -->
 		<!-- <NDevices>0</NDevices>
 		<Names>Apple M1 Pro,GeForce GTX 770</Names>
 		<ComputeUnits>16</ComputeUnits>
 		<WiLocal>256</WiLocal>
-		<CpuThreads>1</CpuThreads> -->
+		<CpuThreads>16</CpuThreads> -->
 
 		<!-- Worker 1 (MPI Process 2) -->
 		<!-- <NDevices>0</NDevices>
 		<Names>Quadro K2000</Names>
 		<ComputeUnits>2</ComputeUnits>
 		<WiLocal>1024</WiLocal>
-		<CpuThreads>1</CpuThreads> -->
+		<CpuThreads>16</CpuThreads> -->
 
 		<!-- Worker N (MPI Process N+1) -->
 		<!-- <NDevices>X</NDevices> -->

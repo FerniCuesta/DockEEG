@@ -70,4 +70,4 @@ do
 done
 
 echo "------------------------------------------------------------"
-echo "All Mac thread-sweep container tests have finished. Results in $RESULTS_DIR/"
+echo "All Mac thread-sweep container tests have finished. Results in $RESULTS/"

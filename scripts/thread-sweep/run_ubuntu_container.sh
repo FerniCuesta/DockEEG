@@ -73,4 +73,4 @@ do
 done
 
 echo "------------------------------------------------------------"
-echo "All Ubuntu thread-sweep container tests have finished. Results in $RESULTS_DIR/"
+echo "All Ubuntu thread-sweep container tests have finished. Results in $RESULTS"
