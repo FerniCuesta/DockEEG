@@ -11,7 +11,7 @@ En esta sección se presenta la propuesta general del trabajo, explicando la met
 HPMoon es un software desarrollado en el marco de la tesis doctoral \textit{``Energy-Efficient Parallel and Distributed Multi-Objective Feature Selection on Heterogeneous Architectures''}, defendida por Juan José Escobar Pérez el 20 de febrero de 2020 en la Universidad de Granada. El programa se concibe como una herramienta del proyecto \textit{e-hpMOBE} y está disponible públicamente en un repositorio de GitHub. Su desarrollo fue apoyado por proyectos de investigación nacionales financiados por el Ministerio de Ciencia, Innovación y Universidades (MICIU) y fondos FEDER, así como por una beca de NVIDIA. Esta aplicación se utiliza como caso de estudio en este TFG por su significativa relevancia científica y tecnológica en el ámbito de la computación de alto rendimiento (\acs{HPC}).
 
 \subsection{Objetivo de HPMoon}\label{subsec:hpm_objetivo}
-El objetivo principal de HPMoon es abordar la clasificación no supervisada de señales de Electroencefalograma (\acs{EEG}) en tareas de Interfaz Cerebro-Computadora (\acs{BCI}). Este es un problema de alta dimensionalidad y computacionalmente costoso debido a las características de las señales \acs{EEG} y al gran número de características que pueden contener. La aplicación combina la selección de características multiobjetivo (\acs{MOFS}) con algoritmos paralelos y energéticamente eficientes, buscando minimizar el tiempo de ejecución y el consumo de energía, cruciales en problemas de \acs{Machine Learning} y bioingeniería que requieren plataformas de alto rendimiento.
+El objetivo principal de HPMoon es abordar la clasificación no supervisada de señales de Electroencefalograma (\acs{EEG}) en tareas de Interfaz Cerebro-Computadora (\acs{BCI}). Este es un problema de alta dimensionalidad y computacionalmente costoso debido a las características de las señales \acs{EEG} y al gran número de características que pueden contener. La aplicación combina la selección de características multiobjetivo (\acs{MOFS}) con algoritmos paralelos y energéticamente eficientes, buscando minimizar el tiempo de ejecución y el consumo de energía, cruciales en problemas de \textit{Machine Learning} y bioingeniería que requieren plataformas de alto rendimiento.
 
 \subsection{Arquitectura y funcionamiento}\label{subsec:hpm_funcionamiento}
 HPMoon implementa un procedimiento paralelo multinivel y energéticamente eficiente para la selección de características multiobjetivo (\acs{MOFS}). La versión descrita como la ``más eficiente desarrollada hasta la fecha'' es ODGA. La arquitectura y funcionamiento se pueden desglosar en:
@@ -191,7 +191,7 @@ Se realizarán ejecuciones exploratorias con distintas configuraciones de subpob
     \item Para cada configuración de subpoblaciones, se evaluará con 1, 2, 4, 8 y 16 hebras por subpoblación.
 \end{itemize}
 
-\subsubsection{Estudio del comportamiento al requerir más hebras de las disponibles}
+\subsubsection{Estudio del rendimiento al requerir más hebras de las disponibles}
 
 En el dispositivo Lenovo Legion 5, que dispone de un máximo de 16 hebras, se evaluará cómo se comporta la aplicación al requerir un número de hebras mayor al disponible:
 
@@ -205,9 +205,28 @@ En el dispositivo Lenovo Legion 5, que dispone de un máximo de 16 hebras, se ev
     \item El objetivo es determinar si es necesario limitar el número de hebras solicitadas en los tests posteriores.
 \end{itemize}
 
-\subsubsection{Experimentos de escalabilidad y barrido de hebras}
+\subsubsection{Estudio del rendimiento al utilizar la misma GPU en todos los nodos}
 
-Una vez definido el número óptimo de subpoblaciones y el rango válido de hebras, se realizarán los siguientes experimentos:
+En un escenario multinodo local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, surge la necesidad de analizar cómo afecta el uso de la GPU al rendimiento de HPMoon. Dado que el dispositivo dispone de una única tarjeta gráfica, se plantean dos configuraciones posibles:
+
+\begin{itemize}
+    \item \textbf{Acceso compartido a la GPU}: todos los nodos utilizan la misma tarjeta gráfica del dispositivo. Esta configuración permite evaluar el impacto de la contención del recurso gráfico cuando varios procesos intentan ejecutar cálculos en paralelo sobre la misma GPU.
+    \item \textbf{GPU asignada a un único nodo}: únicamente un nodo accede a la GPU, mientras que el resto de nodos realiza los cálculos únicamente con la CPU. Este escenario permite medir si centralizar el uso de la GPU en un único nodo mejora la eficiencia global frente al acceso compartido.
+\end{itemize}
+
+El objetivo de este estudio es determinar cuál de estas dos estrategias proporciona un mejor rendimiento en configuraciones multinodo locales:
+
+\begin{itemize}
+    \item Evaluar la eficiencia de ejecución en términos de tiempo total de cálculo y utilización de recursos.
+    \item Analizar la escalabilidad de la aplicación cuando se incrementa el número de nodos, comparando ambos escenarios.
+    \item Extraer recomendaciones sobre la asignación de la GPU en futuras pruebas multinodo, considerando la relación entre rendimiento y complejidad de gestión de los recursos.
+\end{itemize}
+
+Con ello, se podrá establecer si, en entornos multinodo locales con una única GPU disponible, resulta más eficiente que todos los nodos compartan la tarjeta gráfica o si es preferible que solo uno de ellos la utilice.
+
+\subsubsection{Experimentos de escalabilidad}
+
+Una vez definido el número óptimo de subpoblaciones, el rango válido de hebras y la estrategia de uso de la GPU en entornos multinodo, se realizarán los siguientes experimentos:
 
 \begin{itemize}
     \item \textbf{Escalabilidad mononodo:} con un único nodo fijo, se escala el número de hebras.
