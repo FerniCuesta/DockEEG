@@ -1,35 +1,127 @@
-\chapter{Gestión del Proyecto}\label{cap:planif}
+\chapter{Gestión del Proyecto}\label{cap:gestion_proyecto}
 
-\section{Tareas}
+\section{Tareas}\label{sec:tareas}
 
-Tareas del OB1 (X):
+\subsubsection{Tareas de organización del proyecto}\label{subsubsec:tareas_organizacion}
+\begin{itemize}
+    \item \textbf{Definición de objetivos y alcance del proyecto} \\
+          Establecer claramente los objetivos principales y específicos del proyecto, así como el alcance y las limitaciones.
+
+    \item \textbf{Planificación temporal} \\
+          Desarrollar un cronograma detallado que incluya todas las fases del proyecto, desde la investigación inicial hasta la redacción final del informe.
+
+    \item \textbf{Asignación de recursos} \\
+          Identificar y asignar los recursos necesarios, tanto humanos como materiales, para llevar a cabo el proyecto de manera eficiente.
+
+    \item \textbf{Gestión de riesgos} \\
+          Identificar posibles riesgos que puedan afectar al desarrollo del proyecto y establecer planes de contingencia para mitigarlos.
+
+    \item \textbf{Comunicación y seguimiento} \\
+          Establecer canales de comunicación efectivos entre todos los miembros del equipo y realizar un seguimiento regular del progreso del proyecto para asegurar que se cumplen los plazos establecidos.
+\end{itemize}
+
+\subsubsection{Tareas del OB1 (Estudio del estado del arte)}\label{subsubsec:tareas_ob1}
 
 \begin{itemize}
-    \item 1. X
-    \item 2. Y
+    \item \textbf{Revisión del estado del arte en HPC} \\
+          Estudiar la evolución histórica y tendencias actuales en la computación de alto rendimiento.
+
+    \item \textbf{Análisis del uso de contenedores en HPC} \\
+          Revisar tecnologías de contenedores aplicadas a entornos científicos y de alto rendimiento. Comparar contenedores frente a máquinas virtuales en cuanto a eficiencia, overhead y portabilidad en HPC.
+
+    \item \textbf{Estudio del uso de GPU en aplicaciones HPC} \\
+          Revisar el papel de las GPUs en la aceleración de aplicaciones científicas y de ingeniería. Identificar librerías y frameworks para programación en GPU. Analizar casos de éxito en la integración de GPU en entornos HPC.
+
+    \item \textbf{Investigación sobre el soporte de GPU en contenedores} \\
+          Revisar soluciones actuales para ejecutar GPUs dentro de contenedores. Analizar el grado de compatibilidad con diferentes sistemas operativos y arquitecturas. Estudiar el impacto en rendimiento del uso de GPUs en entornos contenerizados en comparación con la ejecución nativa.
+\end{itemize}
+
+\subsubsection{Tareas del OB2 (Diseño e implementación de la propuesta)}\label{subsubsec:tareas_ob2}
+
+\begin{itemize}
+    \item \textbf{Selección de la aplicación o problema HPC a estudiar} \\
+          Se seleccionará una aplicación representativa del ámbito HPC, justificando su elección en función de su relevancia científica, disponibilidad de código abierto y viabilidad técnica para su ejecución en diferentes plataformas y entornos contenerizados.
+
+    \item \textbf{Preparar entornos y dependencias} \\
+          Se identificarán y documentarán las librerías y herramientas necesarias, incluyendo MPI, OpenMP y CUDA. Se garantizará la homogeneidad de las configuraciones en todos los sistemas de prueba y se detallarán los requisitos específicos para cada plataforma (Linux, Windows, macOS).
+
+    \item \textbf{Diseñar y construir imágenes de contenedor} \\
+          Se desarrollarán Dockerfiles reproducibles que incluyan todas las dependencias necesarias, asegurando soporte para GPU mediante NVIDIA Container Toolkit. Las imágenes serán versionadas y almacenadas en un registro para facilitar su reutilización y trazabilidad.
+
+    \item \textbf{Definir casos de prueba y parámetros de ejecución} \\
+          Se establecerán experimentos mononodo variando el número de hebras, experimentos multinodo con diferentes cantidades de nodos y casos combinados que exploren el espacio de parámetros hebras × nodos.
+
+    \item \textbf{Automatización y orquestación} \\
+          Se implementarán scripts en para automatizar la ejecución de lotes de pruebas, así como la recogida y almacenamiento de logs y resultados.
+
+    \item \textbf{Instrumentación y métricas} \\
+          Se instrumentará la aplicación para medir tiempos totales de ejecución, uso de CPU y otros recursos. Se calcularán métricas como aceleración, eficiencia, throughput y overhead comparando la ejecución en contenedor frente a la nativa. Se generarán gráficos comparativos para el análisis de resultados.
+
+    \item \textbf{Reproducibilidad y trazabilidad} \\
+          Se mantendrá un repositorio con los Dockerfiles, scripts y documentación del proyecto. Se etiquetarán las versiones de las imágenes y dependencias para asegurar la reproducibilidad de los experimentos.
+\end{itemize}
+
+\subsubsection{Tareas del OB3 (Evaluación de rendimiento)}\label{subsubsec:tareas_ob3}
+
+\begin{itemize}
+    \item \textbf{Definición de criterios de comparación} \\
+          Se establecerán las métricas principales para la comparación de rendimiento y se garantizará la paridad de configuraciones (versiones de compiladores, librerías, drivers).
+
+    \item \textbf{Ejecución de pruebas comparativas} \\
+          Se ejecutarán las mismas baterías de experimentos tanto en modo nativo como en contenedor. Se registrarán logs completos de cada ejecución.
+
+    \item \textbf{Recopilación y organización de resultados} \\
+          Se guardarán los tiempos de ejecución y métricas de uso de recursos, clasificando los datos según plataforma (Linux, Windows, macOS) y tipo de acelerador (CPU, GPU). Se establecerá un formato homogéneo para los ficheros de resultados (CSV o base de datos).
+
+    \item \textbf{Análisis cuantitativo del rendimiento} \\
+          Se calcularán diferencias absolutas y relativas entre ejecución nativa y contenerizada, estimando overheads medios y por caso. Se evaluará la escalabilidad en cada escenario y se aplicará análisis estadístico para validar la significancia de las diferencias.
+
+    \item \textbf{Análisis cualitativo} \\
+          Se identificarán ventajas no estrictamente de rendimiento (portabilidad, reproducibilidad, facilidad de despliegue) y se documentarán limitaciones observadas (drivers de GPU, gestión de red en contenedores, problemas de compatibilidad).
+
+    \item \textbf{Visualización de resultados comparativos} \\
+          Se generarán gráficos y tablas que destaquen los casos extremos (mejores y peores comportamientos), facilitando la interpretación de los resultados.
+\end{itemize}
+
+\subsubsection{Tareas del OB4 (Análisis de resultados)}\label{subsubsec:tareas_ob4}
+
+\begin{itemize}
+    \item \textbf{Revisión sistemática de los resultados experimentales} \\
+          Se analizarán de manera estructurada los datos obtenidos en las pruebas, comparando el rendimiento entre ejecución nativa y contenerizada en las distintas plataformas (Linux, Windows, macOS) y ante el uso o no de aceleradores (CPU, GPU). Se identificarán tendencias generales, anomalías y comportamientos consistentes.
+
+    \item \textbf{Detección de desafíos en la adopción de contenedores en HPC} \\
+          Se evaluará la complejidad asociada a la configuración, despliegue y mantenimiento de entornos contenerizados en HPC, incluyendo la integración de aceleradores como GPU y la gestión de dependencias específicas.
+
+    \item \textbf{Propuesta de líneas de investigación futura} \\
+          A partir de los resultados y desafíos identificados, se propondrán posibles líneas de trabajo futuro.
 \end{itemize}
 
 \section{Planificación temporal}
 
-\begin{table}[h!]
+En la tabla \ref{tab:planificacion-temporal} se presenta una estimación del tiempo necesario para completar cada una de las tareas principales del proyecto, desglosado en horas dedicadas por el desarrollador y el tutor.
+
+\begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|r|}
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{|p{2.5cm}|r|r|}
         \hline
-        \textbf{Tarea} & \textbf{Horas estimadas} \\
+        \textbf{Tarea}  & \textbf{Desarrollador (h)} & \textbf{Tutor (h)} \\
         \hline
-        Tarea 1        & 20                       \\
-        Tarea 2        & 15                       \\
-        Tarea 3        & 35                       \\
-        Tarea 4        & 20                       \\
-        Tarea 5        & 10                       \\
-        Tarea 6        & 5                        \\
+        Planificación   & 20                         & 5                  \\
+        Estado del arte & 40                         & 10                 \\
+        Implementación  & 85                         & 8                  \\
+        Evaluación      & 55                         & 7                  \\
+        Análisis        & 30                         & 5                  \\
         \hline
-        \textbf{Total} & \textbf{105}             \\
+        \textbf{Total}  & \textbf{230}               & \textbf{35}        \\
         \hline
     \end{tabular}
     \caption{Planificación temporal de tareas y horas estimadas}
     \label{tab:planificacion-temporal}
 \end{table}
+
+
 
 \section{Estimación de costes}
 
@@ -62,7 +154,7 @@ Para la ejecución de las pruebas en un cluster de computación, no se ha podido
 
 \textbf{Recursos humanos}.
 
-\begin{table}[h!]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{|l|l|r|}
         \hline
@@ -86,7 +178,7 @@ En cuanto al software, los sistemas operativos Microsoft Windows 11 y macOS {TOD
 
 En la tabla \ref{tab:recursos-humanos} se detalla el coste por hora, las horas estimadas y el coste total de los recursos humanos necesarios para llevar a cabo el proyecto.
 
-\begin{table}[h!]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{|l|l|r|r|r|}
         \hline
@@ -106,7 +198,7 @@ En la tabla \ref{tab:recursos-humanos} se detalla el coste por hora, las horas e
 
 El coste total del proyecto se calcula sumando los costes de hardware, software y recursos humanos. En la tabla \ref{tab:coste-total} se detalla el coste total estimado.
 
-\begin{table}[h!]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{|l|r|}
         \hline
