@@ -53,7 +53,7 @@ do
             # Run the program in Docker or Podman and save the log
             echo "Running the program in $CONTAINER and saving log to $LOGFILE"
             /usr/bin/time -v $CONTAINER run --rm \
-                --gpus all \
+                --device nvidia.com/gpu=all \
                 -v "$PWD/$CONFIG":/root/Hpmoon/config.xml \
                 -w /root/Hpmoon \
                 $IMAGE \
