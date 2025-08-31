@@ -178,34 +178,170 @@ A continuación, se explica en detalle:
 
 En resumen, al concentrarse en el número de subpoblaciones, el número de hebras y el número de nodos, se aborda directamente la capacidad del programa para aprovechar arquitecturas paralelas y la distribución de la carga de trabajo en todos los niveles, sentando las bases para análisis más detallados posteriormente \cite{escobar2020energy}.
 
-\section{Objetivos específicos de la propuesta}\label{sec:objetivos_especificos}
-Se redefinen y concretan los objetivos experimentales derivados de los objetivos generales del TFG, incluyendo la comparación de tiempos de ejecución nativos versus contenerizados, la medición del overhead introducido por contenedores y el análisis de portabilidad y reproducibilidad.
+\subsection{Diseño de los experimentos}\label{subsec:diseno_experimentos_detallado}
 
-\section{Metodología}\label{sec:metodologia}
-Se describe el diseño experimental, incluyendo:
+Los experimentos se estructuran en varias fases con el fin de determinar los parámetros óptimos y evaluar la escalabilidad y portabilidad de HPMoon en distintos entornos y plataformas.
+
+\subsubsection{Determinación del número óptimo de subpoblaciones}
+
+Se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations} a usar en los tests posteriores:
+
 \begin{itemize}
-    \item Cómo se ejecutarán las aplicaciones, número de pruebas y tipos de tests.
-    \item Selección de aplicaciones HPC (HPMoon) y justificación.
-    \item Plataformas y arquitecturas: hardware, sistemas operativos, arquitecturas heterogéneas y tipo de contenedores.
-    \item Variables a medir y métricas: tiempo de ejecución, eficiencia, escalabilidad y overhead.
-    \item Configuración de contenedores: base de imágenes, librerías, dependencias y optimizaciones.
+    \item Se lanzarán ejecuciones con 1, 2, 4, 8 y 16 subpoblaciones.
+    \item Para cada configuración de subpoblaciones, se evaluará con 1, 2, 4, 8 y 16 hebras por subpoblación.
 \end{itemize}
 
-\section{Protocolo de pruebas}\label{sec:protocolo_pruebas}
-Se detalla paso a paso la ejecución de los experimentos, incluyendo la definición de casos de prueba (por ejemplo, test con 1 hilo, test con múltiples hilos y prueba multinodo) y consideraciones de reproducibilidad y consistencia.
+\subsubsection{Estudio del comportamiento al requerir más hebras de las disponibles}
 
-\section{Herramientas y scripts}\label{sec:herramientas_scripts}
-Se describen las herramientas de automatización, scripts de benchmarking y frameworks de contenedores utilizados para ejecutar, monitorizar y analizar los experimentos de manera sistemática.
+En el dispositivo Lenovo Legion 5, que dispone de un máximo de 16 hebras, se evaluará cómo se comporta la aplicación al requerir un número de hebras mayor al disponible:
 
-\section{Análisis previsto}\label{sec:analisis_previsto}
-Se explica cómo se tratarán los resultados, incluyendo la comparación entre ejecución nativa y contenerizada, generación de gráficos y tablas, y criterios de evaluación como eficiencia por núcleo, overhead relativo y portabilidad.
+\begin{itemize}
+    \item En las ejecuciones multinodo, cada nodo tendrá un número de hebras tal que el número total de hebras requerido sea igual a: \textit{número de nodos} $\times$ \textit{hebras por nodo}.
+    \item Se realizarán dos variantes de test:
+          \begin{enumerate}
+              \item Variante 1: si el número total de hebras requerido supera el máximo del dispositivo (16), el test no se ejecuta.
+              \item Variante 2: se ejecutan los tests aunque el número total de hebras requerido sea mayor a 16.
+          \end{enumerate}
+    \item El objetivo es determinar si es necesario limitar el número de hebras solicitadas en los tests posteriores.
+\end{itemize}
 
-\section{Limitaciones de la propuesta}\label{sec:limitaciones_propuesta}
-Se enumeran los aspectos que no se cubrirán, los supuestos del estudio y las restricciones de hardware o software que pueden influir en la ejecución y análisis de los experimentos.
+\subsubsection{Experimentos de escalabilidad y barrido de hebras}
 
+Una vez definido el número óptimo de subpoblaciones y el rango válido de hebras, se realizarán los siguientes experimentos:
 
-\section{Background}
+\begin{itemize}
+    \item \textbf{Escalabilidad mononodo:} con un único nodo fijo, se escala el número de hebras.
+    \item \textbf{Escalabilidad multinodo:} con una única hebra por nodo, se escala el número de nodos.
+    \item \textbf{Barrido de hebras:} se ejecutan todas las combinaciones posibles de número de nodos y hebras por nodo.
+\end{itemize}
 
-\section{Herramientas utilizadas}
+\subsubsection{Plataformas y entornos de ejecución}
 
-\section{Implementación}
+Los experimentos se realizarán en distintas plataformas y entornos, tanto con uso único de CPU como la combinación con uso de GPU (salvo en el caso de Mac, donde el uso de GPU en contenedores es objeto de estudio):
+
+\begin{itemize}
+    \item Ubuntu 24.04: ejecución nativa, y en contenedores Docker y Podman.
+    \item Windows 11 Home: ejecución en contenedores Docker y Podman.
+    \item MacOS Sequoia 15.5: ejecución en contenedores Docker y Podman.
+\end{itemize}
+
+Esta estructura permitirá evaluar la escalabilidad, portabilidad y rendimiento de HPMoon en entornos contenerizados y nativos, así como en arquitecturas heterogéneas con CPU y GPU.
+
+\section{Herramientas y scripts utilizados}\label{sec:herramientas_scripts}
+
+Para llevar a cabo los experimentos propuestos, se han desarrollado diversos scripts que automatizan las pruebas en diferentes plataformas, entornos y configuraciones. Estos scripts permiten evaluar la escalabilidad, portabilidad y rendimiento de HPMoon en arquitecturas heterogéneas y entornos contenerizados. A continuación, se describen los principales scripts y su propósito:
+
+\subsection{Compilación del programa}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{utils}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{build\_hpmoon.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Compila el programa HPMoon en el directorio de trabajo especificado utilizando \texttt{make} con parámetros específicos para maximizar el rendimiento, como el número de características (\texttt{N\_FEATURES=3600}). Este paso asegura que el ejecutable esté disponible antes de iniciar los experimentos.
+\end{itemize}
+
+\subsection{Experimentos específicos}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{experiments}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native\_limit.sh}
+              \item \texttt{run\_ubuntu\_native\_no-limit.sh}
+              \item \texttt{run\_ubuntu\_native\_subpops\_threads.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Diseñados para pruebas concretas, como el impacto de exceder el número máximo de hebras disponibles o la relación entre subpoblaciones y hebras, permitiendo un análisis más detallado de parámetros clave.
+\end{itemize}
+
+\subsection{Experimentos de escalabilidad mononodo}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{single-node}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Ejecuta pruebas de escalabilidad en un único nodo, variando el número de hebras utilizadas, evaluando el rendimiento nativo en sistemas Ubuntu sin contenedores.
+    \item \textbf{Variantes:}
+          \begin{itemize}
+              \item Versiones para contenedores:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_container.sh}
+                        \item \texttt{run\_mac\_container.sh}
+                        \item \texttt{run\_windows\_container.ps1}
+                    \end{itemize}
+              \item Versiones para GPU:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_gpu\_container.sh}
+                        \item \texttt{run\_mac\_gpu\_container.sh}
+                        \item \texttt{run\_windows\_gpu\_container.ps1}
+                    \end{itemize}
+          \end{itemize}
+\end{itemize}
+
+\subsection{Experimentos de escalabilidad multinodo}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{multi-node}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Distribuye las subpoblaciones entre varios nodos utilizando una única hebra por nodo, evaluando el rendimiento nativo en sistemas distribuidos.
+    \item \textbf{Variantes:}
+          \begin{itemize}
+              \item Versiones para contenedores:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_container.sh}
+                        \item \texttt{run\_mac\_container.sh}
+                        \item \texttt{run\_windows\_container.ps1}
+                    \end{itemize}
+              \item Versiones para GPU:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_gpu\_container.sh}
+                        \item \texttt{run\_mac\_gpu\_container.sh}
+                        \item \texttt{run\_windows\_gpu\_container.ps1}
+                    \end{itemize}
+          \end{itemize}
+\end{itemize}
+
+\subsection{Barrido de hebras}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{thread-sweep}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Ejecuta todas las combinaciones posibles de número de nodos y hebras por nodo, permitiendo identificar configuraciones óptimas y evaluar el comportamiento del programa en diferentes escenarios.
+    \item \textbf{Variantes:}
+          \begin{itemize}
+              \item Versiones para contenedores:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_container.sh}
+                        \item \texttt{run\_mac\_container.sh}
+                        \item \texttt{run\_windows\_container.ps1}
+                    \end{itemize}
+              \item Versiones para GPU:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_gpu\_native.sh}
+                        \item \texttt{run\_ubuntu\_gpu\_container.sh}
+                        \item \texttt{run\_mac\_gpu\_container.sh}
+                        \item \texttt{run\_windows\_gpu\_container.ps1}
+                    \end{itemize}
+          \end{itemize}
+\end{itemize}
+
+\subsection{Ejecución automatizada}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{utils}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_all.sh}
+              \item \texttt{run\_mac\_all.sh}
+              \item \texttt{run\_windows\_all.ps1}
+              \item \texttt{run\_cluster\_all.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Estos scripts agrupan y ejecutan automáticamente todos los experimentos correspondientes a cada plataforma o entorno, facilitando la ejecución secuencial de múltiples pruebas según la metodología definida.
+\end{itemize}
+
+\section{Repositorio del proyecto}\label{sec:repositorio}
+
+Todo el trabajo desarrollado en este TFG, incluyendo scripts, configuraciones, documentación y resultados de los experimentos, está recogido y disponible públicamente en un repositorio de GitHub\footnote{\url{https://github.com/FerniCuesta/DockEEG}}.
