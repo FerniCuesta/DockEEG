@@ -9,8 +9,8 @@ $LogDir = "logs"
 
 # Script list with associated BASE_DIR
 $ScriptsAndBaseDirs = @(
-    # @{ Script = ".\scripts\thread-sweep\run_windows_container.ps1"; BaseDir = $BaseDirNoGpu }
-    @{ Script = ".\scripts\thread-sweep\run_windows_gpu_container.ps1"; BaseDir = $BaseDirGpu }
+    @{ Script = ".\scripts\thread-sweep\run_windows_container.ps1"; BaseDir = $BaseDirNoGpu }
+    # @{ Script = ".\scripts\thread-sweep\run_windows_gpu_container.ps1"; BaseDir = $BaseDirGpu }
 )
 
 # Execute script list
