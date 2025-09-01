@@ -12,6 +12,8 @@
 \usepackage{colortbl,longtable}
 \usepackage[stable]{footmisc}
 
+\usepackage{booktabs}
+
 % Lo he comentado porque da problemas al compilar
 % \usepackage{minted}
 
@@ -229,20 +231,18 @@ pdfproducer = {pdflatex}
 %
 %
 %%\nocite{*}
-% Uncomment the following lines and add at least one \cite{} in your chapters to avoid the error,
-% or keep them commented if you do not use citations.
-% \bibliography{bibliografia/bibliografia}\addcontentsline{toc}{chapter}{Bibliografía}
-% \bibliographystyle{miunsrturl}
+%\bibliography{bibliografia/bibliografia}\addcontentsline{toc}{chapter}{Bibliografía}
+%\bibliographystyle{miunsrturl}
 %
-\appendix
-\input{capitulos/A_gestion}
+%\appendix
+%\input{capitulos/A_gestion}
 %%\input{apendices/paper/paper}
 %\input{glosario/entradas_glosario}
 % \addcontentsline{toc}{chapter}{Glosario}
 % \printglossary
 
-% \bibliographystyle{IEEEtran}
-% \bibliography{referencias}\addcontentsline{toc}{chapter}{Bibliografía}
+\bibliographystyle{IEEEtran}
+\bibliography{referencias}\addcontentsline{toc}{chapter}{Bibliografía}
 \chapter*{}
 \thispagestyle{empty}
 

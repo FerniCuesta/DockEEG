@@ -1,9 +1,366 @@
 \chapter{Propuesta principal}\label{cap:propuesta}
 
-[En esta sección se ha de introducir y explicar la propuesta principal del trabajo. Se puede y es recomendable dividir en secciones, incluso, este capítulo puede contemplar varios  capítulos a su vez.]
+% [En esta sección se ha de introducir y explicar la propuesta principal del trabajo. Se puede y es recomendable dividir en secciones, incluso, este capítulo puede contemplar varios  capítulos a su vez.]
 
-\section{Background}
+\section{Introducción de la propuesta}\label{sec:introduccion_propuesta}
+En esta sección se presenta la propuesta general del trabajo, explicando la metodología seguida para evaluar el uso de contenedores en entornos HPC. Se justifica la elección de los experimentos en función de los objetivos del TFG y del estado del arte, y se define el alcance de los mismos, indicando qué se medirá y evaluará.
 
-\section{Herramientas utilizadas}
+\section{Aplicación seleccionada: HPMoon}\label{sec:hpm_application}
 
-\section{Implementación}
+\subsection{Origen y contexto}\label{subsec:hpm_origen}
+HPMoon es un software desarrollado en el marco de la tesis doctoral \textit{``Energy-Efficient Parallel and Distributed Multi-Objective Feature Selection on Heterogeneous Architectures''}, defendida por Juan José Escobar Pérez el 20 de febrero de 2020 en la Universidad de Granada. El programa se concibe como una herramienta del proyecto \textit{e-hpMOBE} y está disponible públicamente en un repositorio de GitHub. Su desarrollo fue apoyado por proyectos de investigación nacionales financiados por el Ministerio de Ciencia, Innovación y Universidades (MICIU) y fondos FEDER, así como por una beca de NVIDIA. Esta aplicación se utiliza como caso de estudio en este TFG por su significativa relevancia científica y tecnológica en el ámbito de la computación de alto rendimiento (\acs{HPC}).
+
+\subsection{Objetivo de HPMoon}\label{subsec:hpm_objetivo}
+El objetivo principal de HPMoon es abordar la clasificación no supervisada de señales de Electroencefalograma (\acs{EEG}) en tareas de Interfaz Cerebro-Computadora (\acs{BCI}). Este es un problema de alta dimensionalidad y computacionalmente costoso debido a las características de las señales \acs{EEG} y al gran número de características que pueden contener. La aplicación combina la selección de características multiobjetivo (\acs{MOFS}) con algoritmos paralelos y energéticamente eficientes, buscando minimizar el tiempo de ejecución y el consumo de energía, cruciales en problemas de \textit{Machine Learning} y bioingeniería que requieren plataformas de alto rendimiento.
+
+\subsection{Arquitectura y funcionamiento}\label{subsec:hpm_funcionamiento}
+HPMoon implementa un procedimiento paralelo multinivel y energéticamente eficiente para la selección de características multiobjetivo (\acs{MOFS}). La versión descrita como la ``más eficiente desarrollada hasta la fecha'' es ODGA. La arquitectura y funcionamiento se pueden desglosar en:
+
+\begin{itemize}
+    \item \textbf{Enfoque Wrapper con Algoritmos Genéticos Multiobjetivo (MOGA)}: HPMoon utiliza un enfoque wrapper donde un MOGA, específicamente una adaptación del algoritmo NSGA-II, realiza la selección de características. Este algoritmo opera con poblaciones de individuos (cromosomas) que codifican diferentes selecciones de características.
+    \item \textbf{Evaluación de Fitness con K-means}: La fitness de cada individuo se evalúa mediante el algoritmo K-means para clasificación no supervisada. El objetivo es minimizar dos funciones de coste:
+          \begin{itemize}
+              \item $f_1$ (minimización de WCSS), que representa la suma de distancias dentro de los clústeres.
+              \item $f_2$ (maximización de BCSS), que se refiere a la suma de distancias entre los centroides.
+          \end{itemize}
+          Estas funciones se normalizan en el intervalo (0,1).
+    \item \textbf{Paralelismo Multinivel}: La aplicación explota hasta cuatro niveles de paralelismo en arquitecturas heterogéneas:
+          \begin{enumerate}
+              \item Distribución entre nodos del clúster mediante MPI.
+              \item Distribución entre dispositivos CPU/GPU por nodo, gestionado con OpenMP.
+              \item Distribución entre Unidades de Cómputo (CUs) o hilos de CPU.
+              \item Paralelismo de datos en GPU para K-means, aprovechando el paralelismo de datos para cálculo de distancias y actualización de centroides.
+          \end{enumerate}
+    \item \textbf{Tecnologías de implementación}: El código está desarrollado principalmente en C++, utilizando:
+          \begin{itemize}
+              \item \acs{MPI} (\textit{Message Passing Interface}) para la comunicación entre nodos en sistemas distribuidos.
+              \item \acs{OpenMP} para el paralelismo en CPU.
+              \item \acs{OpenCL} para los kernels de K-means en GPU.
+          \end{itemize}
+    \item \textbf{Optimización de carga de trabajo}: Incluye esquemas master-worker con balanceo dinámico de carga entre CPU y GPU, así como entre nodos del clúster. Las versiones posteriores, como ODGA, optimizan la comunicación y distribución para minimizar desequilibrio de carga.
+    \item \textbf{Configuración y uso}: El programa se ejecuta desde la línea de comandos, permitiendo la configuración de parámetros (número de subpoblaciones, tamaño de la población, migraciones, generaciones, número de características y uso de CPU/GPU) mediante un archivo XML.
+\end{itemize}
+
+\subsection{Justificación de la elección para este TFG}\label{subsec:hpm_justificacion}
+HPMoon se selecciona como caso de estudio por las siguientes razones, que lo convierten en un candidato ideal para analizar portabilidad, rendimiento y overhead de contenedores:
+
+\begin{itemize}
+    \item \textbf{Relevancia en HPC y problemas reales}: HPMoon aborda un problema intensivo en cómputo (clasificación EEG de alta dimensionalidad) frecuente en bioinformática e ingeniería biomédica. Su complejidad permite generar métricas relevantes en HPC.
+    \item \textbf{Paralelización multinivel y arquitecturas heterogéneas}: Diseñado para explotar múltiples niveles de paralelismo en CPUs multi-núcleo, GPUs y sistemas distribuidos (clústeres), permitiendo análisis exhaustivo en diversas configuraciones.
+    \item \textbf{Énfasis en eficiencia energética}: Minimiza consumo de energía y tiempo de ejecución, aspecto crucial en HPC moderna.
+    \item \textbf{Estrategias de balanceo de carga}: Distribución dinámica de carga entre CPU y GPU, permitiendo manejar diferencias de capacidad y consumo energético de dispositivos heterogéneos.
+    \item \textbf{Disponibilidad y madurez}: Software robusto derivado de tesis doctoral y publicaciones científicas, con versiones evolutivas (SGA, PGA, OPGA, MDGA, MPGA, DGA, DGA-II, ODGA, GAAM) y documentación completa.
+    \item \textbf{Modelos de energía-tiempo}: Incluye desarrollo y evaluación de modelos para predecir comportamiento de algoritmos en sistemas monocomputador y distribuidos, proporcionando base sólida para comparar resultados en contenedores.
+    \item \textbf{Complejidad y desafíos de optimización}: Presenta retos como balanceo de carga en entornos heterogéneos, irregularidades en accesos a memoria y gestión de comunicación entre nodos y dispositivos, ideales para evaluar impacto de contenedores en optimización del código.
+\end{itemize}
+
+\subsection{Configuración y parámetros de compilación y ejecución}\label{subsec:hpm_configuracion}
+
+La aplicación HPMoon requiere una fase previa de compilación y, posteriormente, una configuración en tiempo de ejecución a través de un fichero XML (con soporte parcial mediante parámetros de línea de comandos).
+
+\subsubsection{Compilación}
+
+La compilación se realiza mediante un \textit{Makefile}, los principales parámetros de compilación son:
+
+\begin{itemize}
+    \item \textbf{N\_FEATURES (NF)}: número de características de la base de datos (columnas). Debe estar entre 4 y el máximo disponible.
+    \item \textbf{COMP (COMPILER)}: compilador MPI a emplear (por defecto, \texttt{mpic++}).
+\end{itemize}
+
+Estos parámetros se procesan en tiempo de compilación para evitar el uso de memoria dinámica y maximizar el rendimiento. El ejecutable resultante, denominado \texttt{hpmoon}, se ubica en el directorio \texttt{bin}.
+
+\subsubsection{Configuración en tiempo de ejecución}
+
+La configuración en tiempo de ejecución se realiza principalmente mediante un fichero XML, que permite ajustar tanto los parámetros de los algoritmos evolutivos como la gestión de recursos computacionales. Los parámetros más relevantes son:
+
+\begin{itemize}
+    \item \textbf{NSubpopulations}: número total de subpoblaciones (modelo de islas).
+    \item \textbf{SubpopulationSize}: tamaño de cada subpoblación (número de individuos).
+    \item \textbf{NGlobalMigrations}: número de migraciones entre subpoblaciones en diferentes nodos.
+    \item \textbf{NGenerations}: número de generaciones a simular.
+    \item \textbf{MaxFeatures}: número máximo de características permitidas.
+    \item \textbf{DataFileName}: fichero de salida con la aptitud de los individuos del primer frente de Pareto.
+    \item \textbf{PlotFileName}: fichero con el código de gnuplot para visualización.
+    \item \textbf{ImageFileName}: fichero de salida con la gráfica generada.
+    \item \textbf{TournamentSize}: número de individuos en el torneo de selección.
+    \item \textbf{NInstances}: número de instancias (filas) de la base de datos a utilizar.
+    \item \textbf{FileName}: nombre del fichero de la base de datos de entrada.
+    \item \textbf{Normalize}: indica si la base de datos debe ser normalizada.
+    \item \textbf{NDevices}: número de dispositivos OpenCL empleados en el nodo.
+    \item \textbf{Names}: lista de nombres de dispositivos OpenCL, separados por comas.
+    \item \textbf{ComputeUnits}: unidades de cómputo por dispositivo OpenCL, en el mismo orden que \texttt{Names}.
+    \item \textbf{WiLocal}: número de \textit{work-items} por unidad de cómputo, alineado con los dispositivos.
+    \item \textbf{CpuThreads}: número de hilos de CPU para la evaluación de aptitud. Si es 1 y \texttt{NDevices=0}, la ejecución es secuencial.
+    \item \textbf{KernelsFileName}: fichero con los kernels de OpenCL.
+\end{itemize}
+
+Muchos de estos parámetros pueden especificarse también mediante opciones en la línea de comandos al ejecutar \texttt{hpmoon}, aunque no todos están disponibles de esta forma. Esta circunstancia se refleja en la columna \texttt{CMD OPTION} de la Tabla~\ref{tab:hpmoon_parametros}, donde un guion (\texttt{-}) indica ausencia de soporte por línea de comandos.
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{|p{3cm}|p{6cm}|p{2.2cm}|}
+        \hline
+        \textbf{PARÁMETRO}  & \textbf{RANGO}                                                          & \textbf{CMD OPTION} \\ \hline
+        N\_FEATURES         & $4 \leq \mathrm{NF} \leq$ Número de características de la base de datos & -                   \\ \hline
+        NSubpopulations     & $1 \leq \mathrm{NP}$                                                    & -ns                 \\ \hline
+        SubpopulationSize   & $4 \leq \mathrm{PS}$                                                    & -ss                 \\ \hline
+        NGlobalMigrations   & $1 \leq \mathrm{NM}$                                                    & -ngm                \\ \hline
+        NGenerations        & $0 \leq \mathrm{NG}$                                                    & -g                  \\ \hline
+        MaxFeatures         & $1 \leq \mathrm{MaxF}$                                                  & -maxf               \\ \hline
+        DataFileName        & Nombre de fichero válido                                                & -plotdata           \\ \hline
+        PlotFileName        & Nombre de fichero válido                                                & -plotsrc            \\ \hline
+        ImageFileName       & Nombre de fichero válido                                                & -plotimg            \\ \hline
+        TournamentSize      & $2 \leq \mathrm{TS}$                                                    & -ts                 \\ \hline
+        NInstances          & $4 \leq \mathrm{NI} \leq$ Número de instancias de la base de datos      & -trni               \\ \hline
+        FileName            & Base de datos de entrenamiento existente                                & -trdb               \\ \hline
+        Normalize           & 1 ó 0                                                                   & -trnorm             \\ \hline
+        NDevices            & $0 \leq \mathrm{ND}$                                                    & -                   \\ \hline
+        Names               & Nombre de dispositivo existente                                         & -                   \\ \hline
+        ComputeUnits        & $1 \leq \mathrm{CU}$                                                    & -                   \\ \hline
+        WiLocal             & $1 \leq \mathrm{WL} \leq$ Máx. work-items locales del dispositivo       & -                   \\ \hline
+        CpuThreads          & $0 \leq \mathrm{CT}$                                                    & -                   \\ \hline
+        KernelsFileName     & Fichero de kernels existente                                            & -ke                 \\ \hline
+        Display usage       & -                                                                       & -h                  \\ \hline
+        List OpenCL devices & -                                                                       & -l                  \\ \hline
+    \end{tabular}
+    \caption{Rango de valores de los parámetros de entrada y su uso desde la línea de argumentos (si está disponible).}
+    \label{tab:hpmoon_parametros}
+\end{table}
+
+\subsection{Selección de parámetros de estudio}
+
+La decisión de dejar la mayoría de los parámetros con sus valores por defecto y estudiar únicamente la relación entre el número de subpoblaciones y el número de hebras se basa en la arquitectura de paralelismo multinivel inherente al diseño del programa y su impacto directo en la distribución de la carga de trabajo y el rendimiento. Algunas de las recomendaciones mencionadas provienen de la guía de usuario de la aplicación.
+
+A continuación, se explica en detalle:
+
+\begin{enumerate}
+    \item \textbf{Diseño del programa con paralelismo multinivel:}
+          \begin{itemize}
+              \item El programa es un algoritmo evolutivo basado en subpoblaciones con paralelismo multinivel.
+              \item Utiliza MPI (Message Passing Interface) para distribuir las subpoblaciones entre los nodos de un clúster.
+              \item Dentro de cada nodo, emplea OpenMP para distribuir dinámicamente las subpoblaciones o individuos entre los dispositivos disponibles (CPU y GPU).
+              \item La evaluación de la aptitud de los individuos se realiza utilizando OpenMP en la CPU y OpenCL en la GPU, ofreciendo hasta tres niveles de paralelismo en la CPU y hasta cuatro en la GPU.
+          \end{itemize}
+
+    \item \textbf{Importancia del número de subpoblaciones (NSubpopulations):}
+          \begin{itemize}
+              \item NSubpopulations representa el número total de subpoblaciones, un parámetro fundamental para el modelo basado en islas del algoritmo.
+              \item Se sugiere que aumentar el número de subpoblaciones puede generar resultados de buena calidad, incluso más que aumentar el número de individuos \cite{escobar2020energy}.
+              \item Este parámetro es crucial porque define cómo se divide el trabajo a nivel más alto (distribución MPI entre nodos) y cómo estas unidades de trabajo pueden ser gestionadas posteriormente por OpenMP dentro de cada nodo \cite{escobar2020energy}.
+          \end{itemize}
+
+    \item \textbf{Importancia del número de hebras (CPU y GPU):}
+          \begin{itemize}
+              \item El programa hace un uso intensivo de hilos (\textit{threads}) para la evaluación de la aptitud.
+              \item El parámetro \texttt{CpuThreads} especifica el número de hilos de CPU a utilizar en la evaluación de aptitud. La recomendación es que este valor sea igual al número de núcleos lógicos de la CPU para un buen rendimiento.
+              \item Para la GPU, \texttt{NDevices} (número de dispositivos OpenCL), \texttt{ComputeUnits} (unidades de cómputo, $\lambda$) y \texttt{WiLocal} (número de elementos de trabajo o hilos por unidad de cómputo) son esenciales. Se aconseja que \texttt{WiLocal} sea un múltiplo de 32 o 64 para mejorar el rendimiento de OpenCL, y que la combinación óptima de \texttt{WiLocal} y \texttt{ComputeUnits} depende de las características del problema y del dispositivo.
+              \item Estos parámetros controlan directamente la paralelización de la función de evaluación en la GPU con OpenCL y la distribución dinámica de individuos entre los dispositivos mediante OpenMP \cite{escobar2020energy}.
+          \end{itemize}
+
+    \item \textbf{Importancia del número de nodos:}
+          \begin{itemize}
+              \item El programa está diseñado para ejecutarse en sistemas distribuidos, como clústeres, donde múltiples nodos están interconectados \cite{escobar2020energy, Escobar2019}.
+              \item La versión DGA (Distributed Genetic Algorithm) añade un cuarto nivel de paralelismo al distribuir las subpoblaciones entre los nodos del clúster utilizando MPI. El proceso maestro (MPI 0) se encarga de esta distribución dinámica \cite{escobar2020energy, Escobar2019}.
+              \item La escalabilidad y el rendimiento del algoritmo se ven directamente afectados por el número de nodos utilizados. Los experimentos demuestran que usar más nodos puede llevar a reducciones significativas en el tiempo de ejecución y el consumo de energía, logrando picos de speedup de hasta 83 veces y reduciendo el consumo energético a un 4.9\% en el mejor de los casos \cite{escobar2020energy, Escobar2019}.
+              \item La heterogeneidad de los nodos y su configuración de CPU/GPU también influye en la eficiencia de la distribución de carga y el consumo de energía. Por lo tanto, el número de nodos es un parámetro fundamental para el estudio del paralelismo a nivel de sistema distribuido \cite{escobar2020energy, Escobar2019}.
+          \end{itemize}
+
+    \item \textbf{Razones para mantener otros parámetros por defecto:}
+          \begin{itemize}
+              \item \textbf{Prioridad del estudio de paralelismo:} La configuración de \texttt{NSubpopulations} y de los hilos (\texttt{CpuThreads}, \texttt{WiLocal}, \texttt{ComputeUnits}) son los que más influyen directamente en la estrategia de paralelismo y la asignación de recursos computacionales, que son el objetivo principal de este estudio inicial \cite{escobar2020energy}.
+              \item \textbf{Parámetros de compilación vs. ejecución:} Parámetros como \texttt{N\_FEATURES} se establecen en tiempo de compilación (\texttt{make}), lo que los hace menos flexibles para pruebas de rendimiento en tiempo de ejecución. Los parámetros de subpoblaciones y hebras, por el contrario, son de tiempo de ejecución (fichero XML).
+              \item \textbf{Impacto de la función de evaluación:} La función de evaluación (algoritmo K-means) consume más del 99\% del tiempo de ejecución para tamaños de población moderados \cite{escobar2020energy}. Por lo tanto, el enfoque en cómo se paraleliza esta parte (a través de subpoblaciones y hebras) es crítico para el rendimiento.
+              \item \textbf{Otros parámetros secundarios:} Otros parámetros, como \texttt{NGlobalMigrations}, \texttt{NGenerations}, \texttt{MaxFeatures}, \texttt{TournamentSize}, \texttt{NInstances}, \texttt{FileName}, \texttt{Normalize}, etc., están más relacionados con la configuración específica del algoritmo evolutivo, la gestión de datos o la calidad de la solución final, pero no afectan tan directamente al comportamiento fundamental del paralelismo y la escalabilidad del sistema \cite{escobar2020energy}.
+              \item \textbf{Consideraciones de recursos:} El uso de bases de datos muy grandes (\texttt{NInstances}, \texttt{N\_FEATURES}) puede provocar que el programa aborte debido a limitaciones de memoria local en la GPU. Es más prudente estudiar estos factores una vez que se comprenda bien el rendimiento del paralelismo fundamental.
+          \end{itemize}
+\end{enumerate}
+
+En resumen, al concentrarse en el número de subpoblaciones, el número de hebras y el número de nodos, se aborda directamente la capacidad del programa para aprovechar arquitecturas paralelas y la distribución de la carga de trabajo en todos los niveles, sentando las bases para análisis más detallados posteriormente \cite{escobar2020energy}.
+
+\subsection{Diseño de los experimentos}\label{subsec:diseno_experimentos_detallado}
+
+Los experimentos se estructuran en varias fases con el fin de determinar los parámetros óptimos y evaluar la escalabilidad y portabilidad de HPMoon en distintos entornos y plataformas.
+
+\subsubsection{Determinación del número óptimo de subpoblaciones}
+
+Se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations} a usar en los tests posteriores:
+
+\begin{itemize}
+    \item Se lanzarán ejecuciones con 1, 2, 4, 8 y 16 subpoblaciones.
+    \item Para cada configuración de subpoblaciones, se evaluará con 1, 2, 4, 8 y 16 hebras por subpoblación.
+\end{itemize}
+
+\subsubsection{Estudio del rendimiento al requerir más hebras de las disponibles}
+
+En el dispositivo Lenovo Legion 5, que dispone de un máximo de 16 hebras, se evaluará cómo se comporta la aplicación al requerir un número de hebras mayor al disponible:
+
+\begin{itemize}
+    \item En las ejecuciones multinodo, cada nodo tendrá un número de hebras tal que el número total de hebras requerido sea igual a: \textit{número de nodos} $\times$ \textit{hebras por nodo}.
+    \item Se realizarán dos variantes de test:
+          \begin{enumerate}
+              \item Variante 1: si el número total de hebras requerido supera el máximo del dispositivo (16), el test no se ejecuta.
+              \item Variante 2: se ejecutan los tests aunque el número total de hebras requerido sea mayor a 16.
+          \end{enumerate}
+    \item El objetivo es determinar si es necesario limitar el número de hebras solicitadas en los tests posteriores.
+\end{itemize}
+
+\subsubsection{Estudio del rendimiento al utilizar la misma GPU en todos los nodos}
+
+En un escenario multinodo local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, surge la necesidad de analizar cómo afecta el uso de la GPU al rendimiento de HPMoon. Dado que el dispositivo dispone de una única tarjeta gráfica, se plantean dos configuraciones posibles:
+
+\begin{itemize}
+    \item \textbf{Acceso compartido a la GPU}: todos los nodos utilizan la misma tarjeta gráfica del dispositivo. Esta configuración permite evaluar el impacto de la contención del recurso gráfico cuando varios procesos intentan ejecutar cálculos en paralelo sobre la misma GPU.
+    \item \textbf{GPU asignada a un único nodo}: únicamente un nodo accede a la GPU, mientras que el resto de nodos realiza los cálculos únicamente con la CPU. Este escenario permite medir si centralizar el uso de la GPU en un único nodo mejora la eficiencia global frente al acceso compartido.
+\end{itemize}
+
+El objetivo de este estudio es determinar cuál de estas dos estrategias proporciona un mejor rendimiento en configuraciones multinodo locales:
+
+\begin{itemize}
+    \item Evaluar la eficiencia de ejecución en términos de tiempo total de cálculo y utilización de recursos.
+    \item Analizar la escalabilidad de la aplicación cuando se incrementa el número de nodos, comparando ambos escenarios.
+    \item Extraer recomendaciones sobre la asignación de la GPU en futuras pruebas multinodo, considerando la relación entre rendimiento y complejidad de gestión de los recursos.
+\end{itemize}
+
+Con ello, se podrá establecer si, en entornos multinodo locales con una única GPU disponible, resulta más eficiente que todos los nodos compartan la tarjeta gráfica o si es preferible que solo uno de ellos la utilice.
+
+\subsubsection{Experimentos de escalabilidad}
+
+Una vez definido el número óptimo de subpoblaciones, el rango válido de hebras y la estrategia de uso de la GPU en entornos multinodo, se realizarán los siguientes experimentos:
+
+\begin{itemize}
+    \item \textbf{Escalabilidad mononodo:} con un único nodo fijo, se escala el número de hebras.
+    \item \textbf{Escalabilidad multinodo:} con una única hebra por nodo, se escala el número de nodos.
+    \item \textbf{Barrido de hebras:} se ejecutan todas las combinaciones posibles de número de nodos y hebras por nodo.
+\end{itemize}
+
+\subsubsection{Plataformas y entornos de ejecución}
+
+Los experimentos se realizarán en distintas plataformas y entornos, tanto con uso único de CPU como la combinación con uso de GPU (salvo en el caso de Mac, donde el uso de GPU en contenedores es objeto de estudio):
+
+\begin{itemize}
+    \item Ubuntu 24.04: ejecución nativa, y en contenedores Docker y Podman.
+    \item Windows 11 Home: ejecución en contenedores Docker y Podman.
+    \item MacOS Sequoia 15.5: ejecución en contenedores Docker y Podman.
+\end{itemize}
+
+Esta estructura permitirá evaluar la escalabilidad, portabilidad y rendimiento de HPMoon en entornos contenerizados y nativos, así como en arquitecturas heterogéneas con CPU y GPU.
+
+\section{Herramientas y scripts utilizados}\label{sec:herramientas_scripts}
+
+Para llevar a cabo los experimentos propuestos, se han desarrollado diversos scripts que automatizan las pruebas en diferentes plataformas, entornos y configuraciones. Estos scripts permiten evaluar la escalabilidad, portabilidad y rendimiento de HPMoon en arquitecturas heterogéneas y entornos contenerizados. A continuación, se describen los principales scripts y su propósito:
+
+\subsection{Compilación del programa}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{utils}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{build\_hpmoon.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Compila el programa HPMoon en el directorio de trabajo especificado utilizando \texttt{make} con parámetros específicos para maximizar el rendimiento, como el número de características (\texttt{N\_FEATURES=3600}). Este paso asegura que el ejecutable esté disponible antes de iniciar los experimentos.
+\end{itemize}
+
+\subsection{Experimentos específicos}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{experiments}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native\_limit.sh}
+              \item \texttt{run\_ubuntu\_native\_no-limit.sh}
+              \item \texttt{run\_ubuntu\_native\_subpops\_threads.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Diseñados para pruebas concretas, como el impacto de exceder el número máximo de hebras disponibles o la relación entre subpoblaciones y hebras, permitiendo un análisis más detallado de parámetros clave.
+\end{itemize}
+
+\subsection{Experimentos de escalabilidad mononodo}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{single-node}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Ejecuta pruebas de escalabilidad en un único nodo, variando el número de hebras utilizadas, evaluando el rendimiento nativo en sistemas Ubuntu sin contenedores.
+    \item \textbf{Variantes:}
+          \begin{itemize}
+              \item Versiones para contenedores:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_container.sh}
+                        \item \texttt{run\_mac\_container.sh}
+                        \item \texttt{run\_windows\_container.ps1}
+                    \end{itemize}
+              \item Versiones para GPU:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_gpu\_container.sh}
+                        \item \texttt{run\_mac\_gpu\_container.sh}
+                        \item \texttt{run\_windows\_gpu\_container.ps1}
+                    \end{itemize}
+          \end{itemize}
+\end{itemize}
+
+\subsection{Experimentos de escalabilidad multinodo}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{multi-node}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Distribuye las subpoblaciones entre varios nodos utilizando una única hebra por nodo, evaluando el rendimiento nativo en sistemas distribuidos.
+    \item \textbf{Variantes:}
+          \begin{itemize}
+              \item Versiones para contenedores:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_container.sh}
+                        \item \texttt{run\_mac\_container.sh}
+                        \item \texttt{run\_windows\_container.ps1}
+                    \end{itemize}
+              \item Versiones para GPU:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_gpu\_container.sh}
+                        \item \texttt{run\_mac\_gpu\_container.sh}
+                        \item \texttt{run\_windows\_gpu\_container.ps1}
+                    \end{itemize}
+          \end{itemize}
+\end{itemize}
+
+\subsection{Barrido de hebras}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{thread-sweep}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_native.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Ejecuta todas las combinaciones posibles de número de nodos y hebras por nodo, permitiendo identificar configuraciones óptimas y evaluar el comportamiento del programa en diferentes escenarios.
+    \item \textbf{Variantes:}
+          \begin{itemize}
+              \item Versiones para contenedores:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_container.sh}
+                        \item \texttt{run\_mac\_container.sh}
+                        \item \texttt{run\_windows\_container.ps1}
+                    \end{itemize}
+              \item Versiones para GPU:
+                    \begin{itemize}
+                        \item \texttt{run\_ubuntu\_gpu\_native.sh}
+                        \item \texttt{run\_ubuntu\_gpu\_container.sh}
+                        \item \texttt{run\_mac\_gpu\_container.sh}
+                        \item \texttt{run\_windows\_gpu\_container.ps1}
+                    \end{itemize}
+          \end{itemize}
+\end{itemize}
+
+\subsection{Ejecución automatizada}
+\begin{itemize}
+    \item \textbf{Carpeta:} \texttt{utils}
+    \item \textbf{Script:}
+          \begin{itemize}
+              \item \texttt{run\_ubuntu\_all.sh}
+              \item \texttt{run\_mac\_all.sh}
+              \item \texttt{run\_windows\_all.ps1}
+              \item \texttt{run\_cluster\_all.sh}
+          \end{itemize}
+    \item \textbf{Descripción:} Estos scripts agrupan y ejecutan automáticamente todos los experimentos correspondientes a cada plataforma o entorno, facilitando la ejecución secuencial de múltiples pruebas según la metodología definida.
+\end{itemize}
+
+\section{Repositorio del proyecto}\label{sec:repositorio}
+
+Todo el trabajo desarrollado en este TFG, incluyendo scripts, configuraciones, documentación y resultados de los experimentos, está recogido y disponible públicamente en un repositorio de GitHub\footnote{\url{https://github.com/FerniCuesta/DockEEG}}.

@@ -1,13 +1,155 @@
-\chapter{Experimentación}\label{cap:dise-imp}
+\chapter{Experimentación}\label{cap:experimentacion}
 
-[Exponer aquí los requisitos, diseño y la implementación de la propuesta realizada. Este capítulo podría integrarse el de la propuesta si es necesario.]
+\section{Resultados de los Experimentos}
 
-Ejemplo de código en \LaTeX
+\subsection{Pruebas Mononodo}
+\subsubsection{Ejecución Nativa}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas de tiempo de ejecución vs número de hebras.
+    \item Gráficas de uso de CPU vs número de hebras.
+    \item Tablas con datos clave (tiempo, uso de CPU, eficiencia, etc.).
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas de tiempo de ejecución vs número de hebras.
+    \item Gráficas de uso de CPU/GPU vs número de hebras.
+    \item Comparativa entre solo CPU y CPU + GPU.
+\end{itemize}
+\subsubsection{Contenedores en Nativo}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Comparativa entre ejecución nativa, Docker y Podman.
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Comparativa entre ejecución nativa, Docker y Podman con GPU habilitada.
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+\end{itemize}
+\subsubsection{Contenedores en Windows}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\subsubsection{Contenedores en Mac}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
 
-\section{Setup experimental}
+\subsection{Pruebas Multinodo}
+\subsubsection{Ejecución Nativa}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas de tiempo de ejecución vs número de nodos.
+    \item Gráficas de uso de CPU vs número de nodos.
+    \item Tablas con datos clave (tiempo, uso de CPU, eficiencia, etc.).
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas de tiempo de ejecución vs número de nodos.
+    \item Gráficas de uso de CPU/GPU vs número de nodos.
+    \item Comparativa entre solo CPU y CPU + GPU.
+\end{itemize}
+\subsubsection{Contenedores en Nativo}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Comparativa entre ejecución nativa, Docker y Podman.
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Comparativa entre ejecución nativa, Docker y Podman con GPU habilitada.
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+\end{itemize}
+\subsubsection{Contenedores en Windows}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\subsubsection{Contenedores en Mac}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
 
- [Se definen aquí los \textit{setups} necesarios así como su configuración para poder evaluar y validar la propuesta de proyecto y objetivos del mismo. Es posible que se divida en secciones correspondientes a escenarios diferentes para evaluar diferentes casos de uso o funcionalidades.]
+\subsection{Barrido de Hebras}
+\subsubsection{Ejecución Nativa}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas de tiempo de ejecución vs número de hebras.
+    \item Gráficas de uso de CPU vs número de hebras.
+    \item Tablas con datos clave (tiempo, uso de CPU, eficiencia, etc.).
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas de tiempo de ejecución vs número de hebras.
+    \item Gráficas de uso de CPU/GPU vs número de hebras.
+    \item Comparativa entre solo CPU y CPU + GPU.
+\end{itemize}
+\subsubsection{Contenedores en Nativo}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Comparativa entre ejecución nativa, Docker y Podman.
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Comparativa entre ejecución nativa, Docker y Podman con GPU habilitada.
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+\end{itemize}
+\subsubsection{Contenedores en Windows}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\subsubsection{Contenedores en Mac}
+\paragraph{Solo CPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
+\paragraph{CPU + GPU}
+\begin{itemize}
+    \item Gráficas y tablas de tiempo de ejecución y uso de CPU/GPU.
+    \item Comparativa con ejecución nativa.
+\end{itemize}
 
-\subsection{Escenario 1: bla bla bla ...}
+\subsection{Comparativa General}
+\begin{itemize}
+    \item Mononodo vs Multinodo: Comparativa de tiempo de ejecución y uso de CPU. Impacto de la distribución multinodo en el rendimiento.
+    \item Nativo vs Contenedores: Comparativa de tiempo de ejecución y uso de CPU/GPU entre entornos. Análisis de la penalización (si existe) al usar contenedores.
+    \item Solo CPU vs CPU + GPU: Comparativa de rendimiento entre configuraciones. Análisis del impacto de la GPU en el rendimiento.
+\end{itemize}
 
-\section{Resultados y discusión}
