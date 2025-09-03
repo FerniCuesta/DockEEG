@@ -14,6 +14,17 @@
 
 \usepackage{booktabs}
 
+% Crear tablas con celdas que ocupan varias filas
+\usepackage{multirow}
+
+% Forzar figuras en la posición que se indica
+\usepackage{float}
+
+% Fórmulas matemáticas
+\usepackage{amsmath}
+
+
+
 % Lo he comentado porque da problemas al compilar
 % \usepackage{minted}
 
@@ -241,9 +252,6 @@ pdfproducer = {pdflatex}
 % \addcontentsline{toc}{chapter}{Glosario}
 % \printglossary
 
-\bibliographystyle{IEEEtran}
-\bibliography{referencias}\addcontentsline{toc}{chapter}{Bibliografía}
-\chapter*{}
 \thispagestyle{empty}
 
 \end{document}

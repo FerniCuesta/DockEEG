@@ -182,9 +182,9 @@ En resumen, al concentrarse en el número de subpoblaciones, el número de hebra
 
 Los experimentos se estructuran en varias fases con el fin de determinar los parámetros óptimos y evaluar la escalabilidad y portabilidad de HPMoon en distintos entornos y plataformas.
 
-\subsubsection{Determinación del número óptimo de subpoblaciones}
+\subsubsection{Determinación del número óptimo de subpoblaciones}\label{subsubsec:determinacion_subpoblaciones}
 
-Se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations} a usar en los tests posteriores:
+Se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations}, así como el de \texttt{CpuThreads}, a usar en los tests posteriores:
 
 \begin{itemize}
     \item Se lanzarán ejecuciones con 1, 2, 4, 8 y 16 subpoblaciones.
@@ -193,7 +193,7 @@ Se realizarán ejecuciones exploratorias con distintas configuraciones de subpob
 
 \subsubsection{Estudio del rendimiento al requerir más hebras de las disponibles}
 
-En el dispositivo Lenovo Legion 5, que dispone de un máximo de 16 hebras, se evaluará cómo se comporta la aplicación al requerir un número de hebras mayor al disponible:
+Uno de los experimentos que propondremos más adelante es estudiar el rendimiento de la aplicación realizando un barrido completo de todas las combinaciones posibles de número de nodos y hebras por nodo. Dado que el dispositivo donde se correrán los tests dispone de un máximo de 16 hebras, es interesante evaluar cómo se comporta la aplicación al requerir un número de hebras mayor al disponible. Esto nos indicará si es necesario limitar el número de hebras solicitadas en los tests posteriores.
 
 \begin{itemize}
     \item En las ejecuciones multinodo, cada nodo tendrá un número de hebras tal que el número total de hebras requerido sea igual a: \textit{número de nodos} $\times$ \textit{hebras por nodo}.
@@ -207,7 +207,7 @@ En el dispositivo Lenovo Legion 5, que dispone de un máximo de 16 hebras, se ev
 
 \subsubsection{Estudio del rendimiento al utilizar la misma GPU en todos los nodos}
 
-En un escenario multinodo local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, surge la necesidad de analizar cómo afecta el uso de la GPU al rendimiento de HPMoon. Dado que el dispositivo dispone de una única tarjeta gráfica, se plantean dos configuraciones posibles:
+En un escenario multinodo local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, surge la necesidad de analizar cómo afecta el uso de la GPU al rendimiento de HPMoon. Dado que el dispositivo donde se correrán los tests dispone de una única tarjeta gráfica, se plantean dos configuraciones posibles:
 
 \begin{itemize}
     \item \textbf{Acceso compartido a la GPU}: todos los nodos utilizan la misma tarjeta gráfica del dispositivo. Esta configuración permite evaluar el impacto de la contención del recurso gráfico cuando varios procesos intentan ejecutar cálculos en paralelo sobre la misma GPU.
