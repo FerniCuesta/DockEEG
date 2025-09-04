@@ -22,36 +22,49 @@ New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
 
 foreach ($Container in $ContainerList) {
     $Results = "$ResultsDir/thread-sweep/windows_gpu_${Container}.csv"
-    "nodes,threads,time,max_memory,cpu_percentage" | Set-Content $Results
+    "nodes,threads,time_seconds" | Set-Content $Results
 
-    foreach ($Threads in $ThreadsList) {
-        Write-Host "------------------------------------------------------------"
-        $TotalThreads = $Threads * $Nodes[0]
-        Write-Host "Starting test with $($Nodes[0]) nodes and $Threads threads ($Container, total threads: $TotalThreads)..."
+    foreach ($NodesCount in $Nodes) {
+        foreach ($Threads in $ThreadsList) {
+            Write-Host "------------------------------------------------------------"
+            $TotalThreads = $NodesCount * $Threads
+            Write-Host "Starting test with $NodesCount nodes and $Threads threads ($Container, total threads: $TotalThreads)..."
 
-        # Change the number of threads in the configuration file
-        (Get-Content $Config) -replace '<CpuThreads>\d+</CpuThreads>', "<CpuThreads>$Threads</CpuThreads>" | Set-Content $Config
+            # Change the number of threads in the configuration file
+            (Get-Content $Config) -replace '<CpuThreads>\d+</CpuThreads>', "<CpuThreads>$Threads</CpuThreads>" | Set-Content $Config
 
-        # Change the logfile name to include the number of threads and container
-        $LogFile = "$LogDir/thread-sweep/windows_gpu_${Container}_${Threads}threads.log"
+            # Build the hosts string
+            $Hosts = [string]::Join(",", (1..$NodesCount | ForEach-Object { "localhost" }))
 
-        # Run the program in Docker or Podman and save the log
-        Write-Host "Running the program in $Container and saving log to $LogFile"
-        $sw = [System.Diagnostics.Stopwatch]::StartNew()
-        $mount = "$PWD\$Config" + ":/root/Hpmoon/config.xml"
-        & $Container run --rm -v $mount $Image *>&1 | Tee-Object -FilePath $LogFile
-        $sw.Stop()
-        $elapsed = $sw.Elapsed.ToString()
+            # Change the logfile name to include the number of threads, nodes, and container
+            $LogFile = "$LogDir/thread-sweep/windows_gpu_${Container}_${NodesCount}nodes_${Threads}threads.log"
 
-        # Extract metrics from the log file (adjust patterns as needed)
-        $logContent = Get-Content $LogFile
-        $maxMemory = ($logContent | Select-String "Maximum resident set size" | ForEach-Object { $_.ToString().Split()[-1] }) -join ""
-        $cpuPercentage = ($logContent | Select-String "Percent of CPU this job got" | ForEach-Object { $_.ToString().Split(":")[-1].Trim().TrimEnd("%") }) -join ""
+            Write-Host "Running the program in $Container and saving log to $LogFile"
+            $mount = "$PWD\$Config" + ":/root/Hpmoon/config.xml"
+            $dockerArgs = @(
+                "run", "--rm",
+                "-v", $mount,
+                "-w", "/root/Hpmoon",
+                $Image,
+                "mpirun", "--bind-to", "none", "--allow-run-as-root", "--map-by", "node",
+                "--host", $Hosts,
+                "./bin/hpmoon", "-conf", "config.xml"
+            )
+            $startTime = Get-Date
 
-        # Log the results
-        "$Nodes,$Threads,$elapsed,$maxMemory,$cpuPercentage" | Add-Content $Results
+            # Run the container and capture output
+            $output = & $Container @dockerArgs *>&1 | Tee-Object -FilePath $LogFile
 
-        Write-Host "Test with $Threads threads ($Container) finished."
+            $endTime = Get-Date
+            $elapsed = $endTime - $startTime
+            $TimeSeconds = $elapsed.TotalSeconds
+
+            # Write metrics to the results file
+            Write-Host "Writing metrics in $Results"
+            "$NodesCount,$Threads,$TimeSeconds" | Add-Content $Results
+
+            Write-Host "Test with $NodesCount nodes and $Threads threads ($Container) finished."
+        }
     }
 }
 
