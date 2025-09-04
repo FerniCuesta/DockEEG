@@ -264,58 +264,479 @@ En la tabla \ref{tab:single-node_ubuntu_cpu_native} se presentan los tiempos de 
 
 El tiempo de ejecución disminuye drásticamente al aumentar el número de hebras, especialmente en el rango de $1$ a $8$ hebras. Con $2$ hebras, el tiempo se reduce prácticamente a la mitad ($-50.18\%$), y con $4$ hebras, a casi una cuarta parte del tiempo original ($-73.57\%$). El mayor beneficio se observa al pasar de $4$ a $8$ hebras, alcanzando una reducción del $-84.47\%$ respecto a una hebra. Sin embargo, al incrementar a $16$ hebras, el tiempo de ejecución es ligeramente superior al obtenido con $8$ hebras, lo que sugiere la aparición de saturación o sobrecarga en el sistema. Por tanto, el óptimo se alcanza con $8$ hebras, coincidiendo con el número de núcleos físicos disponibles en el sistema.
 
-Estos resultados evidencian un buen escalado del rendimiento al aumentar el número de hebras en un entorno mononodo de ejecución nativa en Ubuntu utilizando únicamente la CPU.
+En la figura \ref{fig:single-node_ubuntu_cpu_native_cpu} se muestra el porcentaje de uso de CPU en función del número de hebras.
 
-\paragraph{CPU + GPU}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_cpu_native_cpu.png}
+    \caption{Uso de CPU en función del número de hebras en Ubuntu nativo (CPU).}
+    \label{fig:single-node_ubuntu_cpu_native_cpu}
+\end{figure}
+
+La tabla \ref{tab:single-node_ubuntu_cpu_native_cpu} muestra el porcentaje de uso de CPU alcanzado para cada número de hebras, el máximo teórico posible (calculado como número de hebras por 100\%), y la eficiencia relativa obtenida.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Porcentaje de CPU (\%)} & \textbf{Max posible CPU (\%)} & \textbf{Eficiencia CPU (\%)} \\
+        \hline
+        1               & 99.00                           & 100.00                        & 99.00                        \\
+        2               & 199.00                          & 200.00                        & 99.50                        \\
+        4               & 395.00                          & 400.00                        & 98.75                        \\
+        8               & 780.00                          & 800.00                        & 97.50                        \\
+        16              & 1556.00                         & 1600.00                       & 97.25                        \\
+        \hline
+    \end{tabular}
+    \caption{Porcentaje de uso de CPU y eficiencia en función del número de hebras en Ubuntu nativo (CPU).}
+    \label{tab:single-node_ubuntu_cpu_native_cpu}
+\end{table}
+
+El uso de CPU aumenta de manera casi lineal conforme se incrementa el número de hebras, lo que evidencia un excelente escalado del paralelismo en la ejecución. La eficiencia de uso de la CPU se mantiene muy elevada en todos los casos, superando el $97\%$, lo que indica que prácticamente se está aprovechando todo el potencial de cómputo disponible. Aunque la eficiencia disminuye ligeramente al aumentar el número de hebras (desde un máximo del $99\%$ hasta un mínimo del $97.25\%$), esta reducción es mínima y esperable, ya que responde a la sobrecarga asociada a la gestión de un mayor número de hilos y a posibles contenciones internas. En conjunto, el sistema demuestra un escalado eficiente hasta $16$ hebras, con una pérdida de eficiencia muy reducida.
+
+Estos resultados evidencian que el entorno mononodo nativo en Ubuntu gestiona eficazmente el paralelismo y aprovecha bien los recursos de la CPU, mostrando un buen escalado del rendimiento al aumentar el número de hebras.
+
+\subsubsection{CPU + GPU}
+
+En la figura \ref{fig:single-node_ubuntu__gpu_native_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único nodo con Ubuntu nativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_gpu_native_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU + GPU).}
+    \label{fig:single-node_ubuntu__gpu_native_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_gpu_native} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1.00            & 311.68              & 0.00                           \\
+        2.00            & 163.59              & -47.51                         \\
+        4.00            & 84.49               & -72.89                         \\
+        8.00            & 59.91               & -80.78                         \\
+        16.00           & 56.45               & -81.89                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en Ubuntu nativo (CPU + GPU).}
+    \label{tab:single-node_ubuntu_gpu_native}
+\end{table}
+
+El análisis de los resultados muestra que el tiempo de ejecución disminuye de forma significativa al incrementar el número de hebras, especialmente en el rango de $1$ a $4$ hebras, donde se alcanza una reducción del $72.89\%$. La mayor ganancia relativa se produce al pasar de $1$ a $2$ hebras ($-47.51\%$) y de $2$ a $4$ hebras ($-25.38\%$ adicional). Sin embargo, a partir de $8$ hebras, la mejora es marginal: el tiempo de ejecución solo disminuye de $59.91\,s$ a $56.45\,s$ al pasar de $8$ a $16$ hebras, lo que supone apenas un $1.11\%$ adicional. Esto indica que el sistema alcanza un punto óptimo de rendimiento con $8$ hebras, y que a partir de ese valor se observa una saturación en la eficiencia de la paralelización. En conjunto, la combinación CPU + GPU proporciona una aceleración notable, pero la eficiencia se estabiliza a partir de cierto número de hebras, reflejando el límite práctico de paralelismo efectivo en el entorno analizado.
+
+\subsubsection{Comparativa CPU vs CPU + GPU}
+
+En la figura \ref{fig:single-node_ubuntu_cpu_vs_gpu_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones de CPU y CPU + GPU en un único nodo con Ubuntu nativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_cpu_vs_gpu_native_time.png}
+    \caption{Comparativa de tiempo de ejecución entre CPU y CPU + GPU en función del número de hebras en Ubuntu nativo.}
+    \label{fig:single-node_ubuntu_cpu_vs_gpu_native_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_cpu_vs_gpu_native} se presentan los tiempos de ejecución para ambas configuraciones y la variación porcentual entre ellas.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo CPU (s)} & \textbf{Tiempo CPU+GPU (s)} & \textbf{Variación (\%)} \\
+        \hline
+        1               & 2515.21                 & 311.68                      & -87.61                  \\
+        2               & 1253.18                 & 163.59                      & -86.95                  \\
+        4               & 664.69                  & 84.49                       & -87.29                  \\
+        8               & 390.72                  & 59.91                       & -84.67                  \\
+        16              & 406.76                  & 56.45                       & -86.12                  \\
+        \hline
+    \end{tabular}
+    \caption{Comparativa de tiempos de ejecución y variación porcentual entre CPU y CPU+GPU en Ubuntu nativo.}
+    \label{tab:single-node_ubuntu_cpu_vs_gpu_native}
+\end{table}
+
+El análisis de los resultados muestra que el uso de GPU reduce el tiempo de ejecución entre un $84\%$ y un $88\%$ respecto a la ejecución únicamente en CPU, independientemente del número de hebras empleadas. La mejora relativa se mantiene estable al aumentar el paralelismo, lo que indica que la GPU aporta un beneficio constante y no dependiente del número de hilos de CPU utilizados. Además, mientras que en la configuración solo CPU el tiempo de ejecución deja de mejorar al pasar de $8$ a $16$ hebras (e incluso empeora ligeramente), en la configuración CPU+GPU la mejora es marginal pero consistente. En conjunto, la incorporación de GPU resulta altamente beneficiosa, acelerando el procesamiento en torno al $85\%$ en todos los escenarios analizados.
 
 \subsection{Ejecución en contenedores de Ubuntu}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+En la figura \ref{fig:single-node_ubuntu_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único nodo con contenedores de Ubuntu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_docker_time.png}
+    \caption{Tiempo de ejecución en un único nodo con contenedores de Ubuntu (CPU).}
+    \label{fig:single-node_ubuntu_docker_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_docker} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1               & 2499.09             & 0.00                           \\
+        2               & 1255.95             & -49.74                         \\
+        4               & 652.33              & -73.90                         \\
+        8               & 388.04              & -84.47                         \\
+        16              & 404.09              & -83.83                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en contenedores de Ubuntu (CPU).}
+    \label{tab:single-node_ubuntu_docker}
+\end{table}
+
+El tiempo de ejecución disminuye significativamente al aumentar el número de hebras, especialmente al pasar de 1 a 8 hebras, donde la reducción alcanza el 84.47\%.
+
+La mayor ganancia relativa se obtiene al pasar de 1 a 2 hebras (-49.74\%) y de 2 a 4 hebras (-48.16\% adicional), mostrando una buena escalabilidad inicial.
+
+A partir de 8 hebras, la mejora se estabiliza y el rendimiento apenas varía, e incluso con 16 hebras el tiempo de ejecución es ligeramente superior al de 8 hebras, lo que indica que se alcanza un límite de paralelización eficiente.
+
+Estos resultados sugieren que, en este entorno, el uso de más de 8 hebras no aporta beneficios significativos y puede incluso generar sobrecarga, por lo que 8 hebras representa el punto óptimo de eficiencia para la ejecución en contenedores de Ubuntu con CPU.
+
+En la figura \ref{fig:single-node_ubuntu_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único nodo con contenedores de Ubuntu gestionados por Podman.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_podman_time.png}
+    \caption{Tiempo de ejecución en un único nodo con contenedores de Ubuntu gestionados por Podman (CPU).}
+    \label{fig:single-node_ubuntu_podman_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_podman} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1               & 2499.16             & 0.00                           \\
+        2               & 1266.51             & -49.32                         \\
+        4               & 665.38              & -73.38                         \\
+        8               & 400.51              & -83.97                         \\
+        16              & 413.53              & -83.45                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en contenedores de Ubuntu gestionados por Podman (CPU).}
+    \label{tab:single-node_ubuntu_podman}
+\end{table}
+
+El tiempo de ejecución disminuye de forma considerable al aumentar el número de hebras, especialmente entre 1 y 8 hebras, donde la reducción alcanza el 83.97\%.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-49.32\%) y de 2 a 4 hebras (-47.97\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza y el beneficio adicional es mínimo; con 16 hebras, el tiempo incluso aumenta ligeramente respecto a 8 hebras, lo que sugiere que se alcanza el límite de paralelización eficiente.
+
+Estos resultados muestran que, en este entorno con Podman y CPU, el uso óptimo se encuentra en torno a 8 hebras, ya que aumentar más allá de este valor no aporta mejoras significativas y puede generar sobrecarga.
+
+\subsubsection{CPU + GPU}
+
+En la figura \ref{fig:single-node_ubuntu_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único nodo con contenedores de Ubuntu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_docker_gpu_time.png}
+    \caption{Tiempo de ejecución en un único nodo con contenedores de Ubuntu (CPU + GPU).}
+    \label{fig:single-node_ubuntu_docker_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_docker_gpu} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1               & 312.18              & 0.00                           \\
+        2               & 161.10              & -48.40                         \\
+        4               & 85.78               & -72.52                         \\
+        8               & 60.65               & -80.57                         \\
+        16              & 57.45               & -81.60                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en contenedores de Ubuntu (CPU + GPU).}
+    \label{tab:single-node_ubuntu_docker_gpu}
+\end{table}
+
+El uso combinado de CPU y GPU en contenedores de Ubuntu permite una reducción muy significativa en los tiempos de ejecución al aumentar el número de hebras, alcanzando una disminución del 81.60\% con 16 hebras respecto a la ejecución con una sola hebra.
+
+La mayor ganancia relativa se observa al pasar de 1 a 2 hebras (-48.40\%) y de 2 a 4 hebras (-24.12\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la mejora se estabiliza y el beneficio adicional es marginal; el tiempo de ejecución con 16 hebras es solo ligeramente menor que con 8 hebras.
+
+Estos resultados muestran que, en este entorno, la combinación de CPU y GPU permite aprovechar eficientemente el paralelismo hasta 8 hebras, siendo el punto óptimo de eficiencia, ya que aumentar más allá de este valor aporta mejoras muy pequeñas.
+
+En la figura \ref{fig:single-node_ubuntu_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único nodo con contenedores de Ubuntu gestionados por Podman.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_podman_gpu_time.png}
+    \caption{Tiempo de ejecución en un único nodo con contenedores de Ubuntu gestionados por Podman (CPU + GPU).}
+    \label{fig:single-node_ubuntu_podman_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_podman_gpu} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1               & 314.51              & 0.00                           \\
+        2               & 158.84              & -49.50                         \\
+        4               & 85.62               & -72.78                         \\
+        8               & 59.47               & -81.09                         \\
+        16              & 57.12               & -81.84                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en contenedores de Ubuntu gestionados por Podman (CPU + GPU).}
+    \label{tab:single-node_ubuntu_podman_gpu}
+\end{table}
+
+El tiempo de ejecución disminuye drásticamente al aumentar el número de hebras, alcanzando una reducción del 81.84\% con 16 hebras respecto a la ejecución con una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-49.50\%) y de 2 a 4 hebras (-23.28\% adicional), lo que indica una excelente escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza y el beneficio adicional es muy pequeño; el tiempo con 16 hebras es solo ligeramente menor que con 8 hebras.
+
+Estos resultados muestran que, en este entorno con Podman y CPU+GPU, el uso óptimo se encuentra en torno a 8 hebras, ya que aumentar más allá de este valor no aporta mejoras significativas y puede generar sobrecarga.
+
+\subsubsection{Comparativa contenedores vs nativo}
+
+En la figura \ref{fig:single-node_ubuntu_container_vs_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones nativas y en contenedores de Ubuntu para CPU.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_container_vs_native_time.png}
+    \caption{Comparativa de tiempo de ejecución entre nativo y contenedores de Ubuntu en función del número de hebras, para CPU.}
+    \label{fig:single-node_ubuntu_container_vs_native_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_ubuntu_container_vs_native} se presentan los tiempos de ejecución para ambas configuraciones y la variación porcentual entre ellas.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Nativo (s)} & \textbf{Docker (s)} & \textbf{Docker $\Delta$\%} & \textbf{Podman (s)} & \textbf{Podman $\Delta$\%} \\
+        \hline
+        1               & 311.68              & 312.18              & 0.16                       & 314.51              & 0.91                       \\
+        2               & 163.59              & 161.10              & -1.52                      & 158.84              & -2.90                      \\
+        4               & 84.49               & 85.78               & 1.53                       & 85.62               & 1.34                       \\
+        8               & 59.91               & 60.65               & 1.24                       & 59.47               & -0.73                      \\
+        16              & 56.45               & 57.45               & 1.77                       & 57.12               & 1.19                       \\
+        \hline
+    \end{tabular}
+    \caption{Comparativa de tiempos de ejecución entre nativo, Docker y Podman (CPU+GPU) y variación porcentual respecto a nativo.}
+    \label{tab:single-node_ubuntu_container_vs_native}
+\end{table}
 
 \subsection{Contenedores en contenedores de Windows}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+En la figura \ref{fig:single-node_windows_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único nodo con Docker en Windows.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_docker_time.png}
+    \caption{Tiempo de ejecución en un único nodo con Docker en Windows (CPU).}
+    \label{fig:single-node_windows_docker_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_windows_docker_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1.00            & 3308.08             & 0.00                           \\
+        2.00            & 1341.41             & -59.45                         \\
+        4.00            & 816.06              & -75.33                         \\
+        8.00            & 602.60              & -81.78                         \\
+        16.00           & 453.44              & -86.29                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en Docker sobre Windows (CPU).}
+    \label{tab:single-node_windows_docker_time}
+\end{table}
+
+El tiempo de ejecución disminuye de forma significativa al aumentar el número de hebras, alcanzando una reducción del 86.29\% con 16 hebras respecto a la ejecución con una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-59.45\%) y de 2 a 4 hebras (-39.46\% adicional), lo que indica una excelente escalabilidad inicial.
+
+A medida que se incrementa el número de hebras, la reducción en el tiempo de ejecución se mantiene, aunque con beneficios marginales decrecientes a partir de 8 hebras.
+
+Estos resultados muestran que, en Docker sobre Windows (CPU), el uso de múltiples hebras es muy eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar el mayor número de hebras posible para minimizar el tiempo de ejecución.
+
+En la figura \ref{fig:single-node_windows_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único nodo con Podman en Windows.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_podman_time.png}
+    \caption{Tiempo de ejecución en un único nodo con Podman en Windows (CPU).}
+    \label{fig:single-node_windows_podman_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_windows_podman_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1.00            & 2520.21             & 0.00                           \\
+        2.00            & 1359.69             & -46.05                         \\
+        4.00            & 815.04              & -67.66                         \\
+        8.00            & 595.54              & -76.37                         \\
+        16.00           & 448.43              & -82.21                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en Podman sobre Windows (CPU).}
+    \label{tab:single-node_windows_podman_time}
+\end{table}
+
+El tiempo de ejecución disminuye notablemente al aumentar el número de hebras, alcanzando una reducción del 82.21\% con 16 hebras respecto a una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-46.05\%) y de 2 a 4 hebras (-21.61\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución continúa, aunque los beneficios adicionales son menores, mostrando una tendencia a estabilizarse.
+
+Estos resultados indican que, en Podman sobre Windows (CPU), el uso de múltiples hebras es eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar el mayor número de hebras posible para reducir el tiempo de ejecución, aunque las ganancias adicionales disminuyen a partir de 8 hebras.
+
+\subsubsection{CPU + GPU}
+
+% En la figura \ref{fig:single-node_windows_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único nodo con Docker en Windows.
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_docker_gpu_time.png}
+%     \caption{Tiempo de ejecución en un único nodo con Docker en Windows (CPU + GPU).}
+%     \label{fig:single-node_windows_docker_gpu_time}
+% \end{figure}
+
+% En la tabla \ref{tab:single-node_windows_docker_gpu_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
 
 \subsection{Contenedores en contenedores de Mac}
-\paragraph{CPU}
+\subsubsection{CPU}
+
+En la figura \ref{fig:single-node_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único nodo con Docker en Mac.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_mac_docker_time.png}
+    \caption{Tiempo de ejecución en un único nodo con Docker en Mac (CPU).}
+    \label{fig:single-node_mac_docker_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_mac_docker_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1.00            & 1794.98             & 0.00                           \\
+        2.00            & 951.56              & -46.99                         \\
+        4.00            & 551.41              & -69.28                         \\
+        8.00            & 304.35              & -83.04                         \\
+        16.00           & 270.25              & -84.94                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en Docker sobre Mac (CPU).}
+    \label{tab:single-node_mac_docker_time}
+\end{table}
+
+El tiempo de ejecución disminuye considerablemente al aumentar el número de hebras, alcanzando una reducción del 84.94\% con 16 hebras respecto a una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-46.99\%) y de 2 a 4 hebras (-22.29\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza, con beneficios adicionales menores al incrementar a 16 hebras.
+
+Estos resultados muestran que, en Docker sobre Mac (CPU), el uso de múltiples hebras es eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar el mayor número de hebras posible para minimizar el tiempo de ejecución, aunque las ganancias adicionales disminuyen a partir de 8 hebras.
+
+En la figura \ref{fig:single-node_mac_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único nodo con Podman en Mac.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_mac_podman_time.png}
+    \caption{Tiempo de ejecución en un único nodo con Podman en Mac (CPU).}
+    \label{fig:single-node_mac_podman_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_mac_podman_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1.00            & 8247.00             & 0.00                           \\
+        2.00            & 4328.00             & -47.52                         \\
+        4.00            & 2250.20             & -72.71                         \\
+        8.00            & 1638.79             & -80.13                         \\
+        16.00           & 1625.19             & -80.29                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en Podman sobre Mac (CPU).}
+    \label{tab:single-node_mac_podman_time}
+\end{table}
+
+El tiempo de ejecución disminuye de forma muy significativa al aumentar el número de hebras, alcanzando una reducción del 80.29\% con 16 hebras respecto a una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-47.52\%) y de 2 a 4 hebras (-25.19\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza, con beneficios adicionales mínimos al incrementar a 16 hebras (solo -0.16\% respecto a 8 hebras).
+
+Estos resultados muestran que, en Podman sobre Mac (CPU), el uso de múltiples hebras es eficiente hasta cierto punto, pero las ganancias adicionales más allá de 8 hebras son muy limitadas, sugiriendo que el paralelismo óptimo se alcanza alrededor de ese valor.
 
 \section{Pruebas multinodo}
 \subsection{Ejecución en Ubuntu en nativo}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+\subsubsection{CPU + GPU}
 
 \subsection{Ejecución en contenedores de Ubuntu}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+\subsubsection{CPU + GPU}
 
 \subsection{Contenedores en contenedores de Windows}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+\subsubsection{CPU + GPU}
 
 \subsection{Contenedores en contenedores de Mac}
-\paragraph{CPU}
+\subsubsection{CPU}
 
 \section{Pruebas de barrido de hebras}
 \subsection{Ejecución en Ubuntu en nativo}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+\subsubsection{CPU + GPU}
 
 \subsection{Ejecución en contenedores de Ubuntu}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+\subsubsection{CPU + GPU}
 
 \subsection{Contenedores en contenedores de Windows}
-\paragraph{CPU}
+\subsubsection{CPU}
 
-\paragraph{CPU + GPU}
+\subsubsection{CPU + GPU}
 
 \subsection{Contenedores en contenedores de Mac}
-\paragraph{CPU}
+\subsubsection{CPU}
 
