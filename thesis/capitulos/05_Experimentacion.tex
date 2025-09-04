@@ -706,12 +706,277 @@ Estos resultados muestran que, en Podman sobre Mac (CPU), el uso de múltiples h
 \subsection{Ejecución en Ubuntu en nativo}
 \subsubsection{CPU}
 
+La figura \ref{fig:multi-node_ubuntu_cpu_native_time} muestra el tiempo de ejecución para la configuración de CPU en un entorno multinodo con Ubuntu nativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_cpu_native_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_cpu_native_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_cpu_native} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo de ejecución (s)} & \textbf{$\Delta$\% vs 1 nodo} \\
+        \hline
+        1              & 2515.21                          & 0.00                          \\
+        2              & 2489.49                          & -1.02                         \\
+        4              & 952.85                           & -62.12                        \\
+        8              & 767.87                           & -69.47                        \\
+        16             & 841.96                           & -66.53                        \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a un nodo en entorno multinodo Ubuntu nativo (CPU).}
+    \label{tab:multi-node_ubuntu_cpu_native}
+\end{table}
+
+La tabla muestra cómo varía el tiempo de ejecución al aumentar el número de nodos en un entorno multinodo Ubuntu nativo usando CPU. Se observa que:
+
+Al pasar de 1 a 2 nodos, la reducción del tiempo es mínima (-1.02\%), lo que indica poca mejora.
+Con 4 nodos, el tiempo baja significativamente (-62.12\%), mostrando una mejora notable en la paralelización.
+Con 8 nodos, la reducción es aún mayor (-69.47\%), aunque el beneficio adicional respecto a 4 nodos es menor.
+Al aumentar a 16 nodos, el tiempo de ejecución aumenta ligeramente respecto a 8 nodos y la reducción porcentual disminuye (-66.53\%), lo que sugiere que a partir de cierto punto añadir más nodos no mejora el rendimiento e incluso puede empeorarlo, posiblemente por sobrecarga de comunicación o gestión.
+
+En resumen, la eficiencia de la paralelización mejora hasta cierto número de nodos, pero después se observa un efecto de saturación o incluso degradación del rendimiento.
+
+En la figura \ref{fig:multi-node_ubuntu_cpu_native_cpu} se muestra el porcentaje de uso de CPU y la eficiencia en función del número de nodos en un entorno multinodo con Ubuntu nativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_cpu_native_cpu_time.png}
+    \caption{Porcentaje de uso de CPU y eficiencia en función del número de nodos en Ubuntu nativo (CPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_cpu_native_cpu}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_cpu_native_cpu} se presentan los porcentajes de uso de CPU y la eficiencia correspondiente.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Porcentaje de CPU (\%)} & \textbf{Max uso CPU (\%)} & \textbf{Eficiencia CPU (\%)} \\
+        \hline
+        1              & 99.00                           & 100.00                    & 99.00                        \\
+        2              & 199.00                          & 200.00                    & 99.50                        \\
+        4              & 399.00                          & 400.00                    & 99.75                        \\
+        8              & 799.00                          & 800.00                    & 99.88                        \\
+        16             & 1592.00                         & 1600.00                   & 99.50                        \\
+        \hline
+    \end{tabular}
+    \caption{Porcentaje de uso de CPU y eficiencia en función del número de nodos en Ubuntu nativo (CPU) en entorno multinodo.}
+    \label{tab:multi-node_ubuntu_cpu_native_cpu}
+\end{table}
+
+La tabla muestra el porcentaje de uso de CPU y la eficiencia al aumentar el número de nodos en un entorno multinodo Ubuntu nativo (CPU):
+
+El uso de CPU escala casi linealmente con el número de nodos, lo que indica que los recursos se están utilizando de manera efectiva. El valor "Max uso CPU" representa el uso máximo teórico (número de nodos $\times$ 100\%), y el uso real está muy cerca de ese máximo en todos los casos. La eficiencia de CPU se mantiene muy alta (entre 99.00\% y 99.88\%) para todos los escenarios, lo que sugiere que la sobrecarga de paralelización es mínima y que el sistema aprovecha casi todo el potencial de los recursos disponibles. Solo con 16 nodos se observa una ligera caída en la eficiencia (99.50\%), pero sigue siendo excelente.
+
+En resumen, el sistema mantiene una eficiencia de CPU muy alta al escalar el número de nodos, lo que indica una buena gestión de los recursos y una paralelización efectiva en este entorno.
+
 \subsubsection{CPU + GPU}
+
+La figura \ref{fig:multi-node_ubuntu_gpu_native_time} muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multinodo con Ubuntu nativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_gpu_native_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU + GPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_gpu_native_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_gpu_native} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 nodo} \\
+        \hline
+        1              & 311.68              & 0.00                          \\
+        2              & 316.92              & 1.68                          \\
+        4              & 322.77              & 3.56                          \\
+        8              & 401.33              & 28.76                         \\
+        16             & 869.40              & 178.94                        \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a un nodo en entorno multinodo Ubuntu nativo (CPU + GPU).}
+    \label{tab:multi-node_ubuntu_gpu_native}
+\end{table}
+
+La tabla muestra los tiempos de ejecución y la variación porcentual al aumentar el número de nodos en un entorno multinodo Ubuntu nativo utilizando CPU y GPU:
+
+Con un solo nodo, el tiempo base es de 311.68\,s. Al incrementar a 2 y 4 nodos, el tiempo de ejecución aumenta ligeramente (316.92\,s y 322.77\,s), lo que implica una pequeña penalización en lugar de una mejora (variaciones positivas del 1.68\% y 3.56\%). Con 8 nodos, el tiempo sube notablemente hasta 401.33\,s (+28.76\%), y con 16 nodos el incremento es aún mayor (869.40\,s, +178.94\%).
+
+Estos resultados indican que, a diferencia del caso solo CPU, al añadir más nodos con GPU el rendimiento empeora progresivamente. Es probable que la sobrecarga de comunicación, la gestión de recursos compartidos o la falta de escalabilidad de la aplicación para GPU estén afectando negativamente. En este entorno, la paralelización no solo no aporta beneficios, sino que resulta contraproducente a partir de más de un nodo.
+
+\subsubsection{Comparativa CPU vs CPU + GPU}
+
+En la figura \ref{fig:multi-node_ubuntu_cpu_vs_gpu_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones CPU y CPU + GPU en un entorno multinodo con Ubuntu nativo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_cpu_vs_gpu_native_time.png}
+    \caption{Comparativa de tiempo de ejecución entre CPU y CPU + GPU en función del número de nodos en Ubuntu nativo en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_cpu_vs_gpu_native_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_cpu_vs_gpu_native} se presentan los tiempos de ejecución para ambas configuraciones y la variación porcentual entre ellas.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo CPU (s)} & \textbf{Tiempo CPU+GPU (s)} & \textbf{Variación (\%)} \\
+        \hline
+        1              & 2515.21                 & 311.68                      & -87.61                  \\
+        2              & 2489.49                 & 316.92                      & -87.27                  \\
+        4              & 952.85                  & 322.77                      & -66.13                  \\
+        8              & 767.87                  & 401.33                      & -47.73                  \\
+        16             & 841.96                  & 869.40                      & 3.26                    \\
+        \hline
+    \end{tabular}
+    \caption{Comparativa de tiempos de ejecución entre CPU y CPU+GPU en función del número de nodos en Ubuntu nativo (multinodo) y variación porcentual.}
+    \label{tab:multi-node_ubuntu_cpu_vs_gpu_native}
+\end{table}
+
+La tabla muestra que, con uno y dos nodos, la configuración CPU+GPU es considerablemente más rápida que la opción solo CPU, con reducciones de tiempo superiores al 87\%. Esto evidencia un beneficio claro del uso de GPU en escenarios con pocos nodos. Al aumentar a cuatro y ocho nodos, la ventaja de la GPU disminuye: la reducción es del 66.13\% con cuatro nodos y del 47.73\% con ocho nodos. Aunque la GPU sigue proporcionando mejores tiempos, la diferencia se reduce conforme se incrementa el número de nodos. Con dieciséis nodos, la situación se invierte y el tiempo de CPU+GPU resulta ligeramente superior al de solo CPU, con una variación positiva del 3.26\%. Esto sugiere que, a partir de cierto punto, la sobrecarga asociada al uso de GPU y la comunicación entre nodos supera los beneficios de la aceleración.
+
+En resumen, el uso de GPU aporta grandes mejoras en los tiempos de ejecución para un bajo número de nodos, pero su escalabilidad es limitada. A medida que se incrementa el número de nodos, la eficiencia de la GPU disminuye y puede llegar a ser contraproducente, probablemente debido a la sobrecarga de comunicación y la gestión de recursos en entornos multinodo.
 
 \subsection{Ejecución en contenedores de Ubuntu}
 \subsubsection{CPU}
 
+En la figura \ref{fig:multi-node_ubuntu_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multinodo con contenedores de Ubuntu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_docker_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de Ubuntu (CPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_docker_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_docker} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 nodo} \\
+        \hline
+        1              & 2499.09             & 0.00                          \\
+        2              & 2484.80             & -0.57                         \\
+        4              & 1054.20             & -57.82                        \\
+        8              & 782.42              & -68.69                        \\
+        16             & 879.20              & -64.82                        \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a un nodo en entorno multinodo con contenedores de Ubuntu (CPU).}
+    \label{tab:multi-node_ubuntu_docker}
+\end{table}
+
+La tabla muestra los tiempos de ejecución y la reducción porcentual al aumentar el número de nodos en un entorno multinodo basado en contenedores de Ubuntu (CPU):
+
+De 1 a 2 nodos, la mejora es mínima (-0.57\%), lo que indica que la paralelización apenas aporta beneficio en este rango. Con 4 nodos, la reducción es significativa (-57.82\%), mostrando una mejora clara en el rendimiento gracias a la paralelización. Con 8 nodos, la reducción alcanza el -68.69\%, lo que indica un buen aprovechamiento de los recursos al escalar. Con 16 nodos, el tiempo de ejecución aumenta ligeramente respecto a 8 nodos y la reducción porcentual disminuye a -64.82\%, lo que sugiere que a partir de cierto punto la eficiencia se ve limitada, posiblemente por la sobrecarga de coordinación y comunicación entre contenedores.
+
+En resumen, el entorno con contenedores de Ubuntu permite una buena escalabilidad hasta 8 nodos, con mejoras notables en el tiempo de ejecución. Sin embargo, al aumentar a 16 nodos, la eficiencia disminuye, mostrando un comportamiento similar al entorno nativo: la paralelización es efectiva hasta cierto límite, tras el cual la sobrecarga afecta negativamente al rendimiento.
+
+En la figura \ref{fig:multi-node_ubuntu_podman} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multinodo con contenedores de Podman.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_podman_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de Podman (CPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_podman}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_podman} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 nodo} \\
+        \hline
+        1              & 2499.16             & 0.00                          \\
+        2              & 2574.04             & 3.00                          \\
+        4              & 973.92              & -61.03                        \\
+        8              & 796.84              & -68.12                        \\
+        16             & 870.28              & -65.18                        \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a un nodo en entorno multinodo con contenedores de Podman (CPU).}
+    \label{tab:multi-node_ubuntu_podman}
+\end{table}
+
+La tabla muestra cómo varía el tiempo de ejecución al aumentar el número de nodos en un entorno multinodo utilizando contenedores de Podman sobre CPU. Con un solo nodo se establece el tiempo base, mientras que al duplicar el número de nodos a dos, se observa un ligero aumento en el tiempo de ejecución, lo que indica que la paralelización no solo no aporta mejoras en este caso, sino que introduce una pequeña penalización, probablemente debida a la sobrecarga de gestión de los contenedores. Sin embargo, al incrementar a cuatro nodos, el tiempo de ejecución disminuye considerablemente, reflejando una reducción del 61.03\% respecto al caso de un nodo, lo que evidencia una mejora significativa en el rendimiento gracias a la paralelización. Esta tendencia positiva se mantiene con ocho nodos, donde la reducción alcanza el 68.12\%, mostrando un buen aprovechamiento de los recursos disponibles. No obstante, al aumentar a dieciséis nodos, el tiempo de ejecución vuelve a incrementarse ligeramente y la reducción porcentual disminuye a 65.18\%, lo que sugiere que, a partir de cierto punto, la eficiencia de la paralelización se ve limitada, posiblemente por la sobrecarga de coordinación y comunicación entre los contenedores. En conjunto, el entorno con Podman permite una escalabilidad efectiva hasta un número intermedio de nodos, pero muestra limitaciones cuando se incrementa excesivamente el grado de paralelismo.
+
 \subsubsection{CPU + GPU}
+
+En la figura \ref{fig:multi-node_ubuntu_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multinodo con contenedores de Ubuntu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_docker_gpu_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de Ubuntu (CPU + GPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_docker_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_docker_gpu} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 nodo} \\
+        \hline
+        1              & 312.18              & 0.00                          \\
+        2              & 322.77              & 3.39                          \\
+        4              & 329.54              & 5.56                          \\
+        8              & 388.78              & 24.54                         \\
+        16             & 847.37              & 171.44                        \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a un nodo en entorno multinodo con contenedores de Ubuntu (CPU + GPU).}
+    \label{tab:multi-node_ubuntu_docker_gpu}
+\end{table}
+
+La tabla refleja el comportamiento del tiempo de ejecución al aumentar el número de nodos en un entorno multinodo con contenedores de Ubuntu utilizando tanto CPU como GPU. Con un solo nodo, el tiempo de ejecución es el más bajo, sirviendo como referencia para el resto de configuraciones. Al incrementar a dos y cuatro nodos, lejos de mejorar, el tiempo de ejecución aumenta ligeramente, lo que se traduce en una variación porcentual positiva y evidencia que la paralelización en este contexto no resulta beneficiosa, probablemente debido a la sobrecarga de coordinación y a la gestión de recursos entre los contenedores y las GPUs. Esta tendencia se acentúa al llegar a ocho nodos, donde el tiempo de ejecución sigue incrementándose y la penalización alcanza el 24.54\%. Finalmente, con dieciséis nodos, el tiempo de ejecución se eleva de forma considerable, con una variación porcentual del 171.44\% respecto al caso de un solo nodo. Estos resultados indican que, en este entorno, la escalabilidad es muy limitada y que el uso combinado de contenedores y GPU no solo no aporta mejoras al aumentar el número de nodos, sino que puede llegar a ser claramente contraproducente, probablemente por la complejidad añadida en la gestión de los recursos y la comunicación entre nodos.
+
+En la figura \ref{fig:multi-node_ubuntu_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multinodo con contenedores de Podman.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_podman_gpu_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de Podman (CPU + GPU) en entorno multinodo.}
+    \label{fig:multi-node_ubuntu_podman_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_ubuntu_podman_gpu} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Nodos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 nodo} \\
+        \hline
+        1              & 314.51              & 0.00                          \\
+        2              & 316.80              & 0.73                          \\
+        4              & 326.20              & 3.72                          \\
+        8              & 391.86              & 24.59                         \\
+        16             & 850.18              & 170.32                        \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a un nodo en entorno multinodo con contenedores de Podman (CPU + GPU).}
+    \label{tab:multi-node_ubuntu_podman_gpu}
+\end{table}
+
+La tabla muestra la evolución del tiempo de ejecución al aumentar el número de nodos en un entorno multinodo con contenedores de Podman utilizando tanto CPU como GPU. Con un solo nodo, el tiempo de ejecución es el más bajo y sirve como referencia. Al pasar a dos y cuatro nodos, se observa un ligero incremento en el tiempo de ejecución, con variaciones porcentuales positivas que indican que la paralelización no aporta mejoras y, de hecho, introduce una pequeña penalización, probablemente debida a la sobrecarga de coordinación y gestión de recursos entre los contenedores y las GPUs. Esta tendencia se intensifica al aumentar a ocho nodos, donde el tiempo de ejecución crece de manera más notable y la penalización alcanza el 24.59\%. Finalmente, con dieciséis nodos, el tiempo de ejecución se incrementa considerablemente, con una variación porcentual del 170.32\% respecto al caso de un solo nodo. Estos resultados evidencian que, en este entorno, la escalabilidad es muy limitada y que el uso combinado de contenedores Podman y GPU no solo no mejora el rendimiento al aumentar el número de nodos, sino que puede resultar claramente perjudicial, probablemente debido a la complejidad añadida en la gestión de recursos y la comunicación entre nodos.
+
+% \subsubsection{Comparativa
 
 \subsection{Contenedores en contenedores de Windows}
 \subsubsection{CPU}
