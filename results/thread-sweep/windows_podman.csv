@@ -1,4 +1,4 @@
-nodes,threads,time
+nodes,threads,time_seconds
 1,1,2520.2090327
 1,2,1359.6925015
 1,4,815.0397797
