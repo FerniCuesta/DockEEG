@@ -24,7 +24,14 @@
 \vspace{0.7cm}
 \noindent{\textbf{Resumen}}\\
 
-Poner aquí el resumen.
+Este trabajo presenta un estudio exhaustivo sobre la viabilidad y el rendimiento de la contenerización de aplicaciones paralelas y distribuidas en el ámbito del procesamiento de señales EEG. Se ha desarrollado y evaluado DockEEG, una solución basada en contenedores (Docker y Podman) para la ejecución eficiente y portable de la aplicación HPMoon en distintos sistemas operativos (Ubuntu, Windows, Mac) y arquitecturas (CPU y GPU).
+
+A lo largo del trabajo se han realizado experimentos sistemáticos para analizar el impacto de la contenerización en el rendimiento, la escalabilidad y la portabilidad, comparando la ejecución nativa y contenerizada en escenarios mononodo y multinodo. Los resultados muestran que el uso de contenedores no introduce penalizaciones relevantes, permitiendo mantener un rendimiento muy similar al de la ejecución nativa y facilitando la reproducibilidad y despliegue en entornos heterogéneos.
+
+El estudio identifica el punto óptimo de paralelismo en torno a 8 hebras por nodo y destaca la importancia de ajustar el número de nodos para evitar sobrecargas de coordinación. Además, se analiza el impacto de la aceleración por GPU, que ofrece mejoras significativas en mononodo, aunque su escalabilidad es limitada en entornos distribuidos.
+
+Finalmente, se proponen líneas de trabajo futuro orientadas a mejorar la escalabilidad multinodo, la gestión avanzada de recursos heterogéneos, la automatización del ciclo experimental, la validación en clústeres HPC y la explotación combinada de CPU y GPU en sistemas Mac. HPMoon demuestra así ser una herramienta eficaz y portable para la investigación y desarrollo de aplicaciones científicas
+
 \cleardoublepage
 
 
@@ -44,7 +51,13 @@ Poner aquí el resumen.
 \vspace{0.7cm}
 \noindent{\textbf{Abstract}}\\
 
-Write here the abstract in English.
+This work presents a comprehensive study on the feasibility and performance of containerizing parallel and distributed applications in the field of EEG signal processing. DockEEG, a container-based solution (using Docker and Podman), has been developed and evaluated for the efficient and portable execution of the HPMoon application across different operating systems (Ubuntu, Windows, Mac) and architectures (CPU and GPU).
+
+Throughout this work, systematic experiments have been conducted to analyze the impact of containerization on performance, scalability, and portability, comparing native and containerized execution in both single-node and multi-node scenarios. The results show that the use of containers does not introduce significant overhead, allowing performance very similar to native execution and facilitating reproducibility and deployment in heterogeneous environments.
+
+The study identifies the optimal level of parallelism at around 8 threads per node and highlights the importance of adjusting the number of nodes to avoid coordination overhead. Additionally, the impact of GPU acceleration is analyzed, showing significant improvements in single-node setups, although scalability is limited in distributed environments.
+
+Finally, future work is proposed to improve multi-node scalability, advanced management of heterogeneous resources, automation of the experimental cycle, validation in HPC clusters, and combined exploitation of CPU and GPU on Mac systems. HPMoon thus proves to be an effective and portable tool for scientific application research and development.
 
 \chapter*{}
 \thispagestyle{empty}
@@ -72,7 +85,7 @@ consultada por las personas que lo deseen.
 
 \noindent\rule[-1ex]{\textwidth}{2pt}\\[4.5ex]
 
-D. \textbf{Juan José Escobar Pérez}, Profesor del Área de XXXX del Departamento de Lenguajes y Sistemas Informáticos de la Universidad de Granada.
+D. \textbf{Juan José Escobar Pérez}, Profesor del Departamento de Lenguajes y Sistemas Informáticos de la Universidad de Granada.
 
 \vspace{0.5cm}
 
@@ -90,7 +103,7 @@ Y para que conste, expiden y firman el presente informe en Granada a 5 de septie
 
 \vspace{1cm}
 
-\textbf{El director:}
+\textbf{El tutor:}
 
 \vspace{5cm}
 
@@ -102,5 +115,5 @@ Y para que conste, expiden y firman el presente informe en Granada a 5 de septie
 \vspace{1cm}
 
 
-Poner aquí agradecimientos...
+A mi madre Mercedes y a mi hermana Marta, todo lo que soy es gracias a vosotras. Todo lo que seré será por vosotras. Gracias por vuestro apoyo incondicional y por estar siempre ahí.
 
