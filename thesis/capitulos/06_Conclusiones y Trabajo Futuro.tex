@@ -1,19 +1,43 @@
-\chapter{Conclusiones y trabajo futuro}\label{cap:evaluacion}
+\chapter{Conclusiones y trabajo futuro}\label{cap:conclusiones}
 
-[En este capítulo se presentan las conclusiones obtenidas al llevar a cabo el presente trabajo]
+% [En este capítulo se presentan las conclusiones obtenidas al llevar a cabo el presente trabajo]
 
-\section{Contribuciones}
+\section{Conclusiones}
 
-[En esta sección se presentan las principales contribuciones del trabajo realizado.]
+% [En esta sección se presentan las principales conclusiones del trabajo realizado.]
 
-\begin{itemize}
-    
-    \item Contribución 1 ...
-    
-    \item Contribución 2 ...
-    
-\end{itemize}
+El presente trabajo ha llevado a cabo un exhaustivo estudio experimental sobre el rendimiento y la escalabilidad de una aplicación de computación paralela y distribuida en distintos entornos y configuraciones, abarcando tanto la ejecución nativa como en contenedores (Docker y Podman), y considerando diferentes sistemas operativos (Ubuntu, Windows, Mac), arquitecturas (CPU y CPU+GPU), y modos de operación (mononodo, multinodo y barrido de hebras). A continuación se resumen las principales conclusiones extraídas del análisis de todos los resultados obtenidos:
+
+Los resultados obtenidos en los experimentos permiten extraer varias conclusiones clave sobre el comportamiento de HPMoon en diferentes entornos y configuraciones. En primer lugar, se observa que el incremento del número de hebras reduce de forma notable el tiempo de ejecución, alcanzando en configuraciones mononodo eficiencias superiores al 97\% hasta el límite de núcleos físicos disponibles. El punto óptimo de paralelismo suele situarse en torno a las 8 hebras, que coincide con la arquitectura hardware analizada; a partir de ahí, los beneficios adicionales son escasos e incluso pueden aparecer ligeras penalizaciones por sobrecarga.
+
+En cuanto a la ejecución multinodo, la escalabilidad es efectiva hasta un cierto umbral, generalmente 4 u 8 nodos. Más allá de ese punto, la coordinación y la comunicación entre nodos introducen una sobrecarga que limita los beneficios del paralelismo. De hecho, en algunos escenarios, añadir más nodos puede llegar a empeorar el rendimiento, algo especialmente evidente en configuraciones con GPU o en entornos contenerizados, donde la gestión de recursos compartidos añade complejidad adicional.
+
+Al comparar la ejecución nativa con la realizada en contenedores (Docker y Podman), se aprecia que el uso de contenedores no introduce penalizaciones relevantes: las diferencias suelen ser inferiores al 5\% y, en algunos casos, incluso se obtienen mejoras. Esto confirma la viabilidad de los contenedores como alternativa eficiente para ejecutar aplicaciones paralelas y distribuidas, manteniendo prácticamente el mismo nivel de rendimiento que en ejecución nativa.
+
+Los resultados también evidencian el impacto del sistema operativo en los tiempos de ejecución. Aunque la tendencia general de escalado y saturación es similar en todas las plataformas, Ubuntu ofrece de forma consistente los mejores resultados, seguido de Mac y Windows, lo cual refleja diferencias atribuibles a las características de cada sistema.
+
+La incorporación de GPU se traduce en una aceleración muy notable en escenarios mononodo o con un bajo número de nodos, con reducciones de tiempo de entre el 80\% y el 88\%. No obstante, su escalabilidad es limitada en entornos distribuidos: al aumentar los nodos, la coordinación y la gestión compartida de la GPU penalizan el rendimiento, llegando incluso a hacer contraproducente su uso en configuraciones de gran tamaño.
+
+De forma general, el análisis de los experimentos permite recomendar como configuración óptima el uso de 8 subpoblaciones y 8 hebras por nodo, lo que asegura un buen equilibrio entre eficiencia y aprovechamiento de recursos sin incurrir en sobrecarga. En configuraciones multinodo, el número de nodos debe aumentarse con precaución, ya que el beneficio adicional disminuye rápidamente y puede revertirse si se añaden demasiados.
+
+Finalmente, la utilización de contenedores se confirma como una herramienta clave para garantizar la portabilidad y la reproducibilidad de los experimentos. Gracias a ellos, es posible obtener resultados consistentes en diferentes plataformas y simplificar la gestión y el despliegue de entornos complejos de computación paralela y distribuida.
+
+En conjunto, los resultados obtenidos demuestran que la aplicación analizada es capaz de aprovechar eficazmente el paralelismo y la aceleración por GPU en entornos mononodo, y que la ejecución en contenedores es una alternativa plenamente válida a la ejecución nativa. Sin embargo, la escalabilidad en entornos multinodo está limitada por la sobrecarga de coordinación y la gestión de recursos, especialmente al utilizar GPU. Estas conclusiones proporcionan una base sólida para la toma de decisiones en el diseño y despliegue de aplicaciones científicas y de ingeniería en entornos heterogéneos
 
 \section{Retos y trabajo futuro}
 
-[Exponer aquí los retos y trabajos futuros.]
+A partir de los resultados obtenidos y del análisis detallado de los experimentos, se han identificado varios retos abiertos y posibles líneas de trabajo que pueden contribuir a mejorar tanto el rendimiento como la escalabilidad y la aplicabilidad de la solución propuesta.
+
+Uno de los principales desafíos es la limitada escalabilidad observada al aumentar el número de nodos, especialmente en configuraciones con GPU. En este sentido, futuros estudios podrían centrarse en optimizar los mecanismos de comunicación y coordinación entre nodos, explorar alternativas de middleware más eficientes o incluso aplicar técnicas de balanceo dinámico de carga que reduzcan la sobrecarga y permitan aprovechar mejor los recursos distribuidos.
+
+Otro aspecto clave es la gestión avanzada de recursos heterogéneos. La integración eficiente de CPU, GPU y otras posibles aceleradoras sigue siendo un reto, por lo que resulta interesante investigar estrategias inteligentes de asignación de tareas que se adapten dinámicamente a la disponibilidad y características de cada nodo, maximizando así el rendimiento global del sistema.
+
+En lo referente a la automatización y portabilidad de los experimentos, aunque los contenedores ya han demostrado ser eficaces para garantizar reproducibilidad, aún queda margen de mejora. Incorporar herramientas de orquestación como Kubernetes o sistemas de gestión de flujos de trabajo científicos permitiría automatizar de manera más completa el ciclo experimental: desde el despliegue hasta la monitorización y la recolección de resultados.
+
+Asimismo, el rápido avance de las arquitecturas hardware —con nuevas generaciones de GPU, aceleradores especializados y entornos de computación en la nube o en el edge— abre la puerta a extender este trabajo hacia escenarios emergentes, adaptando la infraestructura para sacar partido de sus capacidades. A ello se suma un aspecto cada vez más relevante: la eficiencia energética. Optimizar el consumo de recursos no solo permitiría reducir costes, sino también avanzar en sostenibilidad, identificando configuraciones que equilibren rendimiento y consumo energético.
+
+Otra línea prometedora consiste en trasladar la metodología y las herramientas desarrolladas a otros problemas científicos o de ingeniería que también requieran computación paralela y distribuida. De esta forma, se ampliaría el alcance y el impacto del trabajo realizado. En paralelo, resulta fundamental validar la solución en clústeres reales de computación de alto rendimiento, lo que permitiría comprobar su robustez en entornos productivos y detectar cuellos de botella que no aparecen en escenarios locales.
+
+Finalmente, se plantea como reto específico la posibilidad de explotar de forma combinada CPU y GPU en sistemas Mac, especialmente en las nuevas arquitecturas Apple Silicon. Este avance permitiría superar las limitaciones actuales en dicho entorno, mejorando la portabilidad y aprovechando de forma más completa todos los recursos disponibles.
+
+En resumen, aunque los resultados obtenidos confirman la viabilidad de la solución y aportan una base sólida, el camino hacia su mejora y ampliación es amplio. Los retos y líneas futuras aquí descritos ofrecen oportunidades tanto técnicas como aplicadas, que permitirán seguir avanzando en el desarrollo de soluciones más eficientes, portables y sostenibles en el ámbito de la computación paralela y distribuida.
