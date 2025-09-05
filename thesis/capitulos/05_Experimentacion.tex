@@ -236,7 +236,7 @@ En conjunto, estas decisiones proporcionan una base sólida y coherente para el 
 
 En la figura \ref{fig:single-node_ubuntu_cpu_native_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_cpu_native_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU).}
@@ -266,7 +266,7 @@ El tiempo de ejecución disminuye drásticamente al aumentar el número de hebra
 
 En la figura \ref{fig:single-node_ubuntu_cpu_native_cpu} se muestra el porcentaje de uso de CPU en función del número de hebras.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_cpu_native_cpu.png}
     \caption{Uso de CPU en función del número de hebras en Ubuntu nativo (CPU).}
@@ -300,7 +300,7 @@ Estos resultados evidencian que el entorno monoproceso nativo en Ubuntu gestiona
 
 En la figura \ref{fig:single-node_ubuntu__gpu_native_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_gpu_native_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU + GPU).}
@@ -332,7 +332,7 @@ El análisis de los resultados muestra que el tiempo de ejecución disminuye de 
 
 En la figura \ref{fig:single-node_ubuntu_cpu_vs_gpu_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones de CPU y CPU + GPU en un único proceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_cpu_vs_gpu_native_time.png}
     \caption{Comparativa de tiempo de ejecución entre CPU y CPU + GPU en función del número de hebras en Ubuntu nativo.}
@@ -365,7 +365,7 @@ El análisis de los resultados muestra que el uso de GPU reduce el tiempo de eje
 
 En la figura \ref{fig:single-node_ubuntu_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con contenedores de Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_docker_time.png}
     \caption{Tiempo de ejecución en un único proceso con contenedores de Ubuntu (CPU).}
@@ -401,7 +401,7 @@ Estos resultados sugieren que, en este entorno, el uso de más de 8 hebras no ap
 
 En la figura \ref{fig:single-node_ubuntu_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con contenedores de Ubuntu gestionados por \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_podman_time.png}
     \caption{Tiempo de ejecución en un único proceso con contenedores de Ubuntu gestionados por \textit{Podman} (CPU).}
@@ -439,7 +439,7 @@ Estos resultados muestran que, en este entorno con \textit{Podman} y CPU, el uso
 
 En la figura \ref{fig:single-node_ubuntu_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con contenedores de Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_docker_gpu_time.png}
     \caption{Tiempo de ejecución en un único proceso con contenedores de Ubuntu (CPU + GPU).}
@@ -475,7 +475,7 @@ Estos resultados muestran que, en este entorno, la combinación de CPU y GPU per
 
 En la figura \ref{fig:single-node_ubuntu_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con contenedores de Ubuntu gestionados por \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_podman_gpu_time.png}
     \caption{Tiempo de ejecución en un único proceso con contenedores de Ubuntu gestionados por \textit{Podman} (CPU + GPU).}
@@ -513,7 +513,7 @@ Estos resultados muestran que, en este entorno con \textit{Podman} y CPU+GPU, el
 
 En la figura \ref{fig:single-node_ubuntu_container_vs_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones nativas y en contenedores de Ubuntu para CPU.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_container_vs_native_time.png}
     \caption{Comparativa de tiempo de ejecución entre nativo y contenedores de Ubuntu en función del número de hebras, para CPU.}
@@ -543,7 +543,7 @@ La tabla compara los tiempos de ejecución entre los entornos nativo, \textit{Do
 
 La figura \ref{fig:single-node_ubuntu_container_vs_native_gpu_time} muestra una comparativa del tiempo de ejecución entre las configuraciones nativas y en contenedores de Ubuntu para CPU + GPU.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_container_vs_native_gpu_time.png}
     \caption{Comparativa de tiempo de ejecución entre nativo y contenedores de Ubuntu en función del número de hebras, para CPU + GPU.}
@@ -579,7 +579,7 @@ La tabla compara los tiempos de ejecución entre los entornos nativo, \textit{Do
 
 En la figura \ref{fig:single-node_windows_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con \textit{Docker} en Windows.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_docker_time.png}
     \caption{Tiempo de ejecución en un único proceso con \textit{Docker} en Windows (CPU).}
@@ -615,7 +615,7 @@ Estos resultados muestran que, en \textit{Docker} sobre Windows (CPU), el uso de
 
 En la figura \ref{fig:single-node_windows_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con \textit{Podman} en Windows.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_podman_time.png}
     \caption{Tiempo de ejecución en un único proceso con \textit{Podman} en Windows (CPU).}
@@ -653,7 +653,7 @@ Estos resultados indican que, en \textit{Podman} sobre Windows (CPU), el uso de 
 
 % En la figura \ref{fig:single-node_windows_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con \textit{Docker} en Windows.
 
-% \begin{figure}[H]
+% \begin{figure}[ht]
 %     \centering
 %     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_docker_gpu_time.png}
 %     \caption{Tiempo de ejecución en un único proceso con \textit{Docker} en Windows (CPU + GPU).}
@@ -662,15 +662,15 @@ Estos resultados indican que, en \textit{Podman} sobre Windows (CPU), el uso de 
 
 % En la tabla \ref{tab:single-node_windows_docker_gpu_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
 
-\subsection{Ejecución en contenedores de Mac}
+\subsection{Ejecución en contenedores de MacOS}
 \subsubsection{CPU}
 
-En la figura \ref{fig:single-node_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con \textit{Docker} en Mac.
+En la figura \ref{fig:single-node_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con \textit{Docker} en MacOS.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_mac_docker_time.png}
-    \caption{Tiempo de ejecución en un único proceso con \textit{Docker} en Mac (CPU).}
+    \caption{Tiempo de ejecución en un único proceso con \textit{Docker} en MacOS (CPU).}
     \label{fig:single-node_mac_docker_time}
 \end{figure}
 
@@ -689,7 +689,7 @@ En la tabla \ref{tab:single-node_mac_docker_time} se presentan los tiempos de ej
         16.00           & 270.25              & -84.94                         \\
         \hline
     \end{tabular}
-    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en \textit{Docker} sobre Mac (CPU).}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en \textit{Docker} sobre MacOS (CPU).}
     \label{tab:single-node_mac_docker_time}
 \end{table}
 
@@ -699,14 +699,14 @@ La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-46.99\%) y de 2 a
 
 A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza, con beneficios adicionales menores al incrementar a 16 hebras.
 
-Estos resultados muestran que, en \textit{Docker} sobre Mac (CPU), el uso de múltiples hebras es eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar el mayor número de hebras posible para minimizar el tiempo de ejecución, aunque las ganancias adicionales disminuyen a partir de 8 hebras.
+Estos resultados muestran que, en \textit{Docker} sobre MacOS(CPU), el uso de múltiples hebras es eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar el mayor número de hebras posible para minimizar el tiempo de ejecución, aunque las ganancias adicionales disminuyen a partir de 8 hebras.
 
-En la figura \ref{fig:single-node_mac_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con \textit{Podman} en Mac.
+En la figura \ref{fig:single-node_mac_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un único proceso con \textit{Podman} en MacOS.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_mac_podman_time.png}
-    \caption{Tiempo de ejecución en un único proceso con \textit{Podman} en Mac (CPU).}
+    \caption{Tiempo de ejecución en un único proceso con \textit{Podman} en MacOS (CPU).}
     \label{fig:single-node_mac_podman_time}
 \end{figure}
 
@@ -725,7 +725,7 @@ En la tabla \ref{tab:single-node_mac_podman_time} se presentan los tiempos de ej
         16.00           & 1625.19             & -80.29                         \\
         \hline
     \end{tabular}
-    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en \textit{Podman} sobre Mac (CPU).}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra en \textit{Podman} sobre MacOS(CPU).}
     \label{tab:single-node_mac_podman_time}
 \end{table}
 
@@ -735,7 +735,7 @@ La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-47.52\%) y de 2 a
 
 A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza, con beneficios adicionales mínimos al incrementar a 16 hebras (solo -0.16\% respecto a 8 hebras).
 
-Estos resultados muestran que, en \textit{Podman} sobre Mac (CPU), el uso de múltiples hebras es eficiente hasta cierto punto, pero las ganancias adicionales más allá de 8 hebras son muy limitadas, sugiriendo que el paralelismo óptimo se alcanza alrededor de ese valor.
+Estos resultados muestran que, en \textit{Podman} sobre MacOS(CPU), el uso de múltiples hebras es eficiente hasta cierto punto, pero las ganancias adicionales más allá de 8 hebras son muy limitadas, sugiriendo que el paralelismo óptimo se alcanza alrededor de ese valor.
 
 \section{Pruebas multiproceso}
 \subsection{Ejecución en Ubuntu en nativo}
@@ -743,7 +743,7 @@ Estos resultados muestran que, en \textit{Podman} sobre Mac (CPU), el uso de mú
 
 La figura \ref{fig:multi-node_ubuntu_cpu_native_time} muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_cpu_native_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU) en entorno multiproceso.}
@@ -780,7 +780,7 @@ En resumen, la eficiencia de la paralelización mejora hasta cierto número de p
 
 En la figura \ref{fig:multi-node_ubuntu_cpu_native_cpu} se muestra el porcentaje de uso de CPU y la eficiencia en función del número de procesos en un entorno multiproceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_cpu_native_cpu_time.png}
     \caption{Porcentaje de uso de CPU y eficiencia en función del número de procesos en Ubuntu nativo (CPU) en entorno multiproceso.}
@@ -819,7 +819,7 @@ En resumen, el sistema mantiene una eficiencia de CPU muy alta al escalar el nú
 
 La figura \ref{fig:multi-node_ubuntu_gpu_native_time} muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multiproceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_gpu_native_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en Ubuntu nativo (CPU + GPU) en entorno multiproceso.}
@@ -855,7 +855,7 @@ Estos resultados indican que, a diferencia del caso solo CPU, al añadir más pr
 
 En la figura \ref{fig:multi-node_ubuntu_cpu_vs_gpu_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones CPU y CPU + GPU en un entorno multiproceso con Ubuntu nativo.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_cpu_vs_gpu_native_time.png}
     \caption{Comparativa de tiempo de ejecución entre CPU y CPU + GPU en función del número de procesos en Ubuntu nativo en entorno multiproceso.}
@@ -890,7 +890,7 @@ En resumen, el uso de GPU aporta grandes mejoras en los tiempos de ejecución pa
 
 En la figura \ref{fig:multi-node_ubuntu_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_docker_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de Ubuntu (CPU) en entorno multiproceso.}
@@ -922,7 +922,7 @@ En resumen, el entorno con contenedores de Ubuntu permite una buena escalabilida
 
 En la figura \ref{fig:multi-node_ubuntu_podman} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_podman_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU) en entorno multiproceso.}
@@ -954,7 +954,7 @@ La tabla muestra cómo varía el tiempo de ejecución al aumentar el número de 
 
 En la figura \ref{fig:multi-node_ubuntu_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multiproceso con contenedores de Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_docker_gpu_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de Ubuntu (CPU + GPU) en entorno multiproceso.}
@@ -984,7 +984,7 @@ La tabla refleja el comportamiento del tiempo de ejecución al aumentar el núme
 
 En la figura \ref{fig:multi-node_ubuntu_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multiproceso con contenedores de \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_podman_gpu_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU + GPU) en entorno multiproceso.}
@@ -1016,7 +1016,7 @@ La tabla muestra la evolución del tiempo de ejecución al aumentar el número d
 
 En la figura \ref{fig:multi-node_ubuntu_container_vs_native_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones nativo y contenedores de Ubuntu en un entorno multiproceso con CPU.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_container_vs_native_time.png}
     \caption{Comparativa de tiempo de ejecución entre nativo y contenedores de Ubuntu en función del número de procesos en entorno multiproceso (CPU).}
@@ -1049,7 +1049,7 @@ La tabla presenta una comparación de los tiempos de ejecución entre los entorn
 
 En la figura \ref{fig:multi-node_ubuntu_container_vs_native_gpu_time} se muestra una comparativa del tiempo de ejecución entre las configuraciones nativo y contenedores de Ubuntu en un entorno multiproceso con CPU + GPU.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_container_vs_native_gpu_time.png}
     \caption{Comparativa de tiempo de ejecución entre nativo y contenedores de Ubuntu en función del número de procesos en entorno multiproceso (CPU + GPU).}
@@ -1085,7 +1085,7 @@ La tabla compara los tiempos de ejecución en un entorno multiproceso con CPU y 
 
 En la figura \ref{fig:multi-node_windows_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de Windows.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_windows_docker_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de Windows (CPU) en entorno multiproceso.}
@@ -1115,7 +1115,7 @@ La tabla muestra la evolución del tiempo de ejecución al aumentar el número d
 
 En la figura \ref{fig:multi-node_windows_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de \textit{Podman} en Windows.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_windows_podman_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU) en entorno multiproceso.}
@@ -1145,15 +1145,15 @@ La tabla presenta la evolución del tiempo de ejecución al aumentar el número 
 
 \subsubsection{CPU + GPU}
 
-\subsection{Ejecución en contenedores de Mac}
+\subsection{Ejecución en contenedores de MacOS}
 \subsubsection{CPU}
 
-En la figura \ref{fig:multi-node_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de Mac.
+En la figura \ref{fig:multi-node_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de MacOS.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_mac_docker_time.png}
-    \caption{Tiempo de ejecución en función del número de hebras en contenedores de Mac (CPU) en entorno multiproceso.}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de MacOS(CPU) en entorno multiproceso.}
     \label{fig:multi-node_mac_docker_time}
 \end{figure}
 
@@ -1172,15 +1172,15 @@ En la tabla \ref{tab:multi-node_mac_docker} se presentan los tiempos de ejecuci�
         16.00             & 536.60              & -70.11                           \\
         \hline
     \end{tabular}
-    \caption{Tiempos de ejecución y reducción porcentual respecto a un proceso en entorno multiproceso con contenedores de Mac (CPU).}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a un proceso en entorno multiproceso con contenedores de MacOS (CPU).}
     \label{tab:multi-node_mac_docker}
 \end{table}
 
-La tabla muestra la evolución del tiempo de ejecución al aumentar el número de procesos en un entorno multiproceso con contenedores de \textit{Docker} sobre Mac utilizando CPU. Con un solo proceso, se establece el tiempo de referencia. Al pasar a dos procesos, se observa un incremento del 8.21\% en el tiempo de ejecución, lo que indica que la paralelización inicial introduce una penalización, probablemente debida a la sobrecarga de coordinación o a limitaciones en la gestión de recursos en el entorno de contenedores sobre Mac. Sin embargo, al aumentar a cuatro procesos, el tiempo de ejecución disminuye de manera significativa, con una reducción del 58.45\%, lo que evidencia una mejora notable en el rendimiento gracias a la paralelización. Esta tendencia positiva se mantiene al escalar a ocho y dieciséis procesos, donde las reducciones alcanzan el 66.94\% y el 70.11\% respectivamente, mostrando que el sistema es capaz de aprovechar de manera eficiente los recursos adicionales a medida que se incrementa el número de procesos. En conjunto, los resultados indican que, aunque existe una penalización inicial al duplicar los procesos, el entorno multiproceso con contenedores de \textit{Docker} en Mac logra una escalabilidad efectiva y una mejora sustancial del rendimiento a partir de cuatro procesos, confirmando la viabilidad de esta tecnología para la ejecución de aplicaciones paralelas en este contexto.
+La tabla muestra la evolución del tiempo de ejecución al aumentar el número de procesos en un entorno multiproceso con contenedores de \textit{Docker} sobre MacOS utilizando CPU. Con un solo proceso, se establece el tiempo de referencia. Al pasar a dos procesos, se observa un incremento del 8.21\% en el tiempo de ejecución, lo que indica que la paralelización inicial introduce una penalización, probablemente debida a la sobrecarga de coordinación o a limitaciones en la gestión de recursos en el entorno de contenedores sobre MacOS. Sin embargo, al aumentar a cuatro procesos, el tiempo de ejecución disminuye de manera significativa, con una reducción del 58.45\%, lo que evidencia una mejora notable en el rendimiento gracias a la paralelización. Esta tendencia positiva se mantiene al escalar a ocho y dieciséis procesos, donde las reducciones alcanzan el 66.94\% y el 70.11\% respectivamente, mostrando que el sistema es capaz de aprovechar de manera eficiente los recursos adicionales a medida que se incrementa el número de procesos. En conjunto, los resultados indican que, aunque existe una penalización inicial al duplicar los procesos, el entorno multiproceso con contenedores de \textit{Docker} en MacOS logra una escalabilidad efectiva y una mejora sustancial del rendimiento a partir de cuatro procesos, confirmando la viabilidad de esta tecnología para la ejecución de aplicaciones paralelas en este contexto.
 
-En la figura \ref{fig:multi-node_mac_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de \textit{Podman} en Mac.
+En la figura \ref{fig:multi-node_mac_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno multiproceso con contenedores de \textit{Podman} en MacOS.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_mac_podman_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU) en entorno multiproceso.}
@@ -1202,11 +1202,11 @@ En la tabla \ref{tab:multi-node_mac_podman} se presentan los tiempos de ejecuci�
         16.00             & 3223.98             & -60.91                           \\
         \hline
     \end{tabular}
-    \caption{Tiempos de ejecución y reducción porcentual respecto a un proceso en entorno multiproceso con contenedores de \textit{Podman} en Mac (CPU).}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a un proceso en entorno multiproceso con contenedores de \textit{Podman} en MacOS (CPU).}
     \label{tab:multi-node_mac_podman}
 \end{table}
 
-La tabla muestra la evolución del tiempo de ejecución al aumentar el número de procesos en un entorno multiproceso con contenedores de \textit{Podman} sobre Mac utilizando CPU. Con un solo proceso, el tiempo de ejecución es el más alto y sirve como referencia. Al pasar a dos procesos, se observa un incremento del 5.10\% en el tiempo de ejecución, lo que indica que la paralelización inicial introduce una penalización, probablemente relacionada con la sobrecarga de coordinación o limitaciones en la gestión de recursos en este entorno. Sin embargo, al aumentar a cuatro procesos, el tiempo de ejecución disminuye de manera muy significativa, con una reducción del 59.46\%, lo que refleja una mejora notable en el rendimiento gracias a la paralelización. Esta mejora se mantiene al escalar a ocho y dieciséis procesos, donde las reducciones se sitúan en torno al 61\%, mostrando que el sistema es capaz de aprovechar de manera eficiente los recursos adicionales a partir de cuatro procesos. En conjunto, los resultados indican que, aunque existe una penalización inicial al duplicar los procesos, el entorno multiproceso con contenedores de \textit{Podman} en Mac logra una escalabilidad efectiva y una mejora sustancial del rendimiento a partir de cuatro procesos, confirmando la viabilidad de esta tecnología para la ejecución de aplicaciones paralelas en este contexto.
+La tabla muestra la evolución del tiempo de ejecución al aumentar el número de procesos en un entorno multiproceso con contenedores de \textit{Podman} sobre MacOS utilizando CPU. Con un solo proceso, el tiempo de ejecución es el más alto y sirve como referencia. Al pasar a dos procesos, se observa un incremento del 5.10\% en el tiempo de ejecución, lo que indica que la paralelización inicial introduce una penalización, probablemente relacionada con la sobrecarga de coordinación o limitaciones en la gestión de recursos en este entorno. Sin embargo, al aumentar a cuatro procesos, el tiempo de ejecución disminuye de manera muy significativa, con una reducción del 59.46\%, lo que refleja una mejora notable en el rendimiento gracias a la paralelización. Esta mejora se mantiene al escalar a ocho y dieciséis procesos, donde las reducciones se sitúan en torno al 61\%, mostrando que el sistema es capaz de aprovechar de manera eficiente los recursos adicionales a partir de cuatro procesos. En conjunto, los resultados indican que, aunque existe una penalización inicial al duplicar los procesos, el entorno multiproceso con contenedores de \textit{Podman} en MacOS logra una escalabilidad efectiva y una mejora sustancial del rendimiento a partir de cuatro procesos, confirmando la viabilidad de esta tecnología para la ejecución de aplicaciones paralelas en este contexto.
 
 \section{Pruebas de barrido de hebras}
 \subsection{Ejecución en Ubuntu en nativo}
@@ -1214,7 +1214,7 @@ La tabla muestra la evolución del tiempo de ejecución al aumentar el número d
 
 En la figura \ref{fig:thread_sweep_ubuntu_cpu_native_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno nativo con Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_cpu_native_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en entorno nativo de Ubuntu (CPU).}
@@ -1264,7 +1264,7 @@ La tabla recoge los tiempos de ejecución y la reducción porcentual respecto a 
 
 En la figura \ref{fig:thread_sweep_ubuntu_cpu_native_cpu} se muestra el uso de CPU para la configuración de CPU en un entorno nativo con Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_cpu_native_cpu.png}
     \caption{Uso de CPU en función del número de hebras en entorno nativo de Ubuntu (CPU).}
@@ -1316,7 +1316,7 @@ La tabla recoge el porcentaje de uso de CPU, el máximo teórico posible y la ef
 
 En la figura \ref{fig:thread_sweep_ubuntu_gpu_native_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno nativo con Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_gpu_native_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en entorno nativo de Ubuntu (CPU + GPU).}
@@ -1366,7 +1366,7 @@ La tabla recoge los tiempos de ejecución y la reducción porcentual respecto a 
 
 En la figura \ref{fig:thread_sweep_ubuntu_gpu_native_cpu} se muestra el uso de CPU para la configuración de CPU + GPU en un entorno nativo con Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_gpu_native_cpu.png}
     \caption{Uso de CPU en función del número de hebras en entorno nativo de Ubuntu (CPU + GPU).}
@@ -1425,7 +1425,7 @@ En conjunto, estos resultados muestran que la combinación de CPU y GPU permite 
 
 En la figura \ref{fig:thread_sweep_ubuntu_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_docker_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de Ubuntu (CPU).}
@@ -1475,7 +1475,7 @@ La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a
 
 En la figura \ref{fig:thread_sweep_ubuntu_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_podman_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU).}
@@ -1527,7 +1527,7 @@ La tabla recoge los tiempos de ejecución y la reducción porcentual respecto a 
 
 En la figura \ref{fig:thread_sweep_ubuntu_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno con contenedores de Ubuntu.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_docker_gpu_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de Ubuntu (CPU + GPU).}
@@ -1577,7 +1577,7 @@ La tabla recoge los tiempos de ejecución y la reducción porcentual respecto a 
 
 En la figura \ref{fig:thread_sweep_ubuntu_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno con contenedores de \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_ubuntu_podman_gpu_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU + GPU).}
@@ -1630,7 +1630,7 @@ La tabla presenta los tiempos de ejecución y la reducción porcentual respecto 
 
 En la figura \ref{fig:thread_sweep_windows_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de Windows.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_windows_docker_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores \textit{Docker} de Windows (CPU).}
@@ -1680,7 +1680,7 @@ La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a
 
 En la figura \ref{fig:thread_sweep_windows_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_windows_podman_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU).}
@@ -1730,15 +1730,15 @@ La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a
 
 \subsubsection{CPU + GPU}
 
-\subsection{Ejecución en contenedores de Mac}
+\subsection{Ejecución en contenedores de MacOS}
 \subsubsection{CPU}
 
-En la figura \ref{fig:thread_sweep_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de Mac.
+En la figura \ref{fig:thread_sweep_mac_docker_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de MacOS.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_mac_docker_time.png}
-    \caption{Tiempo de ejecución en función del número de hebras en contenedores \textit{Docker} de Mac (CPU).}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores \textit{Docker} de MacOS (CPU).}
     \label{fig:thread_sweep_mac_docker_time}
 \end{figure}
 
@@ -1777,19 +1777,19 @@ En la tabla \ref{tab:thread_sweep_mac_docker_time} se presentan los tiempos de e
         16.00             & 16.00           & 271.75              & -49.36                         \\
         \hline
     \end{tabular}
-    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores \textit{Docker} de Mac (CPU).}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores \textit{Docker} de MacOS (CPU).}
     \label{tab:thread_sweep_mac_docker_time}
 \end{table}
 
-La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores \textit{Docker} de Mac (CPU). Se observa que, en configuraciones monoproceso, el incremento del número de hebras produce una reducción muy significativa del tiempo de ejecución, alcanzando una disminución del 84.94\% con 16 hebras respecto a la ejecución secuencial. El mayor beneficio se obtiene al pasar de 1 a 2 hebras (-46.99\%) y de 2 a 4 hebras (-22.29\% adicional), lo que indica una buena escalabilidad inicial. A partir de 8 hebras, la mejora se estabiliza y el beneficio adicional es menor, lo que sugiere que el paralelismo óptimo se sitúa en torno a 8 hebras.
+La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores \textit{Docker} de MacOS (CPU). Se observa que, en configuraciones monoproceso, el incremento del número de hebras produce una reducción muy significativa del tiempo de ejecución, alcanzando una disminución del 84.94\% con 16 hebras respecto a la ejecución secuencial. El mayor beneficio se obtiene al pasar de 1 a 2 hebras (-46.99\%) y de 2 a 4 hebras (-22.29\% adicional), lo que indica una buena escalabilidad inicial. A partir de 8 hebras, la mejora se estabiliza y el beneficio adicional es menor, lo que sugiere que el paralelismo óptimo se sitúa en torno a 8 hebras.
 
-Al aumentar el número de procesos, la reducción porcentual respecto a una hebra sigue una tendencia similar: con 2 y 4 procesos se mantienen reducciones superiores al 60\%, pero a partir de 8 y 16 procesos las mejoras adicionales son más limitadas. Además, en algunos casos, como al pasar de 1 a 2 procesos, se observa un ligero aumento en el tiempo de ejecución, probablemente debido a la sobrecarga de coordinación entre procesos en el entorno de \textit{Docker} sobre Mac.
+Al aumentar el número de procesos, la reducción porcentual respecto a una hebra sigue una tendencia similar: con 2 y 4 procesos se mantienen reducciones superiores al 60\%, pero a partir de 8 y 16 procesos las mejoras adicionales son más limitadas. Además, en algunos casos, como al pasar de 1 a 2 procesos, se observa un ligero aumento en el tiempo de ejecución, probablemente debido a la sobrecarga de coordinación entre procesos en el entorno de \textit{Docker} sobre MacOS.
 
-En resumen, \textit{Docker} sobre Mac permite un aprovechamiento eficiente del paralelismo hasta cierto punto, siendo recomendable utilizar hasta 8 hebras por proceso para maximizar el rendimiento. Aumentar el número de procesos y hebras más allá de ese valor aporta mejoras cada vez menores, debido a la sobrecarga de coordinación y a las limitaciones propias del entorno.
+En resumen, \textit{Docker} sobre MacOS permite un aprovechamiento eficiente del paralelismo hasta cierto punto, siendo recomendable utilizar hasta 8 hebras por proceso para maximizar el rendimiento. Aumentar el número de procesos y hebras más allá de ese valor aporta mejoras cada vez menores, debido a la sobrecarga de coordinación y a las limitaciones propias del entorno.
 
 En la figura \ref{fig:thread_sweep_mac_podman_time} se muestra el tiempo de ejecución para la configuración de CPU en un entorno con contenedores de \textit{Podman}.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/cap5/thread_sweep_mac_podman_time.png}
     \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU).}
@@ -1831,12 +1831,12 @@ En la tabla \ref{tab:thread_sweep_mac_podman_time} se presentan los tiempos de e
         16.00             & 16.00           & 1674.10             & -48.07                         \\
         \hline
     \end{tabular}
-    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores de \textit{Podman} sobre Mac (CPU).}
+    \caption{Tiempos de ejecución y reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores de \textit{Podman} sobre MacOS (CPU).}
     \label{tab:thread_sweep_mac_podman_time}
 \end{table}
 
-La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores de \textit{Podman} sobre Mac (CPU). Se observa que, en configuraciones monoproceso, el incremento del número de hebras produce una reducción significativa del tiempo de ejecución, alcanzando una disminución del 80.29\% con 16 hebras respecto a la ejecución secuencial. El mayor beneficio se obtiene al pasar de 1 a 2 hebras (-47.52\%) y de 2 a 4 hebras (-25.19\% adicional), lo que indica una buena escalabilidad inicial. Sin embargo, a partir de 8 hebras, la mejora se estabiliza y el beneficio adicional es mínimo, sugiriendo que el paralelismo óptimo se sitúa en torno a 8 hebras.
+La tabla muestra los tiempos de ejecución y la reducción porcentual respecto a una hebra para distintas combinaciones de procesos y hebras en contenedores de \textit{Podman} sobre MacOS (CPU). Se observa que, en configuraciones monoproceso, el incremento del número de hebras produce una reducción significativa del tiempo de ejecución, alcanzando una disminución del 80.29\% con 16 hebras respecto a la ejecución secuencial. El mayor beneficio se obtiene al pasar de 1 a 2 hebras (-47.52\%) y de 2 a 4 hebras (-25.19\% adicional), lo que indica una buena escalabilidad inicial. Sin embargo, a partir de 8 hebras, la mejora se estabiliza y el beneficio adicional es mínimo, sugiriendo que el paralelismo óptimo se sitúa en torno a 8 hebras.
 
 Al aumentar el número de procesos, la reducción porcentual respecto a una hebra disminuye progresivamente. Por ejemplo, con 16 procesos y 16 hebras, la reducción es del 48.07\%, notablemente inferior a la obtenida en el caso monoproceso. Además, en configuraciones con muchos procesos, el incremento de hebras aporta mejoras cada vez más limitadas, lo que sugiere que la sobrecarga de coordinación y la gestión de recursos entre contenedores penalizan la eficiencia del paralelismo.
 
-En resumen, \textit{Podman} sobre Mac permite un aprovechamiento eficiente del paralelismo en configuraciones monoproceso, pero la eficiencia disminuye al aumentar el número de procesos, especialmente cuando se incrementa la complejidad de la comunicación y la gestión de procesos distribuidos. El punto óptimo de eficiencia se alcanza alrededor de 8 hebras por proceso.
+En resumen, \textit{Podman} sobre MacOS permite un aprovechamiento eficiente del paralelismo en configuraciones monoproceso, pero la eficiencia disminuye al aumentar el número de procesos, especialmente cuando se incrementa la complejidad de la comunicación y la gestión de procesos distribuidos. El punto óptimo de eficiencia se alcanza alrededor de 8 hebras por proceso.
