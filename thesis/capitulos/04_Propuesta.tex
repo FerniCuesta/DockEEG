@@ -122,7 +122,7 @@ El parámetro \texttt{NSubpopulations} representa el número total de subpoblaci
 
 El programa hace un uso intensivo de hilos para la evaluación de la aptitud. En la CPU, el parámetro \texttt{CpuThreads} indica cuántos hilos se utilizan, y se recomienda que coincida con el número de núcleos lógicos para obtener un buen rendimiento. En la GPU, parámetros como \texttt{NDevices} (número de dispositivos OpenCL), \texttt{ComputeUnits} (unidades de cómputo) y \texttt{WiLocal} (hilos por unidad de cómputo) son esenciales. Ajustar \texttt{WiLocal} como múltiplo de 32 o 64 mejora la eficiencia de OpenCL, y la combinación óptima de estos valores depende del problema y del dispositivo. Estos parámetros controlan la paralelización de la función de evaluación en la GPU y la distribución dinámica de individuos mediante OpenMP \cite{escobar2020energy}.
 
-\subsubsection{Número de nodos}
+\subsubsection{Número de procesos}
 
 \textit{HPMoon} está preparado para ejecutarse en sistemas distribuidos. Las subpoblaciones se reparten entre nodos usando MPI, agregando un cuarto nivel de paralelismo. El nodo maestro (MPI 0) gestiona esta distribución de manera dinámica. La escalabilidad y el rendimiento dependen directamente del número de nodos: aumentar su cantidad puede reducir significativamente el tiempo de ejecución y el consumo energético, alcanzando speedups de hasta 83 veces y reduciendo el consumo de energía a menos del 5\% en el mejor de los casos \cite{escobar2020energy, Escobar2019}. Además, la heterogeneidad de los nodos y su configuración de CPU/GPU influyen en la eficiencia de la distribución de carga.
 
