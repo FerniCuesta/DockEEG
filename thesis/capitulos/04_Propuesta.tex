@@ -1,52 +1,50 @@
-\chapter{Propuesta principal}\label{cap:propuesta}
+\chapter{DockEEG}\label{cap:DockEEG}
 
 % [En esta sección se ha de introducir y explicar la propuesta principal del trabajo. Se puede y es recomendable dividir en secciones, incluso, este capítulo puede contemplar varios  capítulos a su vez.]
 
-\section{Introducción de la propuesta}\label{sec:introduccion_propuesta}
 En esta sección se presenta la propuesta general del trabajo, explicando la metodología seguida para evaluar el uso de contenedores en entornos HPC. Se justifica la elección de los experimentos en función de los objetivos del TFG y del estado del arte, y se define el alcance de los mismos, indicando qué se medirá y evaluará.
 
-\section{Aplicación seleccionada: HPMoon}\label{sec:hpm_application}
+\section{Aplicación de punto de partida: HPMoon}\label{sec:hpm_application}
 
 \subsection{Origen y contexto}\label{subsec:hpm_origen}
 
-HPMoon es un software desarrollado por el investigador Juan José Escobar Pérez en el marco de la tesis doctoral \textit{``Energy-Efficient Parallel and Distributed Multi-Objective Feature Selection on Heterogeneous Architectures''}. Su nombre proviene del proyecto \textit{High Performance Multi-Objective Optimization for Neuroengineering and Rehabilitation Technologies} (HPMoon), reflejando su enfoque en optimización de alto rendimiento y aplicaciones biomédicas.
+\textit{HPMoon} es un software desarrollado por el investigador Juan José Escobar en el marco de la tesis doctoral \textit{``Energy-Efficient Parallel and Distributed Multi-Objective Feature Selection on Heterogeneous Architectures''}.
 
-El programa se concibe como una herramienta del proyecto \textit{e-hpMOBE} y está disponible públicamente en GitHub\footnote{\url{https://github.com/hpmoon/}}. Su desarrollo fue apoyado por proyectos de investigación nacionales financiados por el Ministerio de Ciencia, Innovación y Universidades (MICIU) y fondos FEDER, así como por una beca de NVIDIA.
+El programa se concibe como una herramienta de los proyectos \textit{\textit{HPMoon}}, \textit{e-hpMOBE} y \textit{HPEE-COBE} y toma su nombre del primero de ellos. Está disponible públicamente en GitHub\footnote{\url{https://github.com/rotty11/HPMoon}}.
 
-Esta aplicación se utiliza como caso de estudio en este TFG debido a su relevante aportación científica y tecnológica en el ámbito de la computación de alto rendimiento (\acs{HPC}).
-
-\subsection{Objetivo de HPMoon}\label{subsec:hpm_objetivo}
-El objetivo principal de HPMoon es abordar la clasificación no supervisada de señales de Electroencefalograma (\acs{EEG}) en tareas de Interfaz Cerebro-Computadora (\acs{BCI}). Este es un problema de alta dimensionalidad y computacionalmente costoso debido a las características de las señales \acs{EEG} y al gran número de características que pueden contener. La aplicación combina la selección de características multiobjetivo (\acs{MOFS}) con algoritmos paralelos y energéticamente eficientes, buscando minimizar el tiempo de ejecución y el consumo de energía, cruciales en problemas de \textit{Machine Learning} y bioingeniería que requieren plataformas de alto rendimiento.
+Su objetivo es abordar la clasificación no supervisada de señales de electroencefalograma (\acs{EEG}) aplicado a tareas de interfaz cerebro-computadora (\acs{BCI}). Este es un problema de alta dimensionalidad y computacionalmente costoso debido a las características de las señales \acs{EEG} y al gran número de características que pueden contener. La aplicación combina la selección de características multiobjetivo (\acs{MOFS}) con algoritmos paralelos y energéticamente eficientes, buscando minimizar el tiempo de ejecución y el consumo de energía, cruciales en problemas de \textit{Machine Learning} y bioingeniería que requieren plataformas de alto rendimiento.
 
 \subsection{Arquitectura y funcionamiento}\label{subsec:hpm_funcionamiento}
 
-HPMoon implementa un procedimiento paralelo multinivel y energéticamente eficiente para la selección de características multiobjetivo (\acs{MOFS}). La versión más avanzada, conocida como ODGA, ha sido descrita como la ``más eficiente desarrollada hasta la fecha''. Su arquitectura combina técnicas de algoritmos evolutivos, paralelismo en múltiples niveles y optimización de recursos para abordar problemas complejos de selección de características.
+La versión más avanzada, conocida como ODGA, ha sido descrita como la ``más eficiente desarrollada hasta la fecha''. Su arquitectura combina técnicas de algoritmos evolutivos, paralelismo en múltiples niveles y optimización de recursos para abordar problemas complejos de selección de características.
 
-El enfoque principal de HPMoon es de tipo wrapper, utilizando un Algoritmo Genético Multiobjetivo (MOGA), basado en una adaptación de NSGA-II, para seleccionar las características más relevantes. Cada individuo en la población representa una combinación posible de características y se evalúa mediante un procedimiento de fitness basado en el algoritmo K-means para clasificación no supervisada. La evaluación se realiza considerando dos funciones de coste: $f_1$, que minimiza la suma de distancias dentro de los clústeres (WCSS), y $f_2$, que maximiza la distancia entre centroides (BCSS). Ambas funciones se normalizan en el intervalo (0,1) para garantizar comparabilidad.
+El enfoque principal de \textit{HPMoon} es de tipo wrapper, utilizando un Algoritmo Genético Multiobjetivo (MOGA), basado en una adaptación de NSGA-II, para seleccionar las características más relevantes. Cada individuo en la población representa una combinación posible de características y se evalúa mediante un procedimiento de fitness basado en el algoritmo K-means para clasificación no supervisada. La evaluación se realiza considerando dos funciones de coste: $f_1$, que minimiza la suma de distancias dentro de los clústeres (WCSS), y $f_2$, que maximiza la distancia entre centroides (BCSS). Ambas funciones se normalizan en el intervalo (0,1) para garantizar comparabilidad.
 
-HPMoon explota hasta cuatro niveles de paralelismo en arquitecturas heterogéneas. A nivel de clúster, se distribuyen las tareas entre nodos utilizando MPI. Dentro de cada nodo, OpenMP gestiona la distribución de trabajo entre dispositivos CPU y GPU, mientras que a nivel de CPU se aprovechan múltiples hilos o unidades de cómputo (CUs). En la GPU, el paralelismo de datos se aplica al algoritmo K-means, acelerando el cálculo de distancias y la actualización de centroides.
+\textit{HPMoon} explota hasta cuatro niveles de paralelismo en arquitecturas heterogéneas. A nivel de clúster, se distribuyen las tareas entre nodos utilizando MPI. Dentro de cada nodo, OpenMP gestiona la distribución de trabajo entre dispositivos CPU y GPU, mientras que a nivel de CPU se aprovechan múltiples hilos o unidades de cómputo (CUs). En la GPU, el paralelismo de datos se aplica al algoritmo K-means, acelerando el cálculo de distancias y la actualización de centroides.
 
 El software está desarrollado principalmente en C++ e integra tecnologías HPC estándar: MPI para comunicación entre nodos, OpenMP para paralelismo en CPU y OpenCL para ejecutar los kernels de K-means en GPU. Además, incorpora esquemas master-worker con balanceo dinámico de carga, tanto entre CPU y GPU como entre nodos del clúster, optimizando la distribución de trabajo y minimizando desequilibrios, especialmente en versiones avanzadas como ODGA.
 
-La configuración y ejecución de HPMoon se realiza desde la línea de comandos, permitiendo ajustar parámetros como el número de subpoblaciones, tamaño de la población, migraciones, generaciones, número de características y uso de CPU o GPU mediante un archivo XML. Esta flexibilidad facilita la adaptación del programa a distintos entornos de HPC y diferentes conjuntos de datos, maximizando eficiencia y reproducibilidad.
+La configuración y ejecución de \textit{HPMoon} se realiza desde la línea de comandos, permitiendo ajustar parámetros como el número de subpoblaciones, tamaño de la población, migraciones, generaciones, número de características y uso de CPU o GPU mediante un archivo XML. Esta flexibilidad facilita la adaptación del programa a distintos entornos de HPC y diferentes conjuntos de datos, maximizando eficiencia y reproducibilidad.
 
 \subsection{Justificación de la elección para este TFG}\label{subsec:hpm_justificacion}
 
-HPMoon se ha seleccionado como caso de estudio por varias razones que lo convierten en un candidato ideal para analizar aspectos como portabilidad, rendimiento y overhead de contenedores en entornos HPC. En primer lugar, su relevancia científica y tecnológica es clara: aborda un problema intensivo en cómputo, la clasificación de señales EEG de alta dimensionalidad, común en bioinformática e ingeniería biomédica. La complejidad de estas tareas permite generar métricas significativas de rendimiento en HPC.
+Esta aplicación se utiliza como caso de estudio en este TFG debido a su relevante aportación científica y tecnológica en el ámbito de la computación de alto rendimiento.
 
-Otro factor clave es su diseño para paralelización multinivel y arquitecturas heterogéneas. HPMoon explota múltiples niveles de paralelismo en CPUs multi-núcleo, GPUs y sistemas distribuidos en clústeres, lo que permite realizar análisis exhaustivos en distintas configuraciones. A esto se suma un énfasis en la eficiencia energética, optimizando tanto el consumo de energía como el tiempo de ejecución, un aspecto crítico en la computación de alto rendimiento moderna. Asimismo, incorpora estrategias de balanceo de carga dinámico entre CPU y GPU, lo que facilita manejar las diferencias de capacidad y consumo energético de dispositivos heterogéneos.
+\textit{HPMoon} se ha seleccionado como caso de estudio por varias razones que lo convierten en un candidato ideal para analizar aspectos como portabilidad, rendimiento y overhead de contenedores en entornos HPC. En primer lugar, su relevancia científica y tecnológica es clara: aborda un problema intensivo en cómputo, la clasificación de señales EEG de alta dimensionalidad, común en bioinformática e ingeniería biomédica. La complejidad de estas tareas permite generar métricas significativas de rendimiento en HPC.
 
-La disponibilidad y madurez del software también influyen en su elección. HPMoon es un proyecto robusto derivado de tesis doctoral y publicaciones científicas, con múltiples versiones evolutivas (SGA, PGA, OPGA, MDGA, MPGA, DGA, DGA-II, ODGA, GAAM) y documentación completa. Además, incluye modelos de energía-tiempo que permiten predecir el comportamiento de los algoritmos en sistemas monocomputador y distribuidos, proporcionando una base sólida para comparar resultados obtenidos en contenedores. Por último, la complejidad y los desafíos de optimización que presenta —como el balanceo de carga en entornos heterogéneos, irregularidades en accesos a memoria y la gestión de comunicación entre nodos y dispositivos— lo hacen ideal para evaluar el impacto de los contenedores en la eficiencia y optimización del código.
+Otro factor clave es su diseño para paralelización multinivel y arquitecturas heterogéneas. \textit{HPMoon} explota múltiples niveles de paralelismo en CPUs multi-núcleo, GPUs y sistemas distribuidos en clústeres, lo que permite realizar análisis exhaustivos en distintas configuraciones. A esto se suma un énfasis en la eficiencia energética, optimizando tanto el consumo de energía como el tiempo de ejecución, un aspecto crítico en la computación de alto rendimiento moderna. Asimismo, incorpora estrategias de balanceo de carga dinámico entre CPU y GPU, lo que facilita manejar las diferencias de capacidad y consumo energético de dispositivos heterogéneos.
+
+La disponibilidad y madurez del software también influyen en su elección. \textit{HPMoon} es un proyecto robusto derivado de tesis doctoral y publicaciones científicas, con múltiples versiones que han ido optimizándose a lo largo de los años y documentación completa. Además, se han documentado trabajos donde se analizan modelos de energía-tiempo que permiten predecir el comportamiento de los algoritmos en sistemas monocomputador y distribuidos, proporcionando una base sólida para comparar resultados obtenidos en contenedores \cite{escobar2025energytime}, \cite{escobar2019energyaware}, \cite{escobar2019timeenergy}. Por último, la complejidad y los desafíos de optimización que presenta, como el balanceo de carga en entornos heterogéneos, irregularidades en accesos a memoria y la gestión de comunicación entre nodos y dispositivos, lo hacen ideal para evaluar el impacto de los contenedores en la eficiencia y optimización del código.
 
 \subsection{Configuración y parámetros de compilación y ejecución}\label{subsec:hpm_configuracion}
 
-La aplicación HPMoon requiere una fase previa de compilación y, posteriormente, una configuración en tiempo de ejecución a través de un fichero XML (con soporte parcial mediante parámetros de línea de comandos).
+La aplicación \textit{HPMoon} requiere una fase previa de compilación y, posteriormente, una configuración en tiempo de ejecución a través de un fichero XML (con soporte parcial mediante parámetros de línea de comandos).
 
 \subsubsection{Compilación}
 
-La compilación de HPMoon se realiza a través de un \textit{Makefile}, que permite configurar los parámetros más importantes antes de generar el ejecutable. Entre estos parámetros destacan el número de características de la base de datos (\texttt{N\_FEATURES} o NF), que debe definirse entre 4 y el máximo disponible, y el compilador MPI a utilizar (\texttt{COMP} o COMPILER), que por defecto es \texttt{mpic++}.
+La compilación de \textit{HPMoon} se realiza a través de un \textit{Makefile}, que permite configurar los parámetros más importantes antes de generar el ejecutable. Entre estos parámetros destacan el número de características de la base de datos (\texttt{N\_FEATURES} o NF), que debe definirse entre 4 y el máximo disponible, y el compilador MPI a utilizar (\texttt{COMP} o COMPILER), que por defecto es \texttt{mpic++}.
 
-Estos valores se procesan en tiempo de compilación, lo que permite evitar el uso de memoria dinámica innecesaria y maximizar el rendimiento del programa. Una vez completada la compilación, el ejecutable resultante, llamado \texttt{hpmoon}, se encuentra disponible en el directorio \texttt{bin}, listo para su ejecución en los distintos entornos de HPC.
+Estos valores se procesan en tiempo de compilación, lo que permite evitar el uso de memoria dinámica innecesaria y maximizar el rendimiento del programa. Una vez completada la compilación, el ejecutable resultante, llamado \texttt{\textit{HPMoon}}, se encuentra disponible en el directorio \texttt{bin}, listo para su ejecución en los distintos entornos de HPC.
 
 \subsubsection{Configuración en tiempo de ejecución}
 
@@ -73,7 +71,7 @@ La configuración en tiempo de ejecución se realiza principalmente mediante un 
     \item \textbf{KernelsFileName}: fichero con los kernels de OpenCL.
 \end{itemize}
 
-Muchos de estos parámetros pueden especificarse también mediante opciones en la línea de comandos al ejecutar \texttt{hpmoon}, aunque no todos están disponibles de esta forma. Esta circunstancia se refleja en la columna \texttt{CMD OPTION} de la Tabla~\ref{tab:hpmoon_parametros}, donde un guion (\texttt{-}) indica ausencia de soporte por línea de comandos.
+Muchos de estos parámetros pueden especificarse también mediante opciones en la línea de comandos al ejecutar \texttt{HPMoon}, aunque no todos están disponibles de esta forma. Esta circunstancia se refleja en la columna \texttt{CMD OPTION} de la Tabla~\ref{tab:HPMoon_parametros}, donde un guion (\texttt{-}) indica ausencia de soporte por línea de comandos.
 
 \begin{table}[htbp]
     \centering
@@ -105,16 +103,16 @@ Muchos de estos parámetros pueden especificarse también mediante opciones en l
         List OpenCL devices & -                                                                       & -l                  \\ \hline
     \end{tabular}
     \caption{Rango de valores de los parámetros de entrada y su uso desde la línea de argumentos (si está disponible).}
-    \label{tab:hpmoon_parametros}
+    \label{tab:HPMoon_parametros}
 \end{table}
 
 \subsection{Selección de parámetros de estudio}
 
-La elección de los parámetros para este estudio se centró en mantener la mayoría de los valores por defecto y analizar únicamente la relación entre el número de subpoblaciones y el número de hilos. Esta decisión se basa en la arquitectura de paralelismo multinivel de HPMoon y su impacto directo en la distribución de la carga de trabajo y el rendimiento. A continuación, se detalla la justificación de esta selección.
+La elección de los parámetros para este estudio se centró en mantener la mayoría de los valores por defecto y analizar únicamente la relación entre el número de subpoblaciones y el número de hilos. Esta decisión se basa en la arquitectura de paralelismo multinivel de \textit{HPMoon} y su impacto directo en la distribución de la carga de trabajo y el rendimiento. A continuación, se detalla la justificación de esta selección.
 
 \subsubsection{Paralelismo multinivel del programa}
 
-HPMoon está diseñado como un algoritmo evolutivo que utiliza subpoblaciones y explota paralelismo en múltiples niveles. A nivel de clúster, MPI (Message Passing Interface) distribuye las subpoblaciones entre los distintos nodos. Dentro de cada nodo, OpenMP se encarga de repartir dinámicamente el trabajo entre los dispositivos disponibles, incluyendo CPU y GPU. La evaluación de la aptitud de los individuos combina OpenMP en la CPU y OpenCL en la GPU, ofreciendo hasta tres niveles de paralelismo en la CPU y cuatro en la GPU. Esta arquitectura multinivel es la que determina la elección de parámetros clave para el estudio.
+\textit{HPMoon} está diseñado como un algoritmo evolutivo que utiliza subpoblaciones y explota paralelismo en múltiples niveles. A nivel de clúster, MPI (Message Passing Interface) distribuye las subpoblaciones entre los distintos nodos. Dentro de cada nodo, OpenMP se encarga de repartir dinámicamente el trabajo entre los dispositivos disponibles, incluyendo CPU y GPU. La evaluación de la aptitud de los individuos combina OpenMP en la CPU y OpenCL en la GPU, ofreciendo hasta tres niveles de paralelismo en la CPU y cuatro en la GPU. Esta arquitectura multinivel es la que determina la elección de parámetros clave para el estudio.
 
 \subsubsection{Número de subpoblaciones}
 
@@ -126,17 +124,35 @@ El programa hace un uso intensivo de hilos para la evaluación de la aptitud. En
 
 \subsubsection{Número de nodos}
 
-HPMoon está preparado para ejecutarse en sistemas distribuidos. En la versión DGA (Distributed Genetic Algorithm), las subpoblaciones se reparten entre nodos usando MPI, agregando un cuarto nivel de paralelismo. El nodo maestro (MPI 0) gestiona esta distribución de manera dinámica. La escalabilidad y el rendimiento dependen directamente del número de nodos: aumentar su cantidad puede reducir significativamente el tiempo de ejecución y el consumo energético, alcanzando speedups de hasta 83 veces y reduciendo el consumo de energía a menos del 5\% en el mejor de los casos \cite{escobar2020energy, Escobar2019}. Además, la heterogeneidad de los nodos y su configuración de CPU/GPU influyen en la eficiencia de la distribución de carga.
+\textit{HPMoon} está preparado para ejecutarse en sistemas distribuidos. Las subpoblaciones se reparten entre nodos usando MPI, agregando un cuarto nivel de paralelismo. El nodo maestro (MPI 0) gestiona esta distribución de manera dinámica. La escalabilidad y el rendimiento dependen directamente del número de nodos: aumentar su cantidad puede reducir significativamente el tiempo de ejecución y el consumo energético, alcanzando speedups de hasta 83 veces y reduciendo el consumo de energía a menos del 5\% en el mejor de los casos \cite{escobar2020energy, Escobar2019}. Además, la heterogeneidad de los nodos y su configuración de CPU/GPU influyen en la eficiencia de la distribución de carga.
 
 \subsubsection{Razones para mantener otros parámetros por defecto}
 
 Se decidió no modificar el resto de los parámetros por varias razones. Primero, la prioridad del estudio es entender cómo el paralelismo y la asignación de recursos influyen en el rendimiento, por lo que se enfocó en \texttt{NSubpopulations} y en los hilos de CPU/GPU. Segundo, algunos parámetros como \texttt{N\_FEATURES} se fijan en tiempo de compilación, lo que dificulta su ajuste en pruebas de rendimiento. Tercero, la función de evaluación (K-means) consume más del 99\% del tiempo de ejecución para poblaciones moderadas, por lo que optimizar su paralelización es crítico \cite{escobar2020energy}. Otros parámetros secundarios relacionados con el algoritmo evolutivo o la gestión de datos no afectan de manera tan directa al comportamiento fundamental del paralelismo. Por último, estudiar bases de datos muy grandes podría provocar problemas de memoria en la GPU, por lo que es más prudente analizar estos factores una vez comprendido el paralelismo básico.
 
-En resumen, al concentrarse en el número de subpoblaciones, el número de hebras y el número de nodos, se aborda directamente la capacidad del programa para aprovechar arquitecturas paralelas y la distribución de la carga de trabajo en todos los niveles, sentando las bases para análisis más detallados posteriormente \cite{escobar2020energy}.
+Al concentrarse en el número de subpoblaciones, el número de hebras y el número de nodos, se aborda directamente la capacidad del programa para aprovechar arquitecturas paralelas y la distribución de la carga de trabajo en todos los niveles, sentando las bases para análisis más detallados posteriormente \cite{escobar2020energy}.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parámetro} & \textbf{Valor por defecto} \\
+        \hline
+        SubpopulationSize  & 480                        \\
+        NGlobalMigrations  & 1                          \\
+        NGenerations       & 50                         \\
+        MaxFeatures        & 10                         \\
+        TournamentSize     & 2                          \\
+        NInstances         & 178                        \\
+        \hline
+    \end{tabular}
+    \caption{Valores por defecto de los principales parámetros de configuración de \textit{HPMoon}.}
+    \label{tab:HPMoon_default_params}
+\end{table}
 
 \subsection{Diseño de los experimentos}\label{subsec:diseno_experimentos_detallado}
 
-Los experimentos se estructuran en varias fases con el fin de determinar los parámetros óptimos y evaluar la escalabilidad y portabilidad de HPMoon en distintos entornos y plataformas.
+Los experimentos se estructuran en varias fases con el fin de determinar los parámetros óptimos y evaluar la escalabilidad y portabilidad de \textit{HPMoon} en distintos entornos y plataformas.
 
 \subsubsection{Determinación del número óptimo de subpoblaciones}\label{subsubsec:determinacion_subpoblaciones}
 
@@ -153,22 +169,22 @@ Uno de los experimentos planteados consiste en evaluar el rendimiento de la apli
 
 En las ejecuciones multinodo, cada nodo se configurará con un número de hebras tal que el total de hebras activas sea igual al producto del número de nodos por el número de hebras por nodo. Para explorar el comportamiento de la aplicación en escenarios límite, se plantean dos variantes de prueba: en la primera, si el número total de hebras requerido supera el máximo del dispositivo (16), el test no se ejecuta; en la segunda, se permiten ejecuciones aunque la cantidad de hebras solicitadas exceda el límite del hardware. Con esto se pretende identificar si el rendimiento se degrada o si el sistema puede manejar de manera eficiente solicitudes superiores a la capacidad real, estableciendo así las condiciones óptimas para los experimentos posteriores.
 
-\subsubsection{Estudio del rendimiento al utilizar la misma GPU en todos los nodos}
+\subsubsection{Estudio del rendimiento al utilizar la misma GPU en todos los procesos}
 
-En un escenario multinodo local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, resulta importante analizar cómo el uso de la GPU afecta al rendimiento de HPMoon. El dispositivo disponible cuenta con una única tarjeta gráfica, por lo que se consideran dos configuraciones posibles.
+En un escenario multiproceso local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, resulta importante analizar cómo el uso de la GPU afecta al rendimiento de \textit{HPMoon}. El dispositivo disponible cuenta con una única tarjeta gráfica, por lo que se consideran dos configuraciones posibles.
 
-En la primera, todos los nodos comparten la misma GPU, lo que permite evaluar el impacto de la contención del recurso gráfico cuando varios procesos intentan ejecutar cálculos en paralelo sobre la misma tarjeta. En la segunda configuración, la GPU se asigna únicamente a un nodo, mientras que el resto de nodos realiza los cálculos exclusivamente con la CPU. Este enfoque permite medir si centralizar el uso de la GPU en un solo nodo mejora la eficiencia global frente al acceso compartido.
+En la primera, todos los procesos comparten la misma GPU, lo que permite evaluar el impacto de la contención del recurso gráfico cuando varios procesos intentan ejecutar cálculos en paralelo sobre la misma tarjeta. En la segunda configuración, la GPU se asigna únicamente a un proceso, mientras que el resto de procesos realiza los cálculos exclusivamente con la CPU. Este enfoque permite medir si centralizar el uso de la GPU en un solo proceso mejora la eficiencia global frente al acceso compartido.
 
-El objetivo de este estudio es identificar cuál de estas estrategias ofrece un mejor rendimiento en configuraciones multinodo locales. Para ello se analizará la eficiencia en términos de tiempo total de cálculo y utilización de recursos, se evaluará la escalabilidad de la aplicación al incrementar el número de nodos y se extraerán recomendaciones sobre la asignación de la GPU en futuras pruebas multinodo. De esta manera, se podrá determinar si resulta más eficiente que todos los nodos compartan la GPU o si es preferible que solo uno de ellos la utilice, teniendo en cuenta tanto el rendimiento como la complejidad de gestión de los recursos.
+El objetivo de este estudio es identificar cuál de estas estrategias ofrece un mejor rendimiento en configuraciones multiproceso locales. Para ello se analizará la eficiencia en términos de tiempo total de cálculo y utilización de recursos, se evaluará la escalabilidad de la aplicación al incrementar el número de procesos y se extraerán recomendaciones sobre la asignación de la GPU en futuras pruebas multiproceso. De esta manera, se podrá determinar si resulta más eficiente que todos los procesos compartan la GPU o si es preferible que solo uno de ellos la utilice, teniendo en cuenta tanto el rendimiento como la complejidad de gestión de los recursos.
 
 \subsubsection{Experimentos de escalabilidad}
 
-Una vez definido el número óptimo de subpoblaciones, el rango válido de hebras y la estrategia de uso de la GPU en entornos multinodo, se realizarán los siguientes experimentos:
+Una vez definido el número óptimo de subpoblaciones, el rango válido de hebras y la estrategia de uso de la GPU en entornos multiproceso, se realizarán los siguientes experimentos:
 
 \begin{itemize}
-    \item \textbf{Escalabilidad mononodo:} con un único nodo fijo, se escala el número de hebras.
-    \item \textbf{Escalabilidad multinodo:} con una única hebra por nodo, se escala el número de nodos.
-    \item \textbf{Barrido de hebras:} se ejecutan todas las combinaciones posibles de número de nodos y hebras por nodo.
+    \item \textbf{Escalabilidad monoproceso:} con un único proceso fijo, se escala el número de hebras.
+    \item \textbf{Escalabilidad multiproceso:} con una única hebra por proceso, se escala el número de procesos.
+    \item \textbf{Barrido de hebras:} se ejecutan todas las combinaciones posibles de número de procesos y hebras por proceso.
 \end{itemize}
 
 \subsubsection{Plataformas y entornos de ejecución}
@@ -181,38 +197,38 @@ Los experimentos se realizarán en distintas plataformas y entornos, tanto con u
     \item MacOS Sequoia 15.5: ejecución en contenedores Docker y Podman.
 \end{itemize}
 
-Esta estructura permitirá evaluar la escalabilidad, portabilidad y rendimiento de HPMoon en entornos contenerizados y nativos, así como en arquitecturas heterogéneas con CPU y GPU.
+La ejecución nativa se realizará únicamente en Ubuntu, ya que el programa está desarrollado para sistemas Linux y no es compatible con Windows ni MacOS sin modificaciones. En estos últimos, se evaluará exclusivamente el rendimiento en contenedores.
+
+Esta estructura permitirá evaluar la escalabilidad, portabilidad y rendimiento de \textit{HPMoon} en entornos nativos y contenerizados, así como en arquitecturas heterogéneas con CPU y GPU.
 
 \section{Herramientas y scripts utilizados}\label{sec:herramientas_scripts}
 
-La carpeta de scripts está organizada en subcarpetas y archivos que se pueden agrupar según su función principal en cuatro bloques:
+Todo el trabajo desarrollado en este TFG, incluyendo scripts, configuraciones, documentación y resultados de los experimentos, está recogido y disponible públicamente en un repositorio de GitHub\footnote{\url{https://github.com/FerniCuesta/DockEEG}}.
+
+La carpeta de scripts está organizada en subcarpetas y archivos que se pueden agrupar según su función principal en cuatro bloques, los cuales se verán en las siguientes secciones.
 
 \subsection{Compilación y preparación}
-Incluye scripts como \textit{build\_hpmoon.sh} y \textit{clean\_system.sh} dentro de la carpeta \texttt{utils}. Su objetivo es automatizar la compilación del software HPMoon y preparar el entorno, asegurando que el binario esté actualizado y que el sistema esté limpio antes de cada experimento.
+Incluye scripts como \textit{build\_HPMoon.sh} y \textit{clean\_system.sh} dentro de la carpeta \texttt{utils}. Su objetivo es automatizar la compilación del software \textit{HPMoon} y preparar el entorno, asegurando que el binario esté actualizado y que el sistema esté limpio antes de cada experimento.
 
 \subsection{Pruebas de escalabilidad}
 
-En esta categoría se agrupan los scripts que permiten evaluar cómo HPMoon se comporta frente a diferentes configuraciones de hardware y parámetros del algoritmo, así como explorar de manera sistemática todas las combinaciones posibles de nodos y hebras. Los scripts se organizan en subcarpetas como \textit{single-node}, \textit{multi-node}, \textit{experiments} y \textit{thread-sweep}, e incluyen ejemplos como \textit{run\_ubuntu\_native.sh}, \textit{run\_ubuntu\_native\_limit.sh} o \textit{run\_ubuntu\_container.sh}.
+En esta categoría se agrupan los scripts que permiten evaluar cómo \textit{HPMoon} se comporta frente a diferentes configuraciones de hardware y parámetros del algoritmo, así como explorar de manera sistemática todas las combinaciones posibles de procesos y hebras. Los scripts se organizan en subcarpetas como \textit{single-node}, \textit{multi-node}, \textit{experiments} y \textit{thread-sweep}, e incluyen ejemplos como \textit{run\_ubuntu\_native.sh}, \textit{run\_ubuntu\_native\_limit.sh} o \textit{run\_ubuntu\_container.sh}.
 
 El objetivo de estos scripts es doble: por un lado, analizar la escalabilidad y el rendimiento de la aplicación en entornos nativos y contenerizados; por otro, generar un panorama completo de cómo diferentes parámetros afectan la ejecución, permitiendo realizar barridos sistemáticos que produzcan matrices completas de resultados.
 
 De manera más concreta, los scripts permiten:
 
 \begin{itemize}
-    \item Variar parámetros críticos como el número de nodos, el número de hebras por nodo y el número de subpoblaciones, observando cómo influyen en el tiempo de ejecución y en la eficiencia general.
+    \item Variar parámetros críticos como el número de procesos, el número de hebras por proceso y el número de subpoblaciones, observando cómo influyen en el tiempo de ejecución y en la eficiencia general.
     \item Comparar el comportamiento de la aplicación en entornos nativos frente a entornos contenerizados, evaluando el overhead introducido por la virtualización.
-    \item Realizar barridos exhaustivos de parámetros, registrando resultados para todas las combinaciones posibles de nodos y hebras, de manera que se puedan identificar configuraciones óptimas y detectar posibles cuellos de botella.
+    \item Realizar barridos exhaustivos de parámetros, registrando resultados para todas las combinaciones posibles de procesos y hebras, de manera que se puedan identificar configuraciones óptimas y detectar posibles cuellos de botella.
 \end{itemize}
 
-Gracias a esta organización y automatización, se puede estudiar de forma sistemática la eficiencia, la escalabilidad y el comportamiento de HPMoon en distintas plataformas, garantizando resultados reproducibles y comparables.
+Gracias a esta organización y automatización, se puede estudiar de forma sistemática la eficiencia, la escalabilidad y el comportamiento de \textit{HPMoon} en distintas plataformas, garantizando resultados reproducibles y comparables.
 
 \subsection{Automatización total y orquestación}
 Incluye scripts de alto nivel como \textit{run\_ubuntu\_all.sh} o \textit{run\_windows\_all.sh}, que coordinan compilación, ejecución y recolección de resultados de forma secuencial.
 
 \subsection{Valor añadido e innovación}
 
-Los scripts desarrollados aportan un valor significativo al estudio al combinar automatización, flexibilidad y reproducibilidad. Permiten ejecutar campañas de pruebas complejas con un solo comando, minimizando errores humanos y optimizando el tiempo de ejecución. Al mismo tiempo, facilitan la modificación rápida de parámetros clave sin intervención manual, lo que permite explorar distintas configuraciones de nodos, hebras y subpoblaciones de manera eficiente. Su estructura también posibilita comparar de forma sistemática el rendimiento entre ejecuciones nativas y contenerizadas, así como entre distintas plataformas, asegurando resultados homogéneos y fácilmente interpretables. Además, estos scripts soportan escenarios multinodo y multiplataforma, validando la escalabilidad y la portabilidad de HPMoon en distintos entornos de HPC. Finalmente, la gestión organizada de logs y resultados garantiza que los experimentos sean completamente reproducibles y auditables, alineándose con las buenas prácticas científicas.
-
-\section{Repositorio del proyecto}\label{sec:repositorio}
-
-Todo el trabajo desarrollado en este TFG, incluyendo scripts, configuraciones, documentación y resultados de los experimentos, está recogido y disponible públicamente en un repositorio de GitHub\footnote{\url{https://github.com/FerniCuesta/DockEEG}}.
+Los scripts desarrollados aportan un valor significativo al estudio al combinar automatización, flexibilidad y reproducibilidad. Permiten ejecutar campañas de pruebas complejas con un solo comando, minimizando errores humanos y optimizando el tiempo de ejecución. Al mismo tiempo, facilitan la modificación rápida de parámetros clave sin intervención manual, lo que permite explorar distintas configuraciones de procesos, hebras y subpoblaciones de manera eficiente. Su estructura también posibilita comparar de forma sistemática el rendimiento entre ejecuciones nativas y contenerizadas, así como entre distintas plataformas, asegurando resultados homogéneos y fácilmente interpretables. Además, estos scripts soportan escenarios multiproceso y multiplataforma, validando la escalabilidad y la portabilidad de \textit{HPMoon} en distintos entornos de HPC. Finalmente, la gestión organizada de logs y resultados garantiza que los experimentos sean completamente reproducibles y auditables, alineándose con las buenas prácticas científicas.
