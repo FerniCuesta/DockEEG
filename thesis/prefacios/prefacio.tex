@@ -4,60 +4,45 @@
 
 %\thispagestyle{empty}
 
-\input{portada/portada_2}
+%\input{portada/portada_2}
 
 
 
 \cleardoublepage
 \thispagestyle{empty}
 
-\begin{center}
-       {\large\bfseries DockEEG - Dockerización de Aplicación Paralela y Distribuida para Clasificación de EEGs: Análisis de Viabilidad y Rendimiento}\\
-\end{center}
-\begin{center}
-       Fernando Cuesta Bueno\\
-\end{center}
-
 %\vspace{0.7cm}
-\noindent{\textbf{Palabras clave}: contenerización, computación paralela, computación distribuida, EEG, Docker, Podman, rendimiento, escalabilidad, portabilidad, GPU, HPC}\\
+\noindent{\textbf{Palabras clave}: Contenerización, Computación de Altas Prestaciones, Tarjeta Gráfica, Electroencefalograma, Rendimiento, Escalabilidad, Portabilidad}\\
 
 \vspace{0.7cm}
 \noindent{\textbf{Resumen}}\\
 
-Este trabajo presenta un estudio exhaustivo sobre la viabilidad y el rendimiento de la contenerización de aplicaciones paralelas y distribuidas en el ámbito del procesamiento de señales EEG. Se ha desarrollado y evaluado DockEEG, una solución basada en contenedores (Docker y Podman) para la ejecución eficiente y portable de la aplicación HPMoon en distintos sistemas operativos (Ubuntu, Windows, Mac) y arquitecturas (CPU y GPU).
+Este trabajo presenta un estudio exhaustivo sobre la viabilidad y el rendimiento de la contenerización de aplicaciones paralelas y distribuidas en el ámbito del procesamiento de señales EEG. Para ello, se ha desarrollado y evaluado DockEEG, una solución basada en contenedores (Docker y Podman) que permite la ejecución eficiente y portable en distintos sistemas operativos (Ubuntu, Windows, MacOS) y arquitecturas (CPU y GPU).
 
-A lo largo del trabajo se han realizado experimentos sistemáticos para analizar el impacto de la contenerización en el rendimiento, la escalabilidad y la portabilidad, comparando la ejecución nativa y contenerizada en escenarios mononodo y multinodo. Los resultados muestran que el uso de contenedores no introduce penalizaciones relevantes, permitiendo mantener un rendimiento muy similar al de la ejecución nativa y facilitando la reproducibilidad y despliegue en entornos heterogéneos.
+A lo largo del trabajo se han realizado experimentos sistemáticos para analizar el impacto de la contenerización en el rendimiento, la escalabilidad y la portabilidad. Se ha comparado la ejecución nativa y contenerizada en escenarios multihebra y multiproceso, evaluando así las diferencias y ventajas de cada enfoque.
 
-El estudio identifica el punto óptimo de paralelismo en torno a 8 hebras por nodo y destaca la importancia de ajustar el número de nodos para evitar sobrecargas de coordinación. Además, se analiza el impacto de la aceleración por GPU, que ofrece mejoras significativas en mononodo, aunque su escalabilidad es limitada en entornos distribuidos.
+El estudio identifica el punto óptimo de paralelismo en torno a 8 hebras por proceso y resalta la importancia de ajustar el número de procesos para evitar sobrecargas de coordinación. Asimismo, se analiza el impacto de la aceleración por GPU, que ofrece mejoras significativas en entornos multihebra, aunque su escalabilidad resulta limitada en escenarios distribuidos.
 
-Finalmente, se proponen líneas de trabajo futuro orientadas a mejorar la escalabilidad multinodo, la gestión avanzada de recursos heterogéneos, la automatización del ciclo experimental, la validación en clústeres HPC y la explotación combinada de CPU y GPU en sistemas Mac. HPMoon demuestra así ser una herramienta eficaz y portable para la investigación y desarrollo de aplicaciones científicas
+Los resultados muestran que el uso de contenedores no introduce penalizaciones relevantes, permitiendo mantener un rendimiento muy similar al de la ejecución nativa y facilitando la reproducibilidad y el despliegue en entornos heterogéneos. Finalmente, se proponen líneas de trabajo futuro orientadas a mejorar la escalabilidad multinodo, la gestión avanzada de recursos heterogéneos, la automatización del ciclo experimental, la validación en clústeres HPC y la explotación combinada de CPU y GPU en sistemas Mac. DockEEG, demuestra así que los contenedores son una herramienta eficaz y portable para la investigación y desarrollo de aplicaciones científicas.
 
 \cleardoublepage
 
 
 \thispagestyle{empty}
 
-
-\begin{center}
-       {\large\bfseries DockEEG - Dockerization of a Parallel and Distributed Application for EEG Classification: Feasibility and Performance Analysis}\\
-\end{center}
-\begin{center}
-       Fernando Cuesta Bueno\\
-\end{center}
-
 %\vspace{0.7cm}
-\noindent{\textbf{Keywords}: containerization, parallel computing, distributed computing, EEG, Docker, Podman, performance, scalability, portability, GPU, HPC}\\
+\noindent{\textbf{Keywords}: Containerization, High-Performance Computing, Graphics Processing Unit, Electroencephalogram, Performance, Scalability, Portability}\\
 
 \vspace{0.7cm}
 \noindent{\textbf{Abstract}}\\
 
-This work presents a comprehensive study on the feasibility and performance of containerizing parallel and distributed applications in the field of EEG signal processing. DockEEG, a container-based solution (using Docker and Podman), has been developed and evaluated for the efficient and portable execution of the HPMoon application across different operating systems (Ubuntu, Windows, Mac) and architectures (CPU and GPU).
+This work presents a comprehensive study on the feasibility and performance of containerizing parallel and distributed applications in the field of EEG signal processing. To this end, DockEEG has been developed and evaluated: a container-based solution (Docker and Podman) that enables efficient and portable execution across different operating systems and architectures (CPU and GPU).
 
-Throughout this work, systematic experiments have been conducted to analyze the impact of containerization on performance, scalability, and portability, comparing native and containerized execution in both single-node and multi-node scenarios. The results show that the use of containers does not introduce significant overhead, allowing performance very similar to native execution and facilitating reproducibility and deployment in heterogeneous environments.
+Throughout this work, systematic experiments have been carried out to analyze the impact of containerization on performance, scalability, and portability. Native and containerized execution have been compared in multithreaded and multiprocess scenarios, thus assessing the differences and advantages of each approach.
 
-The study identifies the optimal level of parallelism at around 8 threads per node and highlights the importance of adjusting the number of nodes to avoid coordination overhead. Additionally, the impact of GPU acceleration is analyzed, showing significant improvements in single-node setups, although scalability is limited in distributed environments.
+The study identifies the optimal point of parallelism around 8 threads per process and highlights the importance of tuning the number of processes to avoid coordination overhead. Likewise, the impact of GPU acceleration is analyzed, showing significant improvements in multithreaded environments, although its scalability proves limited in distributed scenarios.
 
-Finally, future work is proposed to improve multi-node scalability, advanced management of heterogeneous resources, automation of the experimental cycle, validation in HPC clusters, and combined exploitation of CPU and GPU on Mac systems. HPMoon thus proves to be an effective and portable tool for scientific application research and development.
+The results show that the use of containers does not introduce relevant overhead, allowing performance to remain very close to that of native execution while facilitating reproducibility and deployment in heterogeneous environments. Finally, future work directions are proposed, aimed at improving multinode scalability, advanced management of heterogeneous resources, automation of the experimental cycle, validation on HPC clusters, and combined exploitation of CPU and GPU in Mac systems. This demonstrates that containers are an effective and portable tool for research and development of scientific applications.
 
 \chapter*{}
 \thispagestyle{empty}
@@ -93,7 +78,7 @@ D. \textbf{Juan José Escobar Pérez}, Profesor del Departamento de Lenguajes y 
 
 \vspace{0.5cm}
 
-Que el presente trabajo, titulado \textit{\textbf{Dockerización de Aplicación Paralela y Distribuida para Clasificación de EEGs: Análisis de Viabilidad y Rendimiento, DockEEG}},
+Que el presente trabajo, titulado \textit{\textbf{Dockerización de Aplicación Paralela y Distribuida para Clasificación de EEGs: Análisis de Viabilidad y Rendimiento}},
 ha sido realizado bajo su supervisión por \textbf{Fernando Cuesta Bueno}, y autorizo la defensa de dicho trabajo ante el tribunal
 que corresponda.
 
