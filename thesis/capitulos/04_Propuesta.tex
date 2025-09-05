@@ -106,7 +106,7 @@ Muchos de estos parámetros pueden especificarse también mediante opciones en l
     \label{tab:HPMoon_parametros}
 \end{table}
 
-\subsection{Selección de parámetros de estudio}
+\subsection{Selección de parámetros de estudio}\label{subsec:seleccion_parametros_estudio}
 
 La elección de los parámetros para este estudio se centró en mantener la mayoría de los valores por defecto y analizar únicamente la relación entre el número de subpoblaciones y el número de hilos. Esta decisión se basa en la arquitectura de paralelismo multinivel de \textit{HPMoon} y su impacto directo en la distribución de la carga de trabajo y el rendimiento. A continuación, se detalla la justificación de esta selección.
 
@@ -154,9 +154,11 @@ Al concentrarse en el número de subpoblaciones, el número de hebras y el núme
 
 Los experimentos se estructuran en varias fases con el fin de determinar los parámetros óptimos y evaluar la escalabilidad y portabilidad de \textit{HPMoon} en distintos entornos y plataformas.
 
+Como se comenta en la sección \ref{subsec:seleccion_parametros_estudio}, se mantendrán la mayoría de los parámetros por defecto (ver Tabla~\ref{tab:HPMoon_default_params}) y el estudio de los parámetros de configuración que deseamos estimar se realizarán en el sistema operativo Ubuntu 24.04. Esto se debe a que queremos que estos parámetros de configuración resulten óptimos para la versión nativa de Linux. Estos parámetros no se verán modificados en los experimentos posteriores en otros sistemas operativos y entornos contenerizados, ya que el objetivo es evaluar la portabilidad y el rendimiento de \textit{HPMoon} en estos escenarios, no optimizar su configuración para cada uno de ellos. Para optimizar estos parámetros, se realizarán tres experimentos independientes, cada uno enfocado en un aspecto específico de la configuración.
+
 \subsubsection{Determinación del número óptimo de subpoblaciones}\label{subsubsec:determinacion_subpoblaciones}
 
-Se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations}, así como el de \texttt{CpuThreads}, a usar en los tests posteriores:
+El primero de los tests para estimar la configuración óptima, se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations}, así como el de \texttt{CpuThreads}, a usar en los tests posteriores:
 
 \begin{itemize}
     \item Se lanzarán ejecuciones con 1, 2, 4, 8 y 16 subpoblaciones.
@@ -165,13 +167,13 @@ Se realizarán ejecuciones exploratorias con distintas configuraciones de subpob
 
 \subsubsection{Estudio del rendimiento al requerir más hebras de las disponibles}
 
-Uno de los experimentos planteados consiste en evaluar el rendimiento de la aplicación realizando un barrido completo de todas las combinaciones posibles de número de nodos y de hebras por nodo. Dado que el dispositivo en el que se realizarán los tests cuenta con un máximo de 16 hebras, resulta especialmente interesante analizar cómo se comporta la aplicación cuando se solicita un número de hebras superior al disponible. Este estudio permitirá determinar si es necesario imponer un límite en el número de hebras para los tests posteriores.
+El segundo de los experimentos planteados para obtener la configuración óptima consiste en evaluar el rendimiento de la aplicación cuando requieren más hebras de las que el dispositivo puede ofrecer. Este análisis es crucial para cuando se realicen tests donde se prueba la escalabilidad de la aplicación en entornos multiproceso, ya que tendremos que tomar la decisión de si permitir o no que el número total de hebras solicitadas supere el máximo disponible en el dispositivo. Durante este estudio tendremos en cuenta que el dispositivo disponible para las pruebas cuenta con un máximo de 16 hebras.
 
-En las ejecuciones multinodo, cada nodo se configurará con un número de hebras tal que el total de hebras activas sea igual al producto del número de nodos por el número de hebras por nodo. Para explorar el comportamiento de la aplicación en escenarios límite, se plantean dos variantes de prueba: en la primera, si el número total de hebras requerido supera el máximo del dispositivo (16), el test no se ejecuta; en la segunda, se permiten ejecuciones aunque la cantidad de hebras solicitadas exceda el límite del hardware. Con esto se pretende identificar si el rendimiento se degrada o si el sistema puede manejar de manera eficiente solicitudes superiores a la capacidad real, estableciendo así las condiciones óptimas para los experimentos posteriores.
+En las ejecuciones multiproceso, cada proceso se configurará con un número de hebras tal que el total de hebras activas sea igual al producto del número de procesos por el número de hebras por proceso. Para explorar el comportamiento de la aplicación en escenarios límite, se plantean dos variantes de prueba: en la primera, si el número total de hebras requerido supera el máximo del dispositivo (16), el test no se ejecuta; en la segunda, se permiten ejecuciones aunque la cantidad de hebras solicitadas exceda el límite del hardware. Con esto se pretende identificar si el rendimiento se degrada o si el sistema puede manejar de manera eficiente solicitudes superiores a la capacidad real, estableciendo así las condiciones óptimas para los experimentos posteriores.
 
 \subsubsection{Estudio del rendimiento al utilizar la misma GPU en todos los procesos}
 
-En un escenario multiproceso local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, resulta importante analizar cómo el uso de la GPU afecta al rendimiento de \textit{HPMoon}. El dispositivo disponible cuenta con una única tarjeta gráfica, por lo que se consideran dos configuraciones posibles.
+En esta sección se procede a explicar el tercer y último de los experimentos que nos ayudarán a obtener la configuración óptima. En un escenario multiproceso local, donde los nodos corresponden a procesos distribuidos dentro de un mismo dispositivo, resulta importante analizar cómo el uso de la GPU afecta al rendimiento de \textit{HPMoon}. El dispositivo disponible cuenta con una única tarjeta gráfica, por lo que se consideran dos configuraciones posibles.
 
 En la primera, todos los procesos comparten la misma GPU, lo que permite evaluar el impacto de la contención del recurso gráfico cuando varios procesos intentan ejecutar cálculos en paralelo sobre la misma tarjeta. En la segunda configuración, la GPU se asigna únicamente a un proceso, mientras que el resto de procesos realiza los cálculos exclusivamente con la CPU. Este enfoque permite medir si centralizar el uso de la GPU en un solo proceso mejora la eficiencia global frente al acceso compartido.
 

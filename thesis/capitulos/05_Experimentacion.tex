@@ -8,7 +8,7 @@ En esta primera fase de experimentacion se realizarán pruebas para determinar l
 
 Como se ha comentado en la sección \ref{subsubsec:determinacion_subpoblaciones}, se realizarán ejecuciones exploratorias con distintas configuraciones de subpoblaciones y hebras, para definir el parámetro de \texttt{NSubpopulations} a usar en los tests posteriores.
 
-En la figura \ref{fig:exploratory_subpopulations} se muestran las gráficas de estas ejecuciones exploratorias. Se observa que para cualquier número de subpoblaciones, el comportamiento es similar. En la tabla \ref{tab:exploratory_subpopulations_times} se presentan los tiempos de ejecución en segundos para cada combinación de hebras y subpoblaciones, mostrando cómo el incremento en el número de subpoblaciones aumenta significativamente el tiempo de ejecución, especialmente cuando se utilizan pocas hebras.
+En la figura \ref{fig:exploratory_subpopulations} se muestran los datos de estas ejecuciones exploratorias. Se observa que para cualquier número de subpoblaciones, el comportamiento es similar. En la tabla \ref{tab:exploratory_subpopulations_times} se presentan los tiempos de ejecución en segundos para cada combinación de hebras y subpoblaciones, al incrementar el número de subpoblaciones también aumenta significativamente el tiempo de ejecución, especialmente cuando se utilizan pocas hebras.
 
 \begin{figure}[ht]
     \centering
@@ -42,10 +42,10 @@ En la tabla \ref{tab:exploratory_populations_delta} se presentan los porcentajes
         \multirow{2}{*}{\textbf{Hebras}} & \multicolumn{5}{c|}{\textbf{Subpoblaciones}}                                                      \\ \cline{2-6}
                                          & \textbf{1}                                   & \textbf{2} & \textbf{4} & \textbf{8} & \textbf{16} \\ \hline
         1                                & 0.00                                         & 0.00       & 0.00       & 0.00       & 0.00        \\ \hline
-        2                                & -49.01                                       & -49.59     & -48.89     & -49.55     & -49.32      \\ \hline
-        4                                & -73.26                                       & -72.74     & -72.88     & -72.58     & -73.37      \\ \hline
-        8                                & -83.65                                       & -84.04     & -83.87     & -83.94     & -84.07      \\ \hline
-        16                               & -83.09                                       & -83.29     & -83.13     & -83.31     & -83.50      \\ \hline
+        2                                & 49.01                                        & 49.59      & 48.89      & 49.55      & 49.32       \\ \hline
+        4                                & 73.26                                        & 72.74      & 72.88      & 72.58      & 73.37       \\ \hline
+        8                                & 83.65                                        & 84.04      & 83.87      & 83.94      & 84.07       \\ \hline
+        16                               & 83.09                                        & 83.29      & 83.13      & 83.31      & 83.50       \\ \hline
     \end{tabular}
     \caption{Porcentaje de reducción del tiempo de ejecución respecto a la configuración base para distintas combinaciones de hebras y subpoblaciones}
     \label{tab:exploratory_populations_delta}
