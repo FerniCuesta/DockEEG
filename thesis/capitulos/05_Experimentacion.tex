@@ -651,16 +651,77 @@ Estos resultados indican que, en \textit{Podman} sobre Windows (CPU), el uso de 
 
 \subsubsection{CPU + GPU}
 
-% En la figura \ref{fig:single-node_windows_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con \textit{Docker} en Windows.
+En la figura \ref{fig:single-node_windows_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con contenedores de Ubuntu.
 
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_windows_docker_gpu_time.png}
-%     \caption{Tiempo de ejecución en un único proceso con \textit{Docker} en Windows (CPU + GPU).}
-%     \label{fig:single-node_windows_docker_gpu_time}
-% \end{figure}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_docker_gpu_time.png}
+    \caption{Tiempo de ejecución en un único proceso con contenedores de Windows (CPU + GPU).}
+    \label{fig:single-node_windows_docker_gpu_time}
+\end{figure}
 
-% En la tabla \ref{tab:single-node_windows_docker_gpu_time} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+En la tabla \ref{tab:single-node_windows_docker_gpu} se presentan los tiempos de ejecución y la variación porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1               & 423.56              & 0.00                           \\
+        2               & 226.73              & -46.40                         \\
+        4               & 128.93              & -69.52                         \\
+        8               & 90.65               & -78.57                         \\
+        16              & 82.06               & -80.60                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a una hebra en contenedores de Windows (CPU + GPU).}
+    \label{tab:single-node_windows_docker_gpu}
+\end{table}
+
+El tiempo de ejecución disminuye de forma notable al aumentar el número de hebras, alcanzando una reducción del 80.60\% con 16 hebras respecto a una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-46.40\%) y de 2 a 4 hebras (-23.12\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza, con beneficios adicionales menores al incrementar a 16 hebras.
+
+Estos resultados muestran que, en contenedores de Windows con CPU+GPU, el uso de múltiples hebras es eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar al menos 8 hebras para obtener la mayor parte de la mejora, ya que las ganancias adicionales más allá de ese punto son limitadas.
+
+En la figura \ref{fig:single-node_windows_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un único proceso con contenedores de Windows gestionados por \textit{Podman}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/single-node_ubuntu_podman_gpu_time.png}
+    \caption{Tiempo de ejecución en un único proceso con contenedores de Windows gestionados por \textit{Podman} (CPU + GPU).}
+    \label{fig:single-node_windows_podman_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:single-node_windows_podman_gpu} se presentan los tiempos de ejecución y la variación porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Hebras} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 hebra} \\
+        \hline
+        1               & 426.56              & 0.00                           \\
+        2               & 226.73              & -48.40                         \\
+        4               & 123.93              & -68.15                         \\
+        8               & 95.65               & -79.57                         \\
+        16              & 84.06               & -81.05                         \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a una hebra en contenedores de Windows (CPU + GPU).}
+    \label{tab:single-node_windows_podman_gpu}
+\end{table}
+
+El tiempo de ejecución disminuye considerablemente al aumentar el número de hebras, alcanzando una reducción del 81.05\% con 16 hebras respecto a una sola hebra.
+
+La mayor mejora relativa se observa al pasar de 1 a 2 hebras (-48.40\%) y de 2 a 4 hebras (-19.75\% adicional), lo que indica una buena escalabilidad inicial.
+
+A partir de 8 hebras, la reducción en el tiempo de ejecución se estabiliza, con beneficios adicionales menores al incrementar a 16 hebras.
+
+Estos resultados muestran que, en contenedores de Windows con CPU+GPU, el uso de múltiples hebras es eficiente y permite aprovechar el paralelismo, siendo recomendable utilizar al menos 8 hebras para obtener la mayor parte de la mejora, ya que las ganancias adicionales más allá de ese punto son limitadas.
 
 \subsection{Ejecución en contenedores de MacOS}
 \subsubsection{CPU}
@@ -1144,6 +1205,78 @@ En la tabla \ref{tab:multi-node_windows_podman} se presentan los tiempos de ejec
 La tabla presenta la evolución del tiempo de ejecución al aumentar el número de procesos en un entorno multiproceso con contenedores de \textit{Podman} sobre Windows utilizando CPU. Con un solo proceso, se establece el tiempo de referencia. Al pasar a dos procesos, se observa un incremento del 6.18\% en el tiempo de ejecución, lo que indica que la paralelización en este caso introduce una penalización inicial, probablemente debida a la sobrecarga de coordinación o a la gestión de recursos en el entorno de contenedores sobre Windows. Sin embargo, al aumentar a cuatro procesos, el tiempo de ejecución disminuye de forma considerable, con una reducción del 51.25\%, lo que evidencia una mejora significativa en el rendimiento gracias a la paralelización. Esta tendencia positiva se mantiene al escalar a ocho y dieciséis procesos, donde las reducciones alcanzan el 56.76\% y el 62.96\% respectivamente, mostrando que el sistema es capaz de aprovechar de manera eficiente los recursos adicionales a medida que se incrementa el número de procesos. En conjunto, los resultados indican que, aunque existe una penalización inicial al duplicar los procesos, el entorno multiproceso con contenedores de \textit{Podman} en Windows logra una escalabilidad efectiva y una mejora sustancial del rendimiento a partir de cuatro procesos, confirmando la viabilidad de esta tecnología para la ejecución de aplicaciones paralelas en este contexto.
 
 \subsubsection{CPU + GPU}
+
+En la figura \ref{fig:multi-node_windows_docker_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multiproceso con contenedores de Ubuntu.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_docker_gpu_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de Windows (CPU + GPU) en entorno multiproceso.}
+    \label{fig:multi-node_windows_docker_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_windows_docker_gpu} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Procesos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 proceso} \\
+        \hline
+        1                 & 312.18              & 0.00                             \\
+        2                 & 322.77              & 3.39                             \\
+        4                 & 329.54              & 5.56                             \\
+        8                 & 388.78              & 24.54                            \\
+        16                & 847.37              & 171.44                           \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a un proceso en entorno multiproceso con contenedores de Windows (CPU + GPU).}
+    \label{tab:multi-node_windows_docker_gpu}
+\end{table}
+
+Al incrementar el número de procesos, lejos de reducirse, el tiempo de ejecución aumenta de forma progresiva, alcanzando un 171.44\% más con 16 procesos en comparación con la ejecución monoproceso.
+
+Incluso con 2 o 4 procesos, el tiempo de ejecución resulta ligeramente superior al obtenido con un solo proceso, lo que evidencia la ausencia de beneficios de paralelización en este entorno multiproceso.
+
+Este aumento en el tiempo de ejecución indica la presencia de una sobrecarga considerable asociada tanto a la gestión de múltiples procesos como al acceso concurrente a la GPU, lo que deriva en un rendimiento inferior al esperado.
+
+En consecuencia, estos resultados ponen de manifiesto que, en contenedores de Windows con CPU+GPU, la ejecución multiproceso no resulta eficiente e incluso puede ser contraproducente, siendo recomendable optar por la ejecución monoproceso para maximizar el rendimiento.
+
+En la figura \ref{fig:multi-node_windows_podman_gpu_time} se muestra el tiempo de ejecución para la configuración de CPU + GPU en un entorno multiproceso con contenedores de \textit{Podman}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/cap5/multi-node_ubuntu_podman_gpu_time.png}
+    \caption{Tiempo de ejecución en función del número de hebras en contenedores de \textit{Podman} (CPU + GPU) en entorno multiproceso.}
+    \label{fig:multi-node_ubuntu_podman_gpu_time}
+\end{figure}
+
+En la tabla \ref{tab:multi-node_windows_podman_gpu} se presentan los tiempos de ejecución y la reducción porcentual respecto a una hebra.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Procesos} & \textbf{Tiempo (s)} & \textbf{$\Delta$\% vs 1 proceso} \\
+        \hline
+        1                 & 314.51              & 0.00                             \\
+        2                 & 316.80              & 0.73                             \\
+        4                 & 326.20              & 3.72                             \\
+        8                 & 391.86              & 24.59                            \\
+        16                & 850.18              & 170.32                           \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos de ejecución y variación porcentual respecto a un proceso en entorno multiproceso con contenedores de \textit{Podman} (CPU + GPU).}
+    \label{tab:multi-node_windows_podman_gpu}
+\end{table}
+
+Al aumentar el número de procesos, el tiempo de ejecución incrementa en lugar de disminuir, alcanzando un 170.32\% más con 16 procesos respecto a la ejecución con un solo proceso.
+
+Incluso con 2 y 4 procesos, el tiempo de ejecución es ligeramente superior al de un solo proceso, lo que indica que no se obtiene beneficio de paralelismo en este entorno multiproceso.
+
+El aumento progresivo del tiempo sugiere una sobrecarga considerable asociada a la gestión de múltiples procesos y al acceso concurrente a la GPU, lo que afecta negativamente al rendimiento.
+
+Estos resultados muestran que, en contenedores de \textit{Podman} sobre Windows con CPU+GPU, la ejecución multiproceso no es eficiente y puede ser contraproducente, siendo preferible ejecutar los experimentos con un solo proceso para maximizar el rendimiento.
 
 \subsection{Ejecución en contenedores de MacOS}
 \subsubsection{CPU}
